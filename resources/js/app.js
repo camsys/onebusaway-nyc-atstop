@@ -964,7 +964,7 @@ $(document).ready(function () {
     }).addTo(map);
 
     var myButton = L.control({
-        position: 'bottomleft'
+        position: 'topright'
     });
 
     myButton.onAdd = function (map) {
