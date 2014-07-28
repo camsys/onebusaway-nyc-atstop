@@ -1007,7 +1007,7 @@ $(document).ready(function () {
         });
 
         var polylines = $.get("http://bt.mta.info/api/where/stops-for-route/" + $this.data("route-id") + ".json", {
-            key: "TEST"
+            key: config.BTKey
         }, function (response) {
             // console.log(response.data.stopGroupings[0].stopGroups);
             $.each(response.data.stopGroupings[0].stopGroups, function (key, value) {
@@ -1053,7 +1053,7 @@ function addMarkers(lclRouteId, map, markers) {
     });
 
     var vehicles = $.get("http://bustime.mta.info/api/siri/vehicle-monitoring.json", {
-        key: "TEST",
+        key: config.BTKey,
         OperatorRef: "MTA NYCT",
         LineRef: lclRouteId
     }, function (response) {
