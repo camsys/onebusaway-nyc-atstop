@@ -21,6 +21,9 @@
         Khurshid Fayzullaev
     </author>
 
+    <!-- resume to the start -->
+    <preference name="AndroidLaunchMode" value="singleTask" />
+
     <!-- permissions -->
     <preference name="permissions" value="none" />
     <feature name="http://api.phonegap.com/1.0/geolocation" />
