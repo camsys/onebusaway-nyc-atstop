@@ -1,74 +1,74 @@
 /* custom fonts */
 
 @font-face {
-	font-family: Bariol_Regular;
-	src: url(../fonts/Bariol_Regular.otf);
+    font-family: Bariol_Regular;
+    src: url(../fonts/Bariol_Regular.otf);
 }
 /* Search Input */
 
 input[data-type="search"] {
-	text-transform: uppercase;
+    text-transform: uppercase;
 }
 /* Single-direction drop shadow */
 
 hr {
-	border: 0;
-	height: 0;
-	border-top: 1px solid rgba(0, 0, 0, 0.1);
-	border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 /* remove all shadows */
 
 * {
-	font-size: 18px;
-	font-family: Bariol_Regular !important;
-	box-shadow: none !important;
+    font-size: 18px;
+    font-family: Bariol_Regular !important;
+    box-shadow: none !important;
 }
 /* btns style */
 
 #refresh {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 #add-to-favorites {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 #remove-from-favorites {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 #info li:nth-child(even) {
-	background-color: #eeeeee;
+    background-color: #eeeeee;
 }
 /* loader */
 
 .ui-loading .ui-loader {
-	/*background: none;*/
-	border: none;
-	color: #16a085;
+    /*background: none;*/
+    border: none;
+    color: #16a085;
 }
 /* content */
 
 .ui-content {
-	position: absolute;
-	top: 50px;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	padding: 10px !important;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 10px !important;
 }
 /* header */
 
 .header {
-	z-index: 999;
+    z-index: 999;
 }
 /* map*/
 
 #map {
-	height: 100%;
-	margin: -10px;
-	padding-bottom: 20px;
+    height: 100%;
+    margin: -10px;
+    padding-bottom: 20px;
 }
 /*remove hover*/
 
@@ -77,8 +77,8 @@ html .ui-bar-a .ui-btn:hover,
 html .ui-body-a .ui-btn:hover,
 html body .ui-group-theme-a .ui-btn:hover,
 html body .ui-btn.ui-btn-a:hover {
-	background: #2c3e50;
-	border-color: #2c3e50;
+    background: #2c3e50;
+    border-color: #2c3e50;
 }
 /* active */
 
@@ -87,6 +87,10 @@ html .ui-bar-a .ui-btn:active,
 html .ui-body-a .ui-btn:active,
 html body .ui-group-theme-a .ui-btn:active,
 html body .ui-btn.ui-btn-a:active {
-	background: #456280;
-	border-color: #456280;
+    background: #456280;
+    border-color: #456280;
+}
+#home-button {
+    cursor: pointer;
+    cursor: hand;
 }
