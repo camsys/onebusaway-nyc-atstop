@@ -547,6 +547,8 @@ function getInfo(routeId, stopId) {
         MonitoringRef: stopId
     }, function (response) {
         if (response.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit.length > 0) {
+            console.log("Stop Monitoring:");
+            console.log(response.Siri.ServiceDelivery);
             var tmp = [],
                 i = 0;
             $.each(response.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit, function (key, value) {
@@ -957,6 +959,7 @@ $(document).ready(function () {
     var layerMain = new L.StamenTileLayer("terrain");
     var map = new L.Map('map');
     map.addLayer(layerMain);
+    var stop = new L.marker();
     var markers = new L.MarkerClusterGroup();
     var polylinesGroup = new L.FeatureGroup();
     var stamenLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
@@ -1006,6 +1009,19 @@ $(document).ready(function () {
             map.removeLayer(layer);
         });
 
+        var stop_id = $this.data("stop-id");
+        console.log(stop_id);
+        var stop_loc = $.get("http://bt.mta.info/api/where/stop/" + stop_id + ".json", {
+            key: config.BTKey
+        }, function (response) {
+            var newLatLng = new L.LatLng(response.data.lat, response.data.lon);
+            stop.setLatLng(newLatLng);
+            stop.addTo(map);
+        }, "jsonp").fail(function () {
+            console.log("error");
+        });
+
+
         var polylines = $.get("http://bt.mta.info/api/where/stops-for-route/" + $this.data("route-id") + ".json", {
             key: config.BTKey
         }, function (response) {
@@ -1052,7 +1068,8 @@ function addMarkers(lclRouteId, map, markers) {
         iconSize: [30, 30], // size of the icon
     });
 
-    var vehicles = $.get("http://bustime.mta.info/api/siri/vehicle-monitoring.json", {
+
+    var vehicles = $.get("http://bt.mta.info/api/siri/vehicle-monitoring.json", {
         key: config.BTKey,
         OperatorRef: "MTA NYCT",
         LineRef: lclRouteId
