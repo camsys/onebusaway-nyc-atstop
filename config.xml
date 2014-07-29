@@ -11,7 +11,7 @@
     <!-- <gap:platform name="blackberry" /> -->
     <!-- <gap:platform name="winphone" /> -->
 
-    <name>MTA Bus Time</name>
+    <name>At Stop</name>
 
     <description>
         Get information about when the next bus will arrive at your stop.
