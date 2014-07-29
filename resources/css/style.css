@@ -38,9 +38,12 @@ hr {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+/*
 #info li:nth-child(even) {
     background-color: #eeeeee;
 }
+*/
+
 /* loader */
 
 .ui-loading .ui-loader {
@@ -70,8 +73,6 @@ hr {
     margin: -10px;
     padding-bottom: 20px;
 }
-
-
 /*remove hover*/
 
 html .ui-page-theme-a .ui-btn:hover,

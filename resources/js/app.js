@@ -578,12 +578,14 @@ function getInfo(routeId, stopId) {
 
 /* add info about arriving buses */
 var regex = /T[0-9][0-9]:[0-9][0-9]/g;
+var regex_route_name = /\_[a-zA-Z0-9]+/g;
 
 function addInfo(data) {
     var $ul = $("#info");
     $ul.listview("refresh");
     $.each(data, function (key, value) {
         console.log(value);
+        $ul.append($("<li/>").attr("data-role", "list-divider").text(key.match(regex_route_name)[0].substring(1)));
         $.each(value, function (k, v) {
             if (v.ProgressStatus === "prevTrip") {
                 $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (+ scheduled layover at terminal)")).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
