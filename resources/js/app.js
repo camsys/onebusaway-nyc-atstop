@@ -542,6 +542,8 @@ function handleAtStopResult(routeId, routeName, stopId, stopName) {
 function getInfo(routeId, stopId) {
     console.log("route id:" + routeId, "stop id:" + stopId);
     var request = $.get("http://bt.mta.info/api/siri/stop-monitoring.json", {
+        MaximumStopVisits: config.MaximumStopVisits,
+        MinimumStopVisitsPerLine: config.MinimumStopVisitsPerLine,
         key: config.BTKey,
         OperatorRef: "MTA",
         MonitoringRef: stopId
@@ -550,13 +552,10 @@ function getInfo(routeId, stopId) {
             console.log("Stop Monitoring:");
             console.log(response.Siri.ServiceDelivery);
             var tmp = [],
-                i = 0;
+                i = 0,
+                currentLine = null;
             $.each(response.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit, function (key, value) {
                 tmp.push(value.MonitoredVehicleJourney);
-                i = i + 1;
-                if (i === 10) {
-                    return false;
-                }
             });
 
             var groupByLineRef = [];
@@ -586,17 +585,23 @@ function addInfo(data) {
     $.each(data, function (key, value) {
         console.log(value);
         $ul.append($("<li/>").attr("data-role", "list-divider").text(key.match(regex_route_name)[0].substring(1)));
+        var i = 0;
         $.each(value, function (k, v) {
-            if (v.ProgressStatus === "prevTrip") {
-                $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (+ scheduled layover at terminal)")).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
-            } else if (v.ProgressStatus === "layover,prevTrip" && v.OriginAimedDepartureTime) {
-                var time = v.OriginAimedDepartureTime.match(regex)[0].substring(1);
-                // console.log(time[0].substring(1));
-                $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal, scheduled to depart " + time + ")")).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
-            } else if (v.ProgressStatus === "layover") {
-                $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal)")).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
+            if (i < 3) {
+                if (v.ProgressStatus === "prevTrip") {
+                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (+ scheduled layover at terminal)")).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
+                } else if (v.ProgressStatus === "layover,prevTrip" && v.OriginAimedDepartureTime) {
+                    var time = v.OriginAimedDepartureTime.match(regex)[0].substring(1);
+                    // console.log(time[0].substring(1));
+                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal, scheduled to depart " + time + ")")).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
+                } else if (v.ProgressStatus === "layover") {
+                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal)")).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
+                } else {
+                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance)).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
+                }
+                i = i + 1;
             } else {
-                $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance)).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
+                return false;
             }
         });
     });
