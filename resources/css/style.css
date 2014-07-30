@@ -97,3 +97,8 @@ html body .ui-btn.ui-btn-a:active {
     cursor: pointer;
     cursor: hand;
 }
+/* leaflet-control */
+
+.leaflet-control a {
+    font-size: 12px;
+}
