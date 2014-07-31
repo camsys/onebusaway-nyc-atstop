@@ -46,6 +46,9 @@
     <gap:plugin name="org.apache.cordova.geolocation" />
     <gap:plugin name="org.apache.cordova.network-information" />
 
+    <!-- notifications -->
+    <gap:plugin name="org.apache.cordova.dialogs" version="0.2.6" />
+
     <!-- clean cache -->
     <!-- Supported in Phonegap 3.3.0 and + -->
     <gap:plugin name="com.sharinglabs.cordova.plugin.cache" version="1.0.0" />

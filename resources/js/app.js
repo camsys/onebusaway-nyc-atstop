@@ -747,8 +747,27 @@ function onOffline() {
     showError("No internet connection. Check the network.");
 }
 
+/* back button on Android */
+$(document).on("backbutton", function () {
+    onBackKeyDown();
+});
 
+/* on back button function */
+function onBackKeyDown() {
+    navigator.notification.confirm(
+        'Are you sure to exit!', // message
+        onConfirm, // callback to invoke with index of button pressed
+        'Confirm', // title
+ ['Cancel', 'Exit'] // buttonLabels
+    );
+}
 
+/* on confirm */
+function onConfirm(buttonIndex) {
+    if (buttonIndex == 2) {
+        navigator.app.exitApp();
+    }
+}
 
 
 
