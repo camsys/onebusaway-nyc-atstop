@@ -2,7 +2,7 @@
 
 /* config variables */
 var config = {
-    BTKey: "TEST",
+    BTKey: "",
     radius: 300,
     logger: true,
     MaximumStopVisits: 20,
