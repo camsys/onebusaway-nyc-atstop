@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.khurshidfayzullaev.bustime" versionCode="1" version="1.0">
 
-    <preference name="phonegap-version" value="3.3.0" />
+    <preference name="phonegap-version" value="3.5.0" />
 
     <!-- modify to compile for iOS, Windows Mobile, and etc. -->
     <!-- <gap:platform name="ios" />-->
@@ -49,4 +49,14 @@
     <!-- clean cache -->
     <!-- Supported in Phonegap 3.3.0 and + -->
     <gap:plugin name="com.sharinglabs.cordova.plugin.cache" version="1.0.0" />
+
+    <!-- hide the status bar on iOS 7 devices -->
+    <!--    <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />-->
+    <!--    <gap:config-file platform="ios" parent="UIStatusBarHidden">-->
+    <!--        <true/>-->
+    <!--    </gap:config-file>-->
+
+    <!--    <gap:config-file platform="ios" parent="UIViewControllerBasedStatusBarAppearance">-->
+    <!--        <false/>-->
+    <!--    </gap:config-file>-->
 </widget>
