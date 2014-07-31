@@ -21,6 +21,18 @@
         Khurshid Fayzullaev
     </author>
 
+    <!-- Android icons -->
+    <icon src="resources/images/icons/icon_36x36.png" gap:platform="android" gap:density="ldpi" />
+    <icon src="resources/images/icons/icon_48x48.png" gap:platform="android" gap:density="mdpi" />
+    <icon src="resources/images/icons/icon_72x72.png" gap:platform="android" gap:density="hdpi" />
+    <icon src="resources/images/icons/icon_96x96.png" gap:platform="android" gap:density="xhdpi" />
+
+    <!-- Android splashes -->
+    <gap:splash src="resources/images/splashes/splash_200x320.png" gap:platform="android" gap:density="ldpi" />
+    <gap:splash src="resources/images/splashes/splash_320x480.png" gap:platform="android" gap:density="mdpi" />
+    <gap:splash src="resources/images/splashes/splash_480x800.png" gap:platform="android" gap:density="hdpi" />
+    <gap:splash src="resources/images/splashes/splash_720x1280.png" gap:platform="android" gap:density="xhdpi" />
+
     <!-- resume to the start -->
     <preference name="AndroidLaunchMode" value="singleTask" />
 
