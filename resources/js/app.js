@@ -755,7 +755,7 @@ $(document).on("backbutton", function () {
 /* on back button function */
 function onBackKeyDown() {
     navigator.notification.confirm(
-        'Are you sure to exit!', // message
+        'Are you sure you want to exit?', // message
         onConfirm, // callback to invoke with index of button pressed
         'Confirm', // title
  ['Cancel', 'Exit'] // buttonLabels
