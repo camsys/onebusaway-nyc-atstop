@@ -102,3 +102,6 @@ html body .ui-btn.ui-btn-a:active {
 .leaflet-control a {
     font-size: 12px;
 }
+#info > li * {
+    white-space: normal;
+}
