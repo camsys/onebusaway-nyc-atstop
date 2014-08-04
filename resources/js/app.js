@@ -39,7 +39,7 @@ $.ajaxSetup({
         var interval = setInterval(function () {
             $.mobile.loading('hide');
             clearInterval(interval);
-        }, 500);
+        }, 800);
     },
     'error': function () {
         var interval = setInterval(function () {

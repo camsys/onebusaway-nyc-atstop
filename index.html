@@ -2,144 +2,147 @@
 <html>
 
 <head>
-	<title>At Stop</title>
+    <title>At Stop</title>
 
-	<!-- metadata -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, user-scalable=no" />
+    <!-- metadata -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, user-scalable=no" />
 
-	<!-- css -->
-	<link rel="stylesheet" href="resources/flat-ui/jquery.mobile.flatui.css">
-	<link rel="stylesheet" href="libraries/jqm/jquery.mobile.structure-1.4.3.min.css">
-	<link rel="stylesheet" href="libraries/leaflet/leaflet.css">
-	<link rel="stylesheet" href="libraries/leaflet/plugins/MarkerCluster.css">
-	<link rel="stylesheet" href="libraries/leaflet/plugins/MarkerCluster.Default.css">
-	<link rel="stylesheet" href="resources/css/style.css">
+    <!-- css -->
+    <link rel="stylesheet" href="resources/flat-ui/jquery.mobile.flatui.css">
+    <link rel="stylesheet" href="libraries/jqm/jquery.mobile.structure-1.4.3.min.css">
+    <link rel="stylesheet" href="libraries/leaflet/leaflet.css">
+    <link rel="stylesheet" href="libraries/leaflet/plugins/MarkerCluster.css">
+    <link rel="stylesheet" href="libraries/leaflet/plugins/MarkerCluster.Default.css">
+    <link rel="stylesheet" href="resources/css/style.css">
 
-	<!-- cordova -->
-	<script src="phonegap.js"></script>
+    <!-- cordova -->
+    <script src="phonegap.js"></script>
 
-	<!-- jQuery-->
-	<script src="libraries/jquery/jquery-1.11.1.min.js"></script>
+    <!-- jQuery-->
+    <script src="libraries/jquery/jquery-1.11.1.min.js"></script>
 
-	<!-- Fast Click -->
-	<script src="libraries/fastclick/fastclick.js"></script>
+    <!-- Fast Click -->
+    <script src="libraries/fastclick/fastclick.js"></script>
 
-	<!-- underscore -->
-	<script src="libraries/underscore/underscore-min.js"></script>
+    <!-- underscore -->
+    <script src="libraries/underscore/underscore-min.js"></script>
 
-	<!-- leaflet -->
-	<script src="libraries/leaflet/leaflet.js"></script>
-	<script src="libraries/leaflet/plugins/Polyline.encoded.js"></script>
-	<script src="libraries/leaflet/plugins/leaflet.markercluster-src.js"></script>
-	<script src="libraries/leaflet/plugins/leaflet.polylineDecorator.min.js"></script>
-	<script src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+    <!-- leaflet -->
+    <script src="libraries/leaflet/leaflet.js"></script>
+    <script src="libraries/leaflet/plugins/Polyline.encoded.js"></script>
+    <script src="libraries/leaflet/plugins/leaflet.markercluster-src.js"></script>
+    <script src="libraries/leaflet/plugins/leaflet.polylineDecorator.min.js"></script>
+    <script src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
 
-	<!-- jQuery Mobile -->
-	<script src="resources/js/jqm-init.js"></script>
-	<script src="libraries/jqm/jquery.mobile-1.4.3.min.js"></script>
-	<script src="resources/js/logger.js"></script>
-	<script src="resources/js/config.js"></script>
-	<script src="resources/js/app.js"></script>
+    <!-- jQuery Mobile -->
+    <script src="resources/js/jqm-init.js"></script>
+    <script src="libraries/jqm/jquery.mobile-1.4.3.min.js"></script>
+    <script src="resources/js/logger.js"></script>
+    <script src="resources/js/config.js"></script>
+    <script src="resources/js/app.js"></script>
 </head>
 
 <body>
-	<div id="main" data-role="page">
-		<!-- header -->
-		<div data-role="header">
-			<h1 id="home-button" class="ui-title" role="heading">At Stop</h1>
-			<button class="ui-btn-right ui-icon-star ui-btn ui-btn-inline ui-mini ui-btn-icon-notext ui-corner-all" id="favorites-button">Favorities</button>
-			<button class="ui-btn-left ui-icon-back ui-btn ui-btn-inline ui-mini ui-btn-icon-notext ui-corner-all" id="back-button">Back</button>
-		</div>
+    <div id="main" data-role="page">
+        <!-- header -->
+        <div data-role="header">
+            <h1 id="home-button" class="ui-title" role="heading">At Stop</h1>
+            <button class="ui-btn-right ui-icon-star ui-btn ui-btn-inline ui-mini ui-btn-icon-notext ui-corner-all" id="favorites-button">Favorities</button>
+            <button class="ui-btn-left ui-icon-back ui-btn ui-btn-inline ui-mini ui-btn-icon-notext ui-corner-all" id="back-button">Back</button>
+        </div>
 
-		<!-- content -->
-		<div data-role="content">
-			<!-- search -->
-			<div id="search">
-				<p style="font-size: 16px;">Enter an intersection, bus route or bus stop code</p>
-				<ul id="autocomplete" data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder="Search"></ul>
-				<p id="autocomplete-error"></p>
+        <!-- content -->
+        <div data-role="content">
+            <!-- search -->
+            <div id="search">
+                <p style="font-size: 16px;">Enter an intersection, bus route or bus stop code</p>
+                <ul id="autocomplete" data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder="Search"></ul>
+                <p id="autocomplete-error"></p>
 
-				<hr>
-			</div>
+                <hr>
+            </div>
 
-			<!-- results -->
-			<div id="results">
-				<div id="by-route">
-					<h3 class="header"></h3>
-					<p class="desc"></p>
-					<p class="auxiliary"></p>
-					<div id="directions" data-role="collapsibleset" data-inset="true"></div>
-				</div>
-				<div id="by-stop">
-					<h3 class="header"></h3>
-					<p class="desc"></p>
-					<p class="auxiliary"></p>
-					<ul id="routes" data-role="listview" data-inset="true"></ul>
-				</div>
-				<div id="by-geocode">
-					<h3 class="header"></h3>
-					<p class="desc"></p>
-					<p class="auxiliary-routes"></p>
-					<ul id="nearby-routes" data-role="listview" data-inset="true"></ul>
-					<p class="auxiliary-stops"></p>
-					<ul id="nearby-stops" data-role="listview" data-inset="true"></ul>
-				</div>
-				<div id="at-stop">
-					<h3 class="header"></h3>
-					<p class="desc"></p>
-					<p class="auxiliary"></p>
-					<div class="ui-grid-a">
-						<div class="ui-block-a">
-							<button id="refresh" class="ui-btn ui-icon-refresh ui-btn-icon-left ui-corner-all">Refresh</button>
-						</div>
-						<div class="ui-block-b">
+            <!-- results -->
+            <div id="results">
+                <div id="by-route">
+                    <h3 class="header"></h3>
+                    <p class="desc"></p>
+                    <p class="auxiliary"></p>
+                    <div id="directions" data-role="collapsibleset" data-inset="true"></div>
+                </div>
+                <div id="by-stop">
+                    <h3 class="header"></h3>
+                    <p class="desc"></p>
+                    <p class="auxiliary"></p>
+                    <ul id="routes" data-role="listview" data-inset="true"></ul>
+                </div>
+                <div id="by-geocode">
+                    <h3 class="header"></h3>
+                    <p class="desc"></p>
+                    <p class="auxiliary-routes"></p>
+                    <ul id="nearby-routes" data-role="listview" data-inset="true"></ul>
+                    <p class="auxiliary-stops"></p>
+                    <ul id="nearby-stops" data-role="listview" data-inset="true"></ul>
+                </div>
+                <div id="at-stop">
+                    <h3 class="header"></h3>
+                    <p class="desc"></p>
+                    <p class="auxiliary"></p>
+                    <div class="ui-grid-a">
+                        <div class="ui-block-a">
+                            <button id="refresh" class="ui-btn ui-icon-refresh ui-btn-icon-left ui-corner-all">Refresh</button>
+                        </div>
+                        <div class="ui-block-b">
 
-							<button id="add-to-favorites" class="ui-btn ui-icon-star ui-btn-icon-right ui-corner-all">Add</button>
-							<button id="remove-from-favorites" class="ui-btn ui-icon-star ui-btn-icon-right ui-corner-all">Remove</button>
+                            <button id="add-to-favorites" class="ui-btn ui-icon-star ui-btn-icon-right ui-corner-all">Add</button>
+                            <button id="remove-from-favorites" class="ui-btn ui-icon-star ui-btn-icon-right ui-corner-all">Remove</button>
 
-						</div>
-					</div>
-					<div class="ui-grid-b">
-						<div class="ui-grid-a">
-							<button class="ui-btn ui-icon-location ui-corner-all" id="map-button">Map</button>
-						</div>
-					</div>
-					<ul id="info" data-role="listview" data-inset="true"></ul>
-				</div>
-				<div id="favorites">
-					<h3 class="header"></h3>
-					<p class="desc"></p>
-					<p class="auxiliary"></p>
-					<ul id="favorites-list" data-role="listview" data-inset="true"></ul>
-				</div>
-				<div id="local-stops">
-					<button id="refresh-local-btn" class="ui-btn ui-corner-all">Refresh</button>
-					<h3 class="header"></h3>
-					<p class="desc"></p>
-					<p class="auxiliary"></p>
-					<ul id="local-stops-list" data-role="listview" data-inset="true"></ul>
-				</div>
-			</div>
+                        </div>
+                    </div>
+                    <div class="ui-grid-b">
+                        <div class="ui-grid-a">
+                            <button class="ui-btn ui-icon-location ui-corner-all" id="map-button">Map</button>
+                        </div>
+                    </div>
+                    <ul id="info" data-role="listview" data-inset="true"></ul>
+                </div>
+                <div id="favorites">
+                    <h3 class="header"></h3>
+                    <p class="desc"></p>
+                    <p class="auxiliary"></p>
+                    <ul id="favorites-list" data-role="listview" data-inset="true"></ul>
+                </div>
+                <div id="local-stops">
+                    <button id="refresh-local-btn" class="ui-btn ui-corner-all">Refresh</button>
+                    <h3 class="header"></h3>
+                    <p class="desc"></p>
+                    <p class="auxiliary"></p>
+                    <ul id="local-stops-list" data-role="listview" data-inset="true"></ul>
+                </div>
+            </div>
 
-			<div id="map">
-				<!-- map goes here -->
-			</div>
+            <div id="map">
+                <!-- map goes here -->
+            </div>
 
-			<!-- errors -->
-			<div id="errors">
-				<p class="error"></p>
-			</div>
+            <!-- errors -->
+            <div id="errors">
+                <p class="error"></p>
+            </div>
 
-			<!-- home -->
-			<div id="home">
-				<p><b>Try these example searches:</b> Route: B63 M5 Bx1 <br> Intersection: Main St and Kissena Bl <br> Stop Code: 200884 <br>Location: 10304 Hylan Blvd</p>
-				<button id="favorites-btn" class="ui-btn ui-corner-all">Favorites</button>
-				<button id="local-stops-btn" class="ui-btn ui-corner-all">Nearby stops</button>
+            <!-- home -->
+            <div id="home">
+                <p><b>Try these example searches:</b> Route: B63 M5 Bx1
+                    <br>Intersection: Main St and Kissena Bl
+                    <br>Stop Code: 200884
+                    <br>Location: 10304 Hylan Blvd</p>
+                <button id="favorites-btn" class="ui-btn ui-corner-all">Favorites</button>
+                <button id="local-stops-btn" class="ui-btn ui-corner-all">Nearby stops</button>
 
-			</div>
-		</div>
-	</div>
-	<!-- /page -->
+            </div>
+        </div>
+    </div>
+    <!-- /page -->
 </body>
 
 </html>
