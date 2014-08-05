@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="612" height="612" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="614" width="614" y="-1" x="-1"/>
+ </g>
+
+ <g>
+  <title>Layer 1</title>
+  <ellipse fill="#44e557" stroke="#ffffff" stroke-width="15" cx="306.000003" cy="306.000918" id="svg_1" rx="169.50001" ry="169.50001"/>
+ </g>
+</svg>

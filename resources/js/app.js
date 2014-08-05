@@ -988,6 +988,7 @@ $(document).ready(function () {
     var stop = new L.marker();
     var markers = new L.MarkerClusterGroup();
     var polylinesGroup = new L.FeatureGroup();
+    var stopMarkers = new L.layerGroup();
     var stamenLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
         attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
     }).addTo(map);
@@ -1031,8 +1032,14 @@ $(document).ready(function () {
 
         /* clear the map */
         markers.clearLayers();
+        stopMarkers.clearLayers();
         polylinesGroup.eachLayer(function (layer) {
             map.removeLayer(layer);
+        });
+
+        var currentStopIcon = L.icon({
+            iconUrl: 'resources/images/current.svg',
+            iconSize: [30, 30], // size of the icon
         });
 
         var stop_id = $this.data("stop-id");
@@ -1040,8 +1047,8 @@ $(document).ready(function () {
         var stop_loc = $.get("http://bt.mta.info/api/where/stop/" + stop_id + ".json", {
             key: config.BTKey
         }, function (response) {
-            var newLatLng = new L.LatLng(response.data.lat, response.data.lon);
-            stop.setLatLng(newLatLng);
+            stop.setLatLng([response.data.lat, response.data.lon]);
+            stop.setIcon(currentStopIcon);
             stop.addTo(map);
         }, "jsonp").fail(function () {
             console.log("error");
@@ -1051,6 +1058,21 @@ $(document).ready(function () {
         var polylines = $.get("http://bt.mta.info/api/where/stops-for-route/" + $this.data("route-id") + ".json", {
             key: config.BTKey
         }, function (response) {
+            console.log("stops gor route: ");
+            console.log(response);
+
+            var stopIcon = L.icon({
+                iconUrl: 'resources/images/dot.svg',
+                iconSize: [25, 25], // size of the icon
+            });
+
+            console.log("stops: ");
+            $.each(response.data.stops, function (key, value) {
+                stopMarkers.addLayer(L.marker([value.lat, value.lon], {
+                    icon: stopIcon
+                }).bindPopup(value.name));
+            });
+
             // console.log(response.data.stopGroupings[0].stopGroups);
             $.each(response.data.stopGroupings[0].stopGroups, function (key, value) {
                 $.each(value.polylines, function (k, v) {
@@ -1064,6 +1086,7 @@ $(document).ready(function () {
                     polylinesGroup.addLayer(polyline);
                 });
 
+
                 map.fitBounds(polylinesGroup.getBounds());
 
                 map.invalidateSize();
@@ -1076,7 +1099,17 @@ $(document).ready(function () {
 
         showMap();
     });
+
+    map.on('zoomend', function () {
+        if (map.getZoom() >= 16) {
+            map.addLayer(stopMarkers);
+        } else {
+            map.removeLayer(stopMarkers);
+        }
+    });
+
 });
+
 
 
 
