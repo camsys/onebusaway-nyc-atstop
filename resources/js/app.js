@@ -589,15 +589,15 @@ function addInfo(data) {
         $.each(value, function (k, v) {
             if (i < 3) {
                 if (v.ProgressStatus === "prevTrip") {
-                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (+ scheduled layover at terminal)")).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
+                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (+ scheduled layover at terminal)")).append($("<p/>").text(v.DestinationName)));
                 } else if (v.ProgressStatus === "layover,prevTrip" && v.OriginAimedDepartureTime) {
                     var time = v.OriginAimedDepartureTime.match(regex)[0].substring(1);
                     // console.log(time[0].substring(1));
-                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal, scheduled to depart " + time + ")")).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
+                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal, scheduled to depart " + time + ")")).append($("<p/>").text(v.DestinationName)));
                 } else if (v.ProgressStatus === "layover") {
-                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal)")).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
+                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal)")).append($("<p/>").text(v.DestinationName)));
                 } else {
-                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance)).append($("<h2/>").text(v.PublishedLineName)).append($("<p/>").text(v.DestinationName)));
+                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance)).append($("<p/>").text(v.DestinationName)));
                 }
                 i = i + 1;
             } else {
