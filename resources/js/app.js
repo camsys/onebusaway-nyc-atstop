@@ -985,13 +985,18 @@ $(document).ready(function () {
     var layerMain = new L.StamenTileLayer("terrain");
     var map = new L.Map('map');
     map.addLayer(layerMain);
-    var stop = new L.marker();
-    var markers = new L.MarkerClusterGroup();
+
+    //    var markers = new L.MarkerClusterGroup();
     var polylinesGroup = new L.FeatureGroup();
-    var stopMarkers = new L.layerGroup();
+    var stopMarkers = new L.FeatureGroup();
+    var markers = new L.FeatureGroup();
+    var stop = new L.marker();
+
     var stamenLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
         attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
     }).addTo(map);
+
+    polylinesGroup.bringToBack();
 
     var myButton = L.control({
         position: 'topright'
@@ -1063,7 +1068,7 @@ $(document).ready(function () {
 
             var stopIcon = L.icon({
                 iconUrl: 'resources/images/dot.svg',
-                iconSize: [25, 25], // size of the icon
+                iconSize: [20, 20], // size of the icon
             });
 
             console.log("stops: ");
@@ -1124,7 +1129,7 @@ function addMarkers(lclRouteId, map, markers) {
 
     var busIcon = L.icon({
         iconUrl: 'resources/images/arrow.svg',
-        iconSize: [30, 30], // size of the icon
+        iconSize: [25, 25], // size of the icon
     });
 
 
