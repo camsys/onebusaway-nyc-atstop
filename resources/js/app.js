@@ -1106,7 +1106,7 @@ $(document).ready(function () {
     });
 
     map.on('zoomend', function () {
-        if (map.getZoom() >= 16) {
+        if (map.getZoom() >= 15) {
             map.addLayer(stopMarkers);
         } else {
             map.removeLayer(stopMarkers);
