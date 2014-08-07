@@ -430,9 +430,15 @@ function addNearbyRoutes(data) {
     $ulRoutes.listview("refresh");
     if (data.length > 0) {
         $.each(data, function (key, value) {
-            $ulRoutes.append(
-                $("<li/>").data("route-name", value.shortName).append($("<a/>").text(value.shortName + " - " + value.description))
-            );
+            if (value.description !== null) {
+                $ulRoutes.append(
+                    $("<li/>").data("route-name", value.shortName).append($("<a/>").text(value.shortName + " - " + value.description))
+                );
+            } else {
+                $ulRoutes.append(
+                    $("<li/>").data("route-name", value.shortName).append($("<a/>").text(value.shortName + " - " + value.description))
+                );
+            }
         });
     } else {
         $ulRoutes.append($("<p/>").text("No data available"));

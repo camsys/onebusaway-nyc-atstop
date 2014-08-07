@@ -75,6 +75,7 @@ hr {
 }
 /*remove hover*/
 
+/*
 html .ui-page-theme-a .ui-btn:hover,
 html .ui-bar-a .ui-btn:hover,
 html .ui-body-a .ui-btn:hover,
@@ -83,8 +84,11 @@ html body .ui-btn.ui-btn-a:hover {
     background: #2c3e50;
     border-color: #2c3e50;
 }
+*/
+
 /* active */
 
+/*
 html .ui-page-theme-a .ui-btn:active,
 html .ui-bar-a .ui-btn:active,
 html .ui-body-a .ui-btn:active,
@@ -97,6 +101,8 @@ html body .ui-btn.ui-btn-a:active {
     cursor: pointer;
     cursor: hand;
 }
+*/
+
 /* leaflet-control */
 
 .leaflet-control a {
