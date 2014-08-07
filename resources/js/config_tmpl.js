@@ -3,9 +3,9 @@
 /* config variables */
 var config = {
     BTKey: "",
-    radius: 300,
+    radius: 200,
     logger: true,
-    MaximumStopVisits: 20,
+    MaximumStopVisits: 15,
     MinimumStopVisitsPerLine: 2
 };
 
