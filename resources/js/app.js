@@ -291,6 +291,7 @@ function getStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination) {
         $.each(response, function (key, value) {
             addStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination, value);
         });
+        $("#directions").trigger("updatelayout");
     }, "jsonp").fail(function () {
         console.log("get directions request has failed");
         showError("No data available");
@@ -325,7 +326,7 @@ function addStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination, data
         );
     });
     $("#collapsibleListview" + lclDirectionId).listview("refresh");
-    $("#collapsibleListview" + lclDirectionId).trigger("updatelayout");
+
 }
 
 
@@ -578,7 +579,7 @@ function addInfo(data, lclRouteId, lclStopId) {
     $ul.listview("refresh");
     $.each(data, function (key, value) {
         console.log(value);
-        $ul.append($("<li/>").attr("data-role", "list-divider").text(key.match(regex_route_name)[0].substring(1)).append($("<button/>").data("route-id", key).data("stop-id", lclStopId).attr("class", "see-on-map ui-btn ui-corner-all").text("Map")));
+        $ul.append($("<li/>").attr("data-role", "list-divider").text(key.match(regex_route_name)[0].substring(1)).append($("<button/>").data("route-id", key).data("stop-id", lclStopId).attr("class", "see-on-map ui-btn ui-mini ui-corner-all").text("Map")));
         var i = 0;
         $.each(value, function (k, v) {
             if (i < 3) {
