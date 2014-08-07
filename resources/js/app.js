@@ -193,7 +193,7 @@ $(document).on("pagecreate", "#main", function () {
                 $error.text("");
                 $ul.empty();
 
-                if (response.length !== 0) {
+                if (response !== null && response.length !== 0) {
                     $.each(response, function (i, val) {
                         $ul.append($("<li/>").data("term", val).append($("<a/>").text(val)));
                     });
@@ -494,12 +494,6 @@ function handleAtStopResult(routeId, routeName, stopId, stopName) {
 
     $("#at-stop .auxiliary").text("Stop: " + stopName);
 
-    if (routeId === "") {
-        $("#map-button").hide();
-    } else {
-        $("#map-button").show();
-    }
-
     handleRefreshBtn(routeId, stopId);
     getInfo(routeId, stopId);
 
@@ -509,12 +503,6 @@ function handleAtStopResult(routeId, routeName, stopId, stopName) {
 
     var $removeFromFavorites = $("#remove-from-favorites");
     $removeFromFavorites.data("stop-id", stopId);
-
-    var $mapButton = $("#map-button");
-    $mapButton.data("stop-id", stopId);
-    $mapButton.data("route-id", routeId);
-    $mapButton.data("route-name", routeName);
-    $mapButton.data("stop-name", stopName);
 
     var $backButton = $("#back-button");
     $backButton.data("stop-id", stopId);
@@ -564,7 +552,7 @@ function getInfo(routeId, stopId) {
                 return obj.LineRef;
             });
 
-            addInfo(groupByLineRef);
+            addInfo(groupByLineRef, routeId, stopId);
         } else {
             console.log("no data available");
             showError("No data available");
@@ -579,12 +567,12 @@ function getInfo(routeId, stopId) {
 var regex = /T[0-9][0-9]:[0-9][0-9]/g;
 var regex_route_name = /\_[a-zA-Z0-9]+/g;
 
-function addInfo(data) {
+function addInfo(data, lclRouteId, lclStopId) {
     var $ul = $("#info");
     $ul.listview("refresh");
     $.each(data, function (key, value) {
         console.log(value);
-        $ul.append($("<li/>").attr("data-role", "list-divider").text(key.match(regex_route_name)[0].substring(1)));
+        $ul.append($("<li/>").attr("data-role", "list-divider").text(key.match(regex_route_name)[0].substring(1)).append($("<button/>").data("route-id", key).data("stop-id", lclStopId).attr("class", "see-on-map ui-btn ui-corner-all").text("Map")));
         var i = 0;
         $.each(value, function (k, v) {
             if (i < 3) {
@@ -768,6 +756,55 @@ function onConfirm(buttonIndex) {
         navigator.app.exitApp();
     }
 }
+
+
+
+
+
+
+
+
+
+function addMarkers(lclRouteId, map, markers) {
+    $("#map-refresh").attr('disabled', 'disabled').html('Refresh (30s)');
+    window.clearTimeout(globalTimerMap);
+    globalTimerMap = window.setTimeout(function () {
+        $("#map-refresh").removeAttr('disabled').html('Refresh');
+    }, 30000);
+
+    markers.clearLayers();
+
+    var busIcon = L.icon({
+        iconUrl: 'resources/images/arrow.svg',
+        iconSize: [25, 25], // size of the icon
+    });
+
+
+    var vehicles = $.get("http://bt.mta.info/api/siri/vehicle-monitoring.json", {
+        key: config.BTKey,
+        OperatorRef: "MTA NYCT",
+        LineRef: lclRouteId
+    }, function (response) {
+        var vehiclesData = response.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity;
+        $.each(vehiclesData, function (key, value) {
+            console.log(value.MonitoredVehicleJourney.VehicleLocation);
+            var marker = new L.rotatedMarker([value.MonitoredVehicleJourney.VehicleLocation.Latitude, value.MonitoredVehicleJourney.VehicleLocation.Longitude], {
+                icon: busIcon
+            });
+            marker.options.angle = -value.MonitoredVehicleJourney.Bearing;
+            markers.addLayer(marker);
+        });
+    }, "jsonp").fail(function () {
+        console.log("error");
+    });
+
+    $.when(vehicles).then(function () {
+        map.addLayer(markers);
+    });
+}
+
+
+
 
 
 
@@ -1029,7 +1066,15 @@ $(document).ready(function () {
         handleAtStopResult($this.data("route-id"), $this.data("route-name"), $this.data("stop-id"), $this.data("stop-name"));
     });
 
-    $("#map-button").on("click", function (e) {
+    map.on('zoomend', function () {
+        if (map.getZoom() >= 15) {
+            map.addLayer(stopMarkers);
+        } else {
+            map.removeLayer(stopMarkers);
+        }
+    });
+
+    $("#info").on("click", "button.see-on-map", function (e) {
         e.preventDefault();
         var $this = $(this);
 
@@ -1104,59 +1149,16 @@ $(document).ready(function () {
 
         showMap();
     });
-
-    map.on('zoomend', function () {
-        if (map.getZoom() >= 15) {
-            map.addLayer(stopMarkers);
-        } else {
-            map.removeLayer(stopMarkers);
-        }
-    });
-
 });
 
 
 
-
-function addMarkers(lclRouteId, map, markers) {
-    $("#map-refresh").attr('disabled', 'disabled').html('Refresh (30s)');
-    window.clearTimeout(globalTimerMap);
-    globalTimerMap = window.setTimeout(function () {
-        $("#map-refresh").removeAttr('disabled').html('Refresh');
-    }, 30000);
-
-    markers.clearLayers();
-
-    var busIcon = L.icon({
-        iconUrl: 'resources/images/arrow.svg',
-        iconSize: [25, 25], // size of the icon
-    });
-
-
-    var vehicles = $.get("http://bt.mta.info/api/siri/vehicle-monitoring.json", {
-        key: config.BTKey,
-        OperatorRef: "MTA NYCT",
-        LineRef: lclRouteId
-    }, function (response) {
-        var vehiclesData = response.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity;
-        $.each(vehiclesData, function (key, value) {
-            console.log(value.MonitoredVehicleJourney.VehicleLocation);
-            var marker = new L.rotatedMarker([value.MonitoredVehicleJourney.VehicleLocation.Latitude, value.MonitoredVehicleJourney.VehicleLocation.Longitude], {
-                icon: busIcon
-            });
-            marker.options.angle = -value.MonitoredVehicleJourney.Bearing;
-            markers.addLayer(marker);
-        });
-    }, "jsonp").fail(function () {
-        console.log("error");
-    });
-
-    $.when(vehicles).then(function () {
-        map.addLayer(markers);
-    });
-
-}
-
+//$(document).on("click", "button.see-on-map", function () {
+//    $this = $(this);
+//    console.log("see on map!");
+//    console.log($this.data("route-id"));
+//    console.log($this.data("stop-id"));
+//});
 
 
 /* cache handler */
