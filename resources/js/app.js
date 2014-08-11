@@ -78,27 +78,6 @@ function showError(msg) {
 function switchView(view) {
     $.mobile.loading("hide");
 
-    var $slctByRoute = $("#by-route"),
-        $slctByStop = $("#by-stop"),
-        $slctByGeocode = $("#by-geocode"),
-        $slctAtStop = $("#at-stop"),
-        $slctErrors = $("#errors"),
-        $slctRefresh = $("#refresh"),
-        $slctFavorites = $("#favorites"),
-        $slctMap = $("#map"),
-        $slctSearch = $("#search"),
-        $slctBackButton = $("#back-button"),
-        $slctLocalStops = $("#local-stops"),
-        $slctHome = $("#home"),
-        $slctDirections = $("#directions"),
-        $slctRoutes = $("#routes"),
-        $slctNearbyStops = $("#nearby-stops"),
-        $slctNearbyRoutes = $("#nearby-routes"),
-        $slctInfo = $("#info"),
-        $slctFavoritesList = $("#favorites-list"),
-        $slctLocalStopsList = $("#local-stops-list"),
-        $slctAlertsPopup = $("#alerts-popup");
-
     $slctByRoute.hide();
     $slctByStop.hide();
     $slctByGeocode.hide();
@@ -831,11 +810,56 @@ function addMarkers(lclRouteId, map, markers) {
 
 
 
-
+var $slctByRoute,
+    $slctByStop,
+    $slctByGeocode,
+    $slctAtStop,
+    $slctErrors,
+    $slctRefresh,
+    $slctFavorites,
+    $slctMap,
+    $slctSearch,
+    $slctBackButton,
+    $slctLocalStops,
+    $slctHome,
+    $slctDirections,
+    $slctRoutes,
+    $slctNearbyStops,
+    $slctNearbyRoutes,
+    $slctInfo,
+    $slctFavoritesList,
+    $slctLocalStopsList,
+    $slctAlertsPopup;
 
 /* function which gets called when all the dom elements can be accessed */
 $(document).ready(function () {
     "use strict";
+
+    /* pre-processing DOM elements */
+    $slctByRoute = $("#by-route");
+    $slctByStop = $("#by-stop");
+    $slctByGeocode = $("#by-geocode");
+    $slctAtStop = $("#at-stop");
+    $slctErrors = $("#errors");
+    $slctRefresh = $("#refresh");
+    $slctFavorites = $("#favorites");
+    $slctMap = $("#map");
+    $slctSearch = $("#search");
+    $slctBackButton = $("#back-button");
+    $slctLocalStops = $("#local-stops");
+    $slctHome = $("#home");
+    $slctDirections = $("#directions");
+    $slctRoutes = $("#routes");
+    $slctNearbyStops = $("#nearby-stops");
+    $slctNearbyRoutes = $("#nearby-routes");
+    $slctInfo = $("#info");
+    $slctFavoritesList = $("#favorites-list");
+    $slctLocalStopsList = $("#local-stops-list");
+    $slctAlertsPopup = $("#alerts-popup");
+
+
+
+
 
 
 
