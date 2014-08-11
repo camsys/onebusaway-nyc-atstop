@@ -54,6 +54,7 @@
 
         <!-- content -->
         <div data-role="content">
+
             <!-- search -->
             <div id="search">
                 <p style="font-size: 16px;">Enter an intersection, bus route or bus stop code</p>
@@ -63,64 +64,66 @@
                 <hr>
             </div>
 
-            <!-- results -->
-            <div id="results">
-                <div id="by-route">
-                    <h3 class="header"></h3>
-                    <p class="desc"></p>
-                    <p class="auxiliary"></p>
-                    <div id="directions" data-role="collapsibleset" data-inset="true"></div>
-                </div>
-                <div id="by-stop">
-                    <h3 class="header"></h3>
-                    <p class="desc"></p>
-                    <p class="auxiliary"></p>
-                    <ul id="routes" data-role="listview" data-inset="true"></ul>
-                </div>
-                <div id="by-geocode">
-                    <h3 class="header"></h3>
-                    <p class="desc"></p>
-                    <p class="auxiliary-stops"></p>
-                    <ul id="nearby-stops" data-role="listview" data-inset="true"></ul>
-                    <p class="auxiliary-routes"></p>
-                    <ul id="nearby-routes" data-role="listview" data-inset="true"></ul>
-
-                </div>
-                <div id="at-stop">
-                    <h3 class="header"></h3>
-                    <p class="desc"></p>
-                    <p class="auxiliary"></p>
-                    <div class="ui-grid-a">
-                        <div class="ui-block-a">
-                            <button id="refresh" class="ui-btn ui-icon-refresh ui-btn-icon-left ui-corner-all">Refresh</button>
-                        </div>
-                        <div class="ui-block-b">
-
-                            <button id="add-to-favorites" class="ui-btn ui-icon-star ui-btn-icon-right ui-corner-all">Add</button>
-                            <button id="remove-from-favorites" class="ui-btn ui-icon-star ui-btn-icon-right ui-corner-all">Remove</button>
-
-                        </div>
-                    </div>
-
-                    <a href="#popupAlerts" data-rel="popup" class="ui-btn ui-corner-all" data-transition="pop" id="alerts-popup" data-position-to="window">Service Alerts</a>
-                    <div data-role="popup" id="popupAlerts" style="color: #D53620;"></div>
-
-                    <ul id="info" data-role="listview" data-inset="true"></ul>
-                </div>
-                <div id="favorites">
-                    <h3 class="header"></h3>
-                    <p class="desc"></p>
-                    <p class="auxiliary"></p>
-                    <ul id="favorites-list" data-role="listview" data-inset="true"></ul>
-                </div>
-                <div id="local-stops">
-                    <button id="refresh-local-btn" class="ui-btn ui-corner-all">Refresh</button>
-                    <h3 class="header"></h3>
-                    <p class="desc"></p>
-                    <p class="auxiliary"></p>
-                    <ul id="local-stops-list" data-role="listview" data-inset="true"></ul>
-                </div>
+            <div id="by-route">
+                <h3 class="header"></h3>
+                <p class="desc"></p>
+                <p class="auxiliary"></p>
+                <div id="directions" data-role="collapsibleset" data-inset="true"></div>
             </div>
+
+            <div id="by-stop">
+                <h3 class="header"></h3>
+                <p class="desc"></p>
+                <p class="auxiliary"></p>
+                <ul id="routes" data-role="listview" data-inset="true"></ul>
+            </div>
+
+            <div id="by-geocode">
+                <h3 class="header"></h3>
+                <p class="desc"></p>
+                <p class="auxiliary-stops"></p>
+                <ul id="nearby-stops" data-role="listview" data-inset="true"></ul>
+                <p class="auxiliary-routes"></p>
+                <ul id="nearby-routes" data-role="listview" data-inset="true"></ul>
+            </div>
+
+            <div id="at-stop">
+                <h3 class="header"></h3>
+                <p class="desc"></p>
+                <p class="auxiliary"></p>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <button id="refresh" class="ui-btn ui-icon-refresh ui-btn-icon-left ui-corner-all">Refresh</button>
+                    </div>
+                    <div class="ui-block-b">
+
+                        <button id="add-to-favorites" class="ui-btn ui-icon-star ui-btn-icon-right ui-corner-all">Add</button>
+                        <button id="remove-from-favorites" class="ui-btn ui-icon-star ui-btn-icon-right ui-corner-all">Remove</button>
+
+                    </div>
+                </div>
+
+                <a href="#popupAlerts" data-rel="popup" class="ui-btn ui-corner-all" data-transition="pop" id="alerts-popup" data-position-to="window">Service Alerts</a>
+                <div data-role="popup" id="popupAlerts" style="color: #D53620;"></div>
+
+                <ul id="info" data-role="listview" data-inset="true"></ul>
+            </div>
+
+            <div id="favorites">
+                <h3 class="header"></h3>
+                <p class="desc"></p>
+                <p class="auxiliary"></p>
+                <ul id="favorites-list" data-role="listview" data-inset="true"></ul>
+            </div>
+
+            <div id="local-stops">
+                <button id="refresh-local-btn" class="ui-btn ui-corner-all">Refresh</button>
+                <h3 class="header"></h3>
+                <p class="desc"></p>
+                <p class="auxiliary"></p>
+                <ul id="local-stops-list" data-role="listview" data-inset="true"></ul>
+            </div>
+
 
             <div id="map">
                 <!-- map goes here -->
