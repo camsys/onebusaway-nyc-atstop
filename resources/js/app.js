@@ -254,8 +254,8 @@ function handleRouteResult(matches) {
 
     switchView("RouteResult");
 
-    $("#by-route .header").text(matches.shortName + " " + matches.longName);
-    $("#by-route .auxiliary").text("Directions:");
+    $slctByRoute.find(".header").text(matches.shortName + " " + matches.longName);
+    $slctByRoute.find(".auxiliary").text("Directions:");
     $.each(matches.directions, function (key, value) {
         getStops(matches.id, matches.shortName + " " + matches.longName, value.directionId, value.destination);
     });
@@ -272,7 +272,7 @@ function getStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination) {
         $.each(response, function (key, value) {
             addStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination, value);
         });
-        $("#directions").trigger("updatelayout");
+        $slctDirections.trigger("updatelayout");
     }, "jsonp").fail(function () {
         console.log("get directions request has failed");
         showError("No data available");
@@ -281,8 +281,7 @@ function getStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination) {
 
 /* add stops (direction-based) */
 function addStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination, data) {
-    var $collapsibleset = $("#directions");
-    $collapsibleset.append(
+    $slctDirections.append(
         $("<div/>").attr("data-role", "collapsible")
         .append($('<h4/>').text("To " + lclDestination))
         .append($('<ul/>')
@@ -307,10 +306,8 @@ function addStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination, data
         );
     });
     $("#collapsibleListview" + lclDirectionId).listview("refresh");
-
+    $slctDirections.collapsibleset("refresh");
 }
-
-
 
 
 
@@ -326,8 +323,8 @@ function handleStopResult(matches) {
 
     switchView("StopResult");
 
-    $("#by-stop .header").text(matches.name);
-    $("#by-stop .auxiliary").text("Routes:");
+    $slctByStop.find(".header").text(matches.name);
+    $slctByStop.find(".auxiliary").text("Routes:");
 
     var $ul = $("#routes");
     $ul.listview("refresh");
@@ -360,7 +357,7 @@ function handleGeocodeResult(matches) {
 
     switchView("GeocodeResult");
 
-    $("#by-geocode .header").text(matches.formattedAddress);
+    $slctByGeocode.find(".header").text(matches.formattedAddress);
 
     addNearbyRoutes(matches.nearbyRoutes);
     getNearbyStops(matches.latitude, matches.longitude);
@@ -368,7 +365,7 @@ function handleGeocodeResult(matches) {
 
 /* get stops for location */
 function getNearbyStops(lclLat, lclLon) {
-    $("#by-geocode .auxiliary-stops").text("Nearby Stops:");
+    $slctByGeocode.find(".auxiliary-stops").text("Nearby Stops:");
     var request = $.get("http://bt.mta.info/api/where/stops-for-location.json", {
         key: config.BTKey,
         lat: lclLat,
@@ -386,47 +383,45 @@ function getNearbyStops(lclLat, lclLon) {
 
 /* add stops for location */
 function addNearbyStops(data) {
-    var $ulStops = $("#nearby-stops");
-    $ulStops.listview("refresh");
+    $slctNearbyStops.listview("refresh");
     if (data.data.stops.length > 0) {
         $.each(data.data.stops, function (key, value) {
-            $ulStops.append(
+            $slctNearbyStops.append(
                 $("<li/>").data("stop-code", value.code)
                 .append($("<a/>").text(value.name))
             );
         });
     } else {
-        $ulStops.append($("<p/>").text("No data available"));
+        $slctNearbyStops.append($("<p/>").text("No data available"));
     }
-    $ulStops.listview("refresh");
-    $ulStops.trigger("updatelayout");
+    $slctNearbyStops.listview("refresh");
+    $slctNearbyStops.trigger("updatelayout");
 }
 
 /* add routes for location */
 function addNearbyRoutes(data) {
     console.log("nearby routes search results:");
     console.log(data);
-    $("#by-geocode .auxiliary-routes").text("Nearby Routes:");
-    var $ulRoutes = $("#nearby-routes");
+    $slctByGeocode.find(".auxiliary-routes").text("Nearby Routes:");
 
-    $ulRoutes.listview("refresh");
+    $slctNearbyRoutes.listview("refresh");
     if (data.length > 0) {
         $.each(data, function (key, value) {
             if (value.description !== null) {
-                $ulRoutes.append(
+                $slctNearbyRoutes.append(
                     $("<li/>").data("route-name", value.shortName).append($("<a/>").text(value.shortName + " - " + value.description))
                 );
             } else {
-                $ulRoutes.append(
+                $slctNearbyRoutes.append(
                     $("<li/>").data("route-name", value.shortName).append($("<a/>").text(value.shortName))
                 );
             }
         });
     } else {
-        $ulRoutes.append($("<p/>").text("No data available"));
+        $slctNearbyRoutes.append($("<p/>").text("No data available"));
     }
-    $ulRoutes.listview("refresh");
-    $ulRoutes.trigger("updatelayout");
+    $slctNearbyRoutes.listview("refresh");
+    $slctNearbyRoutes.trigger("updatelayout");
 }
 
 
@@ -442,20 +437,19 @@ function showFavorites() {
     console.log("show favorites");
     switchView("Favorites");
 
-    $("#favorites h3").text("Favorite stops:");
+    $slctFavorites.find("h3").text("Favorite stops:");
 
     var favorites = window.localStorage.getItem("favorites");
     if (typeof favorites !== 'undefined' && favorites !== null && $.isEmptyObject($.parseJSON(favorites)) !== true) {
         console.log(favorites);
 
-        var $ul = $("#favorites-list");
-        $ul.listview("refresh");
+        $slctFavoritesList.listview("refresh");
         $.each($.parseJSON(favorites), function (key, value) {
             console.log(value);
-            $ul.append($("<li/>").data("stop-id", value.id).data("stop-name", value.name).append($("<a/>").text(value.name)));
+            $slctFavoritesList.append($("<li/>").data("stop-id", value.id).data("stop-name", value.name).append($("<a/>").text(value.name)));
         });
-        $ul.listview("refresh");
-        $ul.trigger("updatelayout");
+        $slctFavoritesList.listview("refresh");
+        $slctFavoritesList.trigger("updatelayout");
 
     } else {
         showError("No favorites added");
@@ -477,10 +471,10 @@ function handleAtStopResult(routeId, routeName, stopId, stopName) {
     switchView("AtStop");
 
     if (routeName !== "") {
-        $("#at-stop .header").text("Route: " + routeName);
+        $slctAtStop.find(".header").text("Route: " + routeName);
     }
 
-    $("#at-stop .auxiliary").text("Stop: " + stopName);
+    $slctAtStop.find(".auxiliary").text("Stop: " + stopName);
 
     handleRefreshBtn(routeId, stopId);
     getInfo(routeId, stopId);
@@ -492,11 +486,10 @@ function handleAtStopResult(routeId, routeName, stopId, stopName) {
     var $removeFromFavorites = $("#remove-from-favorites");
     $removeFromFavorites.data("stop-id", stopId);
 
-    var $backButton = $("#back-button");
-    $backButton.data("stop-id", stopId);
-    $backButton.data("route-id", routeId);
-    $backButton.data("route-name", routeName);
-    $backButton.data("stop-name", stopName);
+    $slctBackButton.data("stop-id", stopId);
+    $slctBackButton.data("route-id", routeId);
+    $slctBackButton.data("route-name", routeName);
+    $slctBackButton.data("stop-name", stopName);
 
     var favorites = window.localStorage.getItem("favorites");
     if (typeof favorites !== 'undefined' && favorites !== null && $.isEmptyObject($.parseJSON(favorites)) !== true) {
@@ -557,7 +550,7 @@ function getInfo(routeId, stopId) {
 
 /* add service alerts */
 function addServiceAlerts(data) {
-    $("#alerts-popup").show();
+    $slctAlertsPopup.show();
     $("#popupAlerts").empty();
     $.each(data, function (key, value) {
         $("#popupAlerts").append($("<p/>").text(value.Description));
@@ -569,24 +562,23 @@ var regex = /T[0-9][0-9]:[0-9][0-9]/g;
 var regex_route_name = /\_[a-zA-Z0-9]+/g;
 
 function addInfo(data, lclRouteId, lclStopId) {
-    var $ul = $("#info");
-    $ul.listview("refresh");
+    $slctInfo.listview("refresh");
     $.each(data, function (key, value) {
         console.log(value);
-        $ul.append($("<li/>").attr("data-role", "list-divider").text(key.match(regex_route_name)[0].substring(1)).append($("<button/>").data("route-id", key).data("stop-id", lclStopId).attr("class", "see-on-map ui-btn ui-mini ui-corner-all").text("Map")));
+        $slctInfo.append($("<li/>").attr("data-role", "list-divider").text(key.match(regex_route_name)[0].substring(1)).append($("<button/>").data("route-id", key).data("stop-id", lclStopId).attr("class", "see-on-map ui-btn ui-mini ui-corner-all").text("Map")));
         var i = 0;
         $.each(value, function (k, v) {
             if (i < 3) {
                 if (v.ProgressStatus === "prevTrip") {
-                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (+ scheduled layover at terminal)")).append($("<p/>").text(v.DestinationName)));
+                    $slctInfo.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (+ scheduled layover at terminal)")).append($("<p/>").text(v.DestinationName)));
                 } else if (v.ProgressStatus === "layover,prevTrip" && v.OriginAimedDepartureTime) {
                     var time = v.OriginAimedDepartureTime.match(regex)[0].substring(1);
                     // console.log(time[0].substring(1));
-                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal, scheduled to depart " + time + ")")).append($("<p/>").text(v.DestinationName)));
+                    $slctInfo.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal, scheduled to depart " + time + ")")).append($("<p/>").text(v.DestinationName)));
                 } else if (v.ProgressStatus === "layover") {
-                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal)")).append($("<p/>").text(v.DestinationName)));
+                    $slctInfo.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance + " (at terminal)")).append($("<p/>").text(v.DestinationName)));
                 } else {
-                    $ul.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance)).append($("<p/>").text(v.DestinationName)));
+                    $slctInfo.append($("<li/>").append('<img src="resources/images/bus_icon.svg" class="ui-li-icon">').append($("<p/>").attr("style", "color: #16a085; text-transform: uppercase; font-weight: bold;").text(v.MonitoredCall.Extensions.Distances.PresentableDistance)).append($("<p/>").text(v.DestinationName)));
                 }
                 i = i + 1;
             } else {
@@ -594,17 +586,16 @@ function addInfo(data, lclRouteId, lclStopId) {
             }
         });
     });
-    $ul.listview("refresh");
-    $ul.trigger("updatelayout");
+    $slctInfo.listview("refresh");
+    $slctInfo.trigger("updatelayout");
 }
 
 /* refresh button handler */
 function handleRefreshBtn(routeId, stopId) {
-    var $this = $("#refresh");
-    $this.data("route-id", routeId).data("stop-id", stopId).attr('disabled', 'disabled').html('Refresh (30s)');
+    $slctRefresh.data("route-id", routeId).data("stop-id", stopId).attr('disabled', 'disabled').html('Refresh (30s)');
     window.clearTimeout(globalTimer);
     globalTimer = window.setTimeout(function () {
-        $this.removeAttr('disabled').html('Refresh');
+        $slctRefresh.removeAttr('disabled').html('Refresh');
     }, 30000);
 }
 
@@ -633,7 +624,7 @@ var onLocSuccess = function (position) {
     console.log('Latitude: ' + position.coords.latitude + '\n' +
         'Longitude: ' + position.coords.longitude);
 
-    $("#favorites h3").text("Local stops:");
+    $slctFavorites.find("h3").text("Local stops:");
     getLocalStops(position.coords.latitude, position.coords.longitude);
 };
 
@@ -657,20 +648,19 @@ function getLocalStops(lclLat, lclLot) {
 
 /* add stops for location */
 function addLocalStops(data) {
-    var $ulLocalStops = $("#local-stops-list");
-    $ulLocalStops.listview("refresh");
+    $slctLocalStopsList.listview("refresh");
     if (data.data.stops.length > 0) {
         $.each(data.data.stops, function (key, value) {
-            $ulLocalStops.append(
+            $slctLocalStopsList.append(
                 $("<li/>").data("stop-code", value.code)
                 .append($("<a/>").text(value.name))
             );
         });
     } else {
-        $ulLocalStops.append($("<p/>").text("No data available"));
+        $slctLocalStopsList.append($("<p/>").text("No data available"));
     }
-    $ulLocalStops.listview("refresh");
-    $ulLocalStops.trigger("updatelayout");
+    $slctLocalStopsList.listview("refresh");
+    $slctLocalStopsList.trigger("updatelayout");
 }
 
 function onLocError(error) {
@@ -829,13 +819,15 @@ var $slctByRoute,
     $slctInfo,
     $slctFavoritesList,
     $slctLocalStopsList,
-    $slctAlertsPopup;
+    $slctAlertsPopup,
+    $slctAutocomplete;
 
 /* function which gets called when all the dom elements can be accessed */
 $(document).ready(function () {
     "use strict";
 
     /* pre-processing DOM elements */
+    $slctAutocomplete = $("#autocomplete");
     $slctByRoute = $("#by-route");
     $slctByStop = $("#by-stop");
     $slctByGeocode = $("#by-geocode");
@@ -856,6 +848,7 @@ $(document).ready(function () {
     $slctFavoritesList = $("#favorites-list");
     $slctLocalStopsList = $("#local-stops-list");
     $slctAlertsPopup = $("#alerts-popup");
+
 
 
 
@@ -900,7 +893,7 @@ $(document).ready(function () {
     });
 
     /* autocomplete `on click` event handler */
-    $("#autocomplete").off('mouseover', 'li', function () {
+    $slctAutocomplete.off('mouseover', 'li', function () {
         return false;
     }).on("click", "li", function (e) {
         e.preventDefault();
@@ -919,7 +912,7 @@ $(document).ready(function () {
 
 
     /* click event handler for routes */
-    $("#routes").on("click", "li", function (e) {
+    $slctRoutes.on("click", "li", function (e) {
         e.preventDefault();
         var $this = $(this);
         console.log("click");
@@ -934,16 +927,16 @@ $(document).ready(function () {
 
 
     /* click event handler for the 'refresh' button */
-    $("#refresh").on("click", function (e) {
+    $slctRefresh.on("click", function (e) {
         e.preventDefault();
         console.log("refresh");
-        $("#info").empty();
+        $slctInfo.empty();
         getInfo($(this).data("route-id"), $(this).data("stop-id"));
 
         $(this).attr('disabled', 'disabled').html('Refresh (30s)');
         window.clearTimeout(globalTimer);
         globalTimer = window.setTimeout(function () {
-            $("#refresh").removeAttr('disabled').html('Refresh');
+            $slctRefresh.removeAttr('disabled').html('Refresh');
         }, 30000);
     });
 
@@ -955,13 +948,13 @@ $(document).ready(function () {
 
 
     /* click event handlers for nearby stops as well as routes */
-    $("#nearby-stops").on("click", "li", function (e) {
+    $slctNearbyStops.on("click", "li", function (e) {
         e.preventDefault();
         var $this = $(this);
         search($this.data("stop-code"));
     });
 
-    $("#nearby-routes").on("click", "li", function (e) {
+    $slctNearbyRoutes.on("click", "li", function (e) {
         e.preventDefault();
         var $this = $(this);
         search($this.data("route-name"));
@@ -990,7 +983,7 @@ $(document).ready(function () {
 
 
     /* click handler for favorite items */
-    $("#favorites-list").on("click", "li", function (e) {
+    $slctFavoritesList.on("click", "li", function (e) {
         e.preventDefault();
         var stopId = $(this).data("stop-id"),
             stopName = $(this).data("stop-name");
@@ -1051,7 +1044,7 @@ $(document).ready(function () {
         showLocalStops();
     });
 
-    $("#local-stops-list").on("click", "li", function (e) {
+    $slctLocalStopsList.on("click", "li", function (e) {
         e.preventDefault();
         var $this = $(this);
         search($this.data("stop-code"));
@@ -1106,7 +1099,7 @@ $(document).ready(function () {
         }, 30000);
     });
 
-    $("#back-button").on("click", function (e) {
+    $slctBackButton.on("click", function (e) {
         e.preventDefault();
         var $this = $(this);
         handleAtStopResult($this.data("route-id"), $this.data("route-name"), $this.data("stop-id"), $this.data("stop-name"));
@@ -1120,7 +1113,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#info").on("click", "button.see-on-map", function (e) {
+    $slctInfo.on("click", "button.see-on-map", function (e) {
         e.preventDefault();
         var $this = $(this);
 
@@ -1196,16 +1189,6 @@ $(document).ready(function () {
         showMap();
     });
 });
-
-
-
-//$(document).on("click", "button.see-on-map", function () {
-//    $this = $(this);
-//    console.log("see on map!");
-//    console.log($this.data("route-id"));
-//    console.log($this.data("stop-id"));
-//});
-
 
 /* cache handler */
 /*
