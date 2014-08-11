@@ -581,7 +581,7 @@ function addServiceAlerts(data) {
     $("#alerts-popup").show();
     $("#popupAlerts").empty();
     $.each(data, function (key, value) {
-        $("#popupAlerts").append($("<p/>").text(value.Summary));
+        $("#popupAlerts").append($("<p/>").text(value.Description));
     });
 }
 
