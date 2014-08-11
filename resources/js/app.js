@@ -439,7 +439,7 @@ function addNearbyRoutes(data) {
                 );
             } else {
                 $ulRoutes.append(
-                    $("<li/>").data("route-name", value.shortName).append($("<a/>").text(value.shortName + " - " + value.description))
+                    $("<li/>").data("route-name", value.shortName).append($("<a/>").text(value.shortName))
                 );
             }
         });
