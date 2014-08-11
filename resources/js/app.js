@@ -96,7 +96,8 @@ function switchView(view) {
         $slctNearbyRoutes = $("#nearby-routes"),
         $slctInfo = $("#info"),
         $slctFavoritesList = $("#favorites-list"),
-        $slctLocalStopsList = $("#local-stops-list");
+        $slctLocalStopsList = $("#local-stops-list"),
+        $slctAlertsPopup = $("#alerts-popup");
 
     $slctByRoute.hide();
     $slctByStop.hide();
@@ -110,6 +111,7 @@ function switchView(view) {
     $slctHome.hide();
     $slctBackButton.hide();
     $slctSearch.show();
+    $slctAlertsPopup.hide();
 
     $slctDirections.empty();
     $slctRoutes.empty();
@@ -560,13 +562,26 @@ function getInfo(routeId, stopId) {
             });
 
             addInfo(groupByLineRef, routeId, stopId);
-        } else {
-            console.log("no data available");
-            showError("No data available");
         }
+
+
+        if (response.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {
+            addServiceAlerts(response.Siri.ServiceDelivery.SituationExchangeDelivery[0].Situations.PtSituationElement);
+        }
+
+
     }, "jsonp").fail(function () {
         console.log("stop monitoring request has failed");
         showError("No data available");
+    });
+}
+
+/* add service alerts */
+function addServiceAlerts(data) {
+    $("#alerts-popup").show();
+    $("#popupAlerts").empty();
+    $.each(data, function (key, value) {
+        $("#popupAlerts").append($("<p/>").text(value.Summary));
     });
 }
 
