@@ -93,6 +93,10 @@ function switchView(view) {
     $slctAlertsPopup.hide();
 
     //    $slctDirections.empty();
+
+    $slctDirections.collapsibleset("refresh");
+    $slctCollapsible0.collapsible("collapse");
+    $slctCollapsible1.collapsible("collapse");
     $slctCollapsible0.hide();
     $slctCollapsible1.hide();
     $slctCollapsibleListview0.empty();
@@ -257,9 +261,6 @@ function handleRouteResult(matches) {
     console.log("handling route result");
 
     switchView("RouteResult");
-
-    $("#collapsible0").collapsible("collapse");
-    $("#collapsible0").collapsible("collapse");
 
     $slctByRoute.find(".header").text(matches.shortName + " " + matches.longName);
     $slctByRoute.find(".auxiliary").text("Directions:");
@@ -560,9 +561,9 @@ function getInfo(routeId, stopId) {
 /* add service alerts */
 function addServiceAlerts(data) {
     $slctAlertsPopup.show();
-    $("#popupAlerts").empty();
+    $("#popupAlertsContent").empty();
     $.each(data, function (key, value) {
-        $("#popupAlerts").append($("<p/>").text(value.Description));
+        $("#popupAlertsContent").append($("<p/>").text(value.Description));
     });
 }
 
