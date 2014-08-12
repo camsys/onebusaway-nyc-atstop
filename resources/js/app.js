@@ -92,7 +92,11 @@ function switchView(view) {
     $slctSearch.show();
     $slctAlertsPopup.hide();
 
-    $slctDirections.empty();
+    //    $slctDirections.empty();
+    $slctCollapsible0.hide();
+    $slctCollapsible1.hide();
+    $slctCollapsibleListview0.empty();
+    $slctCollapsibleListview1.empty();
     $slctRoutes.empty();
     $slctNearbyStops.empty();
     $slctNearbyRoutes.empty();
@@ -254,6 +258,9 @@ function handleRouteResult(matches) {
 
     switchView("RouteResult");
 
+    $("#collapsible0").collapsible("collapse");
+    $("#collapsible0").collapsible("collapse");
+
     $slctByRoute.find(".header").text(matches.shortName + " " + matches.longName);
     $slctByRoute.find(".auxiliary").text("Directions:");
     $.each(matches.directions, function (key, value) {
@@ -281,32 +288,34 @@ function getStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination) {
 
 /* add stops (direction-based) */
 function addStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination, data) {
-    $slctDirections.append(
-        $("<div/>").attr("data-role", "collapsible")
-        .append($('<h4/>').text("To " + lclDestination))
-        .append($('<ul/>')
-            .attr("data-role", "listview")
-            .attr("id", "collapsibleListview" + lclDirectionId))
-    ).trigger("create");
+    console.log("adding");
 
-    $.each(data, function (key, value) {
-        $("#collapsibleListview" + lclDirectionId).append(
-            $("<li/>").data("route-id", lclRouteId)
-            .data("stop-id", value.id)
-            .data("route-name", lclRouteName)
-            .data("stop-name", value.name)
-            .append(
-                $("<a/>").text(value.name)
-            ).on("click", function (e) {
-                e.preventDefault();
-                var $this = $(this);
-                console.log("click");
-                handleAtStopResult($this.data("route-id"), $this.data("route-name"), $this.data("stop-id"), $this.data("stop-name"));
-            })
-        );
-    });
-    $("#collapsibleListview" + lclDirectionId).listview("refresh");
-    $slctDirections.collapsibleset("refresh");
+    if (lclDirectionId == 0) {
+        $("#collapsible0 h3").find("a").text("To " + lclDestination);
+        $.each(data, function (key, value) {
+            console.log(value.name);
+
+            $slctCollapsibleListview0.append($("<li/>").data("route-id", lclRouteId)
+                .data("stop-id", value.id)
+                .data("route-name", lclRouteName)
+                .data("stop-name", value.name).append($("<a/>").text(value.name)));
+        });
+        $slctCollapsibleListview0.listview("refresh");
+        $slctCollapsible0.show();
+
+    } else {
+        $("#collapsible1 h3").find("a").text("To " + lclDestination);
+        $.each(data, function (key, value) {
+            console.log(value.name);
+            $slctCollapsibleListview1.append($("<li/>").data("route-id", lclRouteId)
+                .data("stop-id", value.id)
+                .data("route-name", lclRouteName)
+                .data("stop-name", value.name).append($("<a/>").text(value.name)));
+        });
+        $slctCollapsibleListview1.listview("refresh");
+        $slctDirections.collapsibleset("refresh");
+        $slctCollapsible1.show();
+    }
 }
 
 
@@ -820,7 +829,11 @@ var $slctByRoute,
     $slctFavoritesList,
     $slctLocalStopsList,
     $slctAlertsPopup,
-    $slctAutocomplete;
+    $slctAutocomplete,
+    $slctCollapsibleListview0,
+    $slctCollapsibleListview1,
+    $slctCollapsible0,
+    $slctCollapsible1;
 
 /* function which gets called when all the dom elements can be accessed */
 $(document).ready(function () {
@@ -848,7 +861,32 @@ $(document).ready(function () {
     $slctFavoritesList = $("#favorites-list");
     $slctLocalStopsList = $("#local-stops-list");
     $slctAlertsPopup = $("#alerts-popup");
+    $slctCollapsibleListview0 = $("#collapsibleListview0");
+    $slctCollapsibleListview1 = $("#collapsibleListview1");
+    $slctCollapsible0 = $("#collapsible0");
+    $slctCollapsible1 = $("#collapsible1");
 
+
+
+
+
+
+
+
+
+    $slctCollapsibleListview0.on("click", "li", function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        console.log("click");
+        handleAtStopResult($this.data("route-id"), $this.data("route-name"), $this.data("stop-id"), $this.data("stop-name"));
+    });
+
+    $slctCollapsibleListview1.on("click", "li", function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        console.log("click");
+        handleAtStopResult($this.data("route-id"), $this.data("route-name"), $this.data("stop-id"), $this.data("stop-name"));
+    });
 
 
 
