@@ -17,7 +17,7 @@
         Get information about when the next bus will arrive at your stop.
     </description>
 
-    <author href="https://github.com/khfayzullaev" email="khurshidfayzullaev@yahoo.com">
+    <author href="http://khfayzullaev.bitbucket.org/atstop" email="khurshidfayzullaev@yahoo.com">
         Khurshid Fayzullaev
     </author>
 
@@ -38,8 +38,6 @@
 
     <!-- permissions -->
     <preference name="permissions" value="none" />
-    <feature name="http://api.phonegap.com/1.0/geolocation" />
-    <feature name="http://api.phonegap.com/1.0/network" />
 
     <!-- access network information -->
     <!-- Supported in Phonegap 3.3.0 and + -->
@@ -47,11 +45,11 @@
     <gap:plugin name="org.apache.cordova.network-information" />
 
     <!-- notifications -->
-    <gap:plugin name="org.apache.cordova.dialogs" version="0.2.6" />
+    <gap:plugin name="org.apache.cordova.dialogs" />
 
     <!-- clean cache -->
     <!-- Supported in Phonegap 3.3.0 and + -->
-    <gap:plugin name="com.sharinglabs.cordova.plugin.cache" version="1.0.0" />
+    <gap:plugin name="com.sharinglabs.cordova.plugin.cache" />
 
     <!-- hide the status bar on iOS 7 devices -->
     <!-- <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />-->

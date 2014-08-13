@@ -44,13 +44,6 @@ hr {
 }
 */
 
-/* loader */
-
-.ui-loading .ui-loader {
-    /*background: none;*/
-    border: none;
-    color: #16a085;
-}
 /* content */
 
 .ui-content {
@@ -73,36 +66,6 @@ hr {
     margin: -10px;
     padding-bottom: 20px;
 }
-/*remove hover*/
-
-/*
-html .ui-page-theme-a .ui-btn:hover,
-html .ui-bar-a .ui-btn:hover,
-html .ui-body-a .ui-btn:hover,
-html body .ui-group-theme-a .ui-btn:hover,
-html body .ui-btn.ui-btn-a:hover {
-    background: #2c3e50;
-    border-color: #2c3e50;
-}
-*/
-
-/* active */
-
-/*
-html .ui-page-theme-a .ui-btn:active,
-html .ui-bar-a .ui-btn:active,
-html .ui-body-a .ui-btn:active,
-html body .ui-group-theme-a .ui-btn:active,
-html body .ui-btn.ui-btn-a:active {
-    background: #456280;
-    border-color: #456280;
-}
-#home-button {
-    cursor: pointer;
-    cursor: hand;
-}
-*/
-
 /* leaflet-control */
 
 .leaflet-control a {
