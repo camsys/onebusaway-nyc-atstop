@@ -78,6 +78,7 @@ function showError(msg) {
 function switchView(view) {
     $.mobile.loading("hide");
 
+    $slctHomeButton.show();
     $slctByRoute.hide();
     $slctByStop.hide();
     $slctByGeocode.hide();
@@ -132,6 +133,7 @@ function switchView(view) {
         $slctFavorites.show();
         break;
     case "Map":
+        $slctHomeButton.hide();
         $slctMap.show();
         $slctBackButton.show();
         $slctSearch.hide();
@@ -292,6 +294,7 @@ function addStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination, data
     console.log("adding");
 
     if (lclDirectionId == 0) {
+        $slctCollapsible0.show();
         $("#collapsible0 h3").find("a").text("To " + lclDestination);
         $.each(data, function (key, value) {
             console.log(value.name);
@@ -302,9 +305,9 @@ function addStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination, data
                 .data("stop-name", value.name).append($("<a/>").text(value.name)));
         });
         $slctCollapsibleListview0.listview("refresh");
-        $slctCollapsible0.show();
 
     } else {
+        $slctCollapsible1.show();
         $("#collapsible1 h3").find("a").text("To " + lclDestination);
         $.each(data, function (key, value) {
             console.log(value.name);
@@ -315,7 +318,6 @@ function addStops(lclRouteId, lclRouteName, lclDirectionId, lclDestination, data
         });
         $slctCollapsibleListview1.listview("refresh");
         $slctDirections.collapsibleset("refresh");
-        $slctCollapsible1.show();
     }
 }
 
@@ -834,13 +836,15 @@ var $slctByRoute,
     $slctCollapsibleListview0,
     $slctCollapsibleListview1,
     $slctCollapsible0,
-    $slctCollapsible1;
+    $slctCollapsible1,
+    $slctHomeButton;
 
 /* function which gets called when all the dom elements can be accessed */
 $(document).ready(function () {
     "use strict";
 
     /* pre-processing DOM elements */
+    $slctHomeButton = $("#home-button");
     $slctAutocomplete = $("#autocomplete");
     $slctByRoute = $("#by-route");
     $slctByStop = $("#by-stop");
