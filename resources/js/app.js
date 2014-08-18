@@ -546,12 +546,18 @@ function getInfo(routeId, stopId) {
             });
 
             addInfo(groupByLineRef, routeId, stopId);
-        }
 
-
-        if (response.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {
+            if (response.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {
+                addServiceAlerts(response.Siri.ServiceDelivery.SituationExchangeDelivery[0].Situations.PtSituationElement);
+            }
+        } else if (response.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {
             addServiceAlerts(response.Siri.ServiceDelivery.SituationExchangeDelivery[0].Situations.PtSituationElement);
+        } else {
+            console.log("stop monitoring request has return empty data");
+            showError("No data available");
         }
+
+
 
 
     }, "jsonp").fail(function () {
