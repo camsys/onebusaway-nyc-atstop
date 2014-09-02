@@ -6,7 +6,8 @@ var config = {
     radius: 200,
     logger: true,
     MaximumStopVisits: 15,
-    MinimumStopVisitsPerLine: 2
+    MinimumStopVisitsPerLine: 2,
+    TFToken: ""
 };
 
 /* enable or disable the logging */

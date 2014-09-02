@@ -11,6 +11,15 @@
     <!-- <gap:platform name="blackberry" /> -->
     <!-- <gap:platform name="winphone" /> -->
 
+    <preference name="EnableViewportScale" value="true" />
+    <meta name='viewport' content='width=device-width, height=device-height, initial-scale=1, user-scalable=no' />
+    <preference name="TopActivityIndicator" value="white" />
+    <preference name="SuppressesIncrementalRendering" value="true" />
+
+    <!-- TestFlight -->
+    <!--    <gap:plugin name="com.testflightapp.cordova-plugin" version="2.0.0" />-->
+    <gap:splash src="resources/images/splashes/splash_720x1280.png" gap:platform="ios" width="640" height="1136" />
+
     <name>At Stop</name>
 
     <description>
@@ -52,12 +61,12 @@
     <gap:plugin name="com.sharinglabs.cordova.plugin.cache" />
 
     <!-- hide the status bar on iOS 7 devices -->
-    <!-- <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />-->
-    <!-- <gap:config-file platform="ios" parent="UIStatusBarHidden">-->
-    <!--    <true/>-->
-    <!-- </gap:config-file>-->
+    <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
+    <gap:config-file platform="ios" parent="UIStatusBarHidden">
+        <true/>
+    </gap:config-file>
 
-    <!-- <gap:config-file platform="ios" parent="UIViewControllerBasedStatusBarAppearance">-->
-    <!--    <false/>-->
-    <!-- </gap:config-file>-->
+    <gap:config-file platform="ios" parent="UIViewControllerBasedStatusBarAppearance">
+        <false/>
+    </gap:config-file>
 </widget>

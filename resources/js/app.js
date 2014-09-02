@@ -730,6 +730,18 @@ $(document).on("online", function () {
 /* PhoneGap is loaded and it is now safe to make calls PhoneGap methods */
 function onDeviceReady() {
     console.log("device is ready");
+
+    // TestFlight Inint and Test
+    var tf = new TestFlight();
+    tf.submitFeedback(successCallback, failureCallback, 'test feedback');
+}
+
+function successCallback() {
+    console.log("test feedback has been sent");
+}
+
+function failureCallback() {
+    console.log("test feedback has failed");
 }
 
 /* on online */
@@ -1117,9 +1129,7 @@ $(document).ready(function () {
     var markers = new L.FeatureGroup();
     var stop = new L.marker();
 
-    var stamenLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
-        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
-    }).addTo(map);
+    var stamenLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {}).addTo(map);
 
     polylinesGroup.bringToBack();
 
