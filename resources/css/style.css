@@ -20,7 +20,7 @@ hr {
 /* remove all shadows */
 
 * {
-    font: 18px Bariol_Regular !important;
+    font: 16px Bariol_Regular !important;
     box-shadow: none !important;
 }
 /* btns style */
@@ -47,7 +47,7 @@ hr {
 
 .ui-content {
     position: absolute;
-    top: 50px;
+    top: 43px;
     right: 0;
     bottom: 0;
     left: 0;
@@ -63,6 +63,7 @@ hr {
 #map {
     height: 100%;
     margin: -10px;
+    margin-top: -15px;
     padding-bottom: 20px;
 }
 /* leaflet-control */
