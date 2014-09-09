@@ -1119,17 +1119,22 @@ $(document).ready(function () {
 
     /* Map handling */
     /* show the map */
-    var layerMain = new L.StamenTileLayer("terrain");
     var map = new L.Map('map');
-    map.addLayer(layerMain);
 
-    //    var markers = new L.MarkerClusterGroup();
+    var mapLink =
+        '<a href="http://openstreetmap.org">OpenStreetMap< /a>';
+    var wholink =
+        '<a href="http://stamen.com">Stamen Design</a>';
+    L.tileLayer(
+        'http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.jpg', {
+            attribution: '&copy; ' + mapLink + ' Contributors & ' + wholink,
+        }).addTo(map);
+
+    // var markers = new L.MarkerClusterGroup();
     var polylinesGroup = new L.FeatureGroup();
     var stopMarkers = new L.FeatureGroup();
     var markers = new L.FeatureGroup();
     var stop = new L.marker();
-
-    var stamenLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {}).addTo(map);
 
     polylinesGroup.bringToBack();
 
