@@ -1122,7 +1122,7 @@ $(document).ready(function () {
     var map = new L.Map('map');
 
     var mapLink =
-        '<a href="http://openstreetmap.org">OpenStreetMap< /a>';
+        '<a href="http://openstreetmap.org">OpenStreetMap</a>';
     var wholink =
         '<a href="http://stamen.com">Stamen Design</a>';
     L.tileLayer(
