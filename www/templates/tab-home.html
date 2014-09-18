@@ -1,0 +1,16 @@
+<ion-view title="Search">
+    <ion-content>
+        <div class="list">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="search" placeholder="Search" ng-change="autocomplete()" ng-enter="search(data.searchKey)" ng-model="data.searchKey">
+            </label>
+
+            <ion-list>
+                <ion-item ng-repeat="item in data.results" ng-click="searchAndGo(item)">
+                    {{item}}
+                </ion-item>
+            </ion-list>
+        </div>
+    </ion-content>
+</ion-view>

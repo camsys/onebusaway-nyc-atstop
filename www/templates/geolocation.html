@@ -1,0 +1,19 @@
+<ion-view title="Nearby Routes &amp; Stops">
+    <ion-content>
+        <p>Location: {{data.address}}</p>
+
+        <p>Routes:</p>
+        <ion-list>
+            <ion-item ng-repeat="item in data.routes" href="#/tab/route/{{item.id}}/{{item.shortName}}">
+                {{item.shortName}}
+            </ion-item>
+        </ion-list>
+
+        <p>Stops:</p>
+        <ion-list>
+            <ion-item ng-repeat="item in data.stops" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+                {{item.name}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>s

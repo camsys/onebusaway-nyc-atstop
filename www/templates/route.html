@@ -1,0 +1,19 @@
+<ion-view title="Route Stops">
+    <ion-content>
+        <p>Route: {{data.routeName}}</p>
+
+        <h2>{{data.directionName}}</h2>
+        <ion-list>
+            <ion-item ng-repeat="item in data.direction" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+                {{item.name}}
+            </ion-item>
+        </ion-list>
+
+        <h2>{{data.directionName_}}</h2>
+        <ion-list>
+            <ion-item ng-repeat="item in data.direction_" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+                {{item.name}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

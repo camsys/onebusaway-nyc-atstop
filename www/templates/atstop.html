@@ -1,0 +1,30 @@
+<ion-view title="At Stop">
+    <ion-content>
+        <p>Stop: {{data.stopName}}</p>
+
+        <button class="button button-full button-positive" ng-click="refresh()" ng-disabled="data.val">
+            Refresh
+        </button>
+
+        <button class="button button-full button-positive" ng-click="addToFavorites()">
+            Add
+        </button>
+
+        <button class="button button-full button-positive" ng-click="removeFromFavorites()">
+            Remove
+        </button>
+
+        <p>Arriving Buses:</p>
+        <ion-list>
+            <ion-item ng-repeat="(routeId, info) in data.results">
+                <a class="button" href="#/tab/map/{{routeId}}">Map</a>
+                {{info.name}}
+                <ion-list>
+                    <ion-item ng-repeat="item in info.distances">
+                        {{item.distance}}
+                    </ion-item>
+                </ion-list>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

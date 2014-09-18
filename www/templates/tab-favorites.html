@@ -1,0 +1,11 @@
+<ion-view title="Favorites">
+    <ion-content>
+        <h1>Favorites</h1>
+
+        <ion-list>
+            <ion-item ng-repeat="item in data.favorites" href="#/tab/atstop/{{item.stopId}}/{{item.stopName}}">
+                {{item.stopName}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
