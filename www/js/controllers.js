@@ -306,5 +306,41 @@ angular.module('starter.controllers', [])
         })();
 }])
 
-.controller('NearbyStopsCtrl', ['$scope',
-    function ($scope) {}]);
+.controller('NearbyStopsCtrl', ['$scope', 'GeolocationService', '$cordovaGeolocation', '$ionicLoading', '$q',
+    function ($scope, GeolocationService, $cordovaGeolocation, $ionicLoading, $q) {
+        $scope.data = {
+            "stops": []
+        };
+
+        $scope.refresh = function () {
+            $scope.getNearbyStops();
+        };
+
+        $scope.getNearbyStops = function () {
+            $ionicLoading.show();
+
+            $cordovaGeolocation
+                .getCurrentPosition()
+                .then(function (position) {
+                    var lat = position.coords.latitude
+                    var long = position.coords.longitude
+
+                    var getStops = GeolocationService.getStops(lat, lon).then(function (results) {
+                        $scope.data.stops = results;
+                    });
+
+                    $q.all([getStops]).then(function () {
+                        $ionicLoading.hide();
+                    });
+                }, function (err) {
+                    $scope.data.stops = [];
+                    $ionicLoading.hide();
+                    console.log('error');
+                });
+        }
+
+        $scope.init = (function () {
+            $scope.getNearbyStops();
+        })();
+
+    }]);
