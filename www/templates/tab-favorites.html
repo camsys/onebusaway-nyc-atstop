@@ -1,19 +1,13 @@
 <ion-view title="Favorites">
-
-    <ion-nav-buttons side="left">
-        <button class="button button-clear" ng-click="shouldShowDelete = !shouldShowDelete">
-            <i class="icon ion-trash-b"></i>
-        </button>
-    </ion-nav-buttons>
-
     <ion-content>
         <h1>Favorites</h1>
 
         <ion-list show-delete="shouldShowDelete">
             <ion-item ng-repeat="item in data.favorites " href="#/tab/atstop/{{item.stopId}}/{{item.stopName}}">
                 {{item.stopName}}
-
-                <ion-delete-button class="ion-minus-circled" ng-click="remove(item.stopId)"></ion-delete-button>
+                <ion-option-button class="button-positive" ng-click="remove(item.stopId)">
+                    <i class="icon ion-trash-b"></i>
+                </ion-option-button>
             </ion-item>
         </ion-list>
 
