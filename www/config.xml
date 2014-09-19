@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.khurshidfayzullaev.atstop" version="1.0.0">
+    <name>At Stop</name>
+
+    <description>
+        A hybrid mobile app that provides information about when the next bus will arrive at your stop.
+    </description>
+
+    <author href="http://khfayzullaev.bitbucket.org/" email="khurshidfayzullaev@yahoo.com">
+        Khurshid N. Fayzullaev
+    </author>
+
+    <!--  Preferences  -->
+    <preference name="phonegap-version" value="3.5.0" />
+    <preference name="orientation" value="portrait" />
+
+    <!--  Preferences / iOS only -->
+    <preference name="target-device" value="handset" />
+    <preference name="detect-data-types" value="false" />
+    <preference name="deployment-target" value="6.0" />
+
+    <!--  Preferences / Android only -->
+
+    <!-- Plugins -->
+    <gap:plugin name="org.apache.cordova.device" />
+    <gap:plugin name="org.apache.cordova.geolocation" />
+    <gap:plugin name="org.apache.cordova.network-information" />
+    <gap:plugin name="org.apache.cordova.statusbar" />
+</widget>

@@ -42,6 +42,7 @@ angular.module('starter.controllers', [])
         };
 
         $scope.drawBuses = function (route) {
+
             $ionicLoading.show();
 
             $scope.val = true;
@@ -64,6 +65,7 @@ angular.module('starter.controllers', [])
                 $scope.markers = buses;
                 $ionicLoading.hide();
             });
+
         };
 
         $scope.refresh = function () {
@@ -71,6 +73,8 @@ angular.module('starter.controllers', [])
         };
 
         $scope.map = function () {
+
+
             angular.extend($scope, {
                 center: {
                     lat: 40.7142700,
@@ -87,6 +91,7 @@ angular.module('starter.controllers', [])
                 markers: {},
                 paths: {}
             });
+
         };
 
         $scope.init = (function () {
@@ -96,9 +101,13 @@ angular.module('starter.controllers', [])
         })();
 }])
 
-.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$cordovaNetwork',
-    function ($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $cordovaNetwork) {
-        $scope.init = (function () {})();
+.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform',
+
+    function ($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform) {
+
+        $scope.init = (function () {
+            // do nothing ...
+        })();
 
         $scope.go = function (path) {
             $location.path(path);
@@ -110,6 +119,21 @@ angular.module('starter.controllers', [])
         };
 
         $scope.autocomplete = function () {
+
+            if (window.Connection) {
+                if (navigator.connection.type == Connection.NONE) {
+                    $ionicPopup.alert({
+                        title: "Internet Disconnected",
+                        content: "The internet is disconnected on your device."
+                    })
+                        .then(function (result) {
+                            if (result) {
+                                ionic.Platform.exitApp();
+                            }
+                        });
+                }
+            }
+
             $ionicLoading.show();
             SearchService.autocomplete($scope.data.searchKey).then(
                 function (matches) {
@@ -120,6 +144,7 @@ angular.module('starter.controllers', [])
         };
 
         $scope.searchAndGo = function (term) {
+
             $ionicLoading.show();
             SearchService.search(term).then(
                 function (matches) {
@@ -139,6 +164,7 @@ angular.module('starter.controllers', [])
                     $ionicLoading.hide();
                 }
             );
+
         };
 }])
 
@@ -327,6 +353,8 @@ angular.module('starter.controllers', [])
 
                     var getStops = GeolocationService.getStops(lat, lon).then(function (results) {
                         $scope.data.stops = results;
+
+                        console.log(results);
                     });
 
                     $q.all([getStops]).then(function () {
@@ -335,12 +363,15 @@ angular.module('starter.controllers', [])
                 }, function (err) {
                     $scope.data.stops = [];
                     $ionicLoading.hide();
-                    console.log('error');
+                    console.log(err);
+                }, {
+                    maximumAge: 600000,
+                    timeout: 10000,
+                    enableHighAccuracy: false
                 });
         }
 
         $scope.init = (function () {
             $scope.getNearbyStops();
         })();
-
-    }]);
+}]);

@@ -1,5 +1,24 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova'])
 
+.run(function ($ionicPlatform, $ionicPopup) {
+    $ionicPlatform.ready(function () {
+        if (window.Connection) {
+            if (navigator.connection.type == Connection.NONE) {
+                $ionicPopup.alert({
+                    title: "Internet Disconnected",
+                    content: "The internet is disconnected on your device."
+                })
+                    .then(function (result) {
+                        if (result) {
+                            // ionic.Platform.exitApp();
+                            // do nothing ...
+                        }
+                    });
+            }
+        }
+    });
+})
+
 .constant('$ionicLoadingConfig', {
     template: 'Loading',
     showBackdrop: false
