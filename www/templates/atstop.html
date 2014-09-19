@@ -1,14 +1,16 @@
 <ion-view title="At Stop">
-    <ion-content>
-        <p>Stop: {{data.stopName}}</p>
-
-        <button class="button button-full button-positive" ng-click="refresh()" ng-disabled="data.val">
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" ng-click="refresh()" ng-disabled="data.val">
             <i class="icon ion-refresh"></i>
         </button>
 
-        <button class="button button-full button-positive" ng-click="addToFavorites()" ng-disabled="data.inFavorites">
+        <button class="button button-clear" ng-click="addToFavorites()" ng-disabled="data.inFavorites">
             <i class="icon ion-star"></i>
         </button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <p>Stop: {{data.stopName}}</p>
 
         <p>Arriving Buses:</p>
         <ion-list>
