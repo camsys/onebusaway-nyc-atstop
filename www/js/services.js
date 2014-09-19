@@ -42,10 +42,16 @@ angular.module('starter.services', ['ionic'])
         return deferred.promise;
     };
 
+    var inFavorites = function (stopId) {
+        var data = JSON.parse($window.localStorage['favorites'] || '{}');
+        return !(angular.isUndefined(data[stopId]) || data[stopId] === null);
+    };
+
     return {
         add: add,
         remove: remove,
-        get: get
+        get: get,
+        inFavorites: inFavorites
     }
 })
 

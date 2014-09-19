@@ -163,12 +163,14 @@ angular.module('starter.controllers', [])
     function ($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout) {
         $scope.data = {
             "val": true,
+            "inFavorites": false,
             "results": [],
             "stopName": $stateParams.stopName
         };
 
         $scope.addToFavorites = function () {
             FavoritesService.add($stateParams.stopId, $stateParams.stopName);
+            $scope.data.inFavorites = true;
         };
 
         $scope.removeFromFavorites = function () {
@@ -198,6 +200,7 @@ angular.module('starter.controllers', [])
         };
 
         $scope.init = (function () {
+            $scope.data.inFavorites = FavoritesService.inFavorites($stateParams.stopId);
             $scope.getBuses();
         })();
 }])

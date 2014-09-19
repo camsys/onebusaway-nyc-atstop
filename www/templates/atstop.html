@@ -3,15 +3,11 @@
         <p>Stop: {{data.stopName}}</p>
 
         <button class="button button-full button-positive" ng-click="refresh()" ng-disabled="data.val">
-            Refresh
+            <i class="icon ion-refresh"></i>
         </button>
 
-        <button class="button button-full button-positive" ng-click="addToFavorites()">
-            Add
-        </button>
-
-        <button class="button button-full button-positive" ng-click="removeFromFavorites()">
-            Remove
+        <button class="button button-full button-positive" ng-click="addToFavorites()" ng-hide="data.inFavorites">
+            <i class="icon ion-star"></i>
         </button>
 
         <p>Arriving Buses:</p>
