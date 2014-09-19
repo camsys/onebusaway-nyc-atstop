@@ -148,6 +148,11 @@ angular.module('starter.controllers', [])
             "favorites": []
         };
 
+        $scope.remove = function (stopId) {
+            FavoritesService.remove(stopId);
+            $scope.get();
+        };
+
         $scope.get = function () {
             FavoritesService.get().then(function (results) {
                 $scope.data.favorites = results;
