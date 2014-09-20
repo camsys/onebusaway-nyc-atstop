@@ -1,27 +1,49 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova'])
 
-.run(function ($ionicPlatform, $ionicPopup) {
+.run(function ($ionicPlatform, $ionicPopup, $cordovaNetwork) {
     $ionicPlatform.ready(function () {
-        if (window.Connection) {
-            if (navigator.connection.type == Connection.NONE) {
-                $ionicPopup.alert({
-                    title: "Internet Disconnected",
-                    content: "The internet is disconnected on your device."
-                })
-                    .then(function (result) {
-                        if (result) {
-                            // ionic.Platform.exitApp();
-                            // do nothing ...
-                        }
-                    });
-            }
+        if ($cordovaNetwork.isOffline()) {
+            $ionicPopup.alert({
+                title: "Internet Disconnected",
+                content: "The internet is disconnected on your device."
+            })
+                .then(function (result) {
+                    if (result) {
+                        // ionic.Platform.exitApp();
+                        // do nothing ...
+                    }
+                });
         }
     });
 })
 
-.constant('$ionicLoadingConfig', {
-    template: 'Loading',
-    showBackdrop: false
+
+.config(function ($httpProvider) {
+    $httpProvider.interceptors.push(function ($rootScope) {
+        return {
+            request: function (config) {
+                $rootScope.$broadcast('loading:show');
+                return config
+            },
+            response: function (response) {
+                $rootScope.$broadcast('loading:hide');
+                return response
+            }
+        }
+    })
+})
+
+.run(function ($rootScope, $ionicLoading) {
+    $rootScope.$on('loading:show', function () {
+        $ionicLoading.show({
+            template: 'Loading',
+            showBackdrop: false
+        })
+    })
+
+    $rootScope.$on('loading:hide', function () {
+        $ionicLoading.hide()
+    })
 })
 
 .filter('encodeStopName', function () {

@@ -5,8 +5,6 @@ angular.module('starter.controllers', [])
         $scope.val = true;
 
         $scope.drawPolylines = function (route) {
-            $ionicLoading.show();
-
             RouteService.getPolylines(route).then(function (results) {
                 var stopsAndRoute = {};
 
@@ -37,14 +35,10 @@ angular.module('starter.controllers', [])
                 });
 
                 $scope.paths = stopsAndRoute;
-                $ionicLoading.hide();
             })
         };
 
         $scope.drawBuses = function (route) {
-
-            $ionicLoading.show();
-
             $scope.val = true;
             $timeout(function () {
                 $scope.val = false;
@@ -63,7 +57,6 @@ angular.module('starter.controllers', [])
                 });
 
                 $scope.markers = buses;
-                $ionicLoading.hide();
             });
 
         };
@@ -134,18 +127,14 @@ angular.module('starter.controllers', [])
                 }
             }
 
-            $ionicLoading.show();
             SearchService.autocomplete($scope.data.searchKey).then(
                 function (matches) {
-                    $ionicLoading.hide();
                     $scope.data.results = matches;
                 }
             );
         };
 
         $scope.searchAndGo = function (term) {
-
-            $ionicLoading.show();
             SearchService.search(term).then(
                 function (matches) {
                     switch (matches.type) {
@@ -161,7 +150,6 @@ angular.module('starter.controllers', [])
                     default:
                         console.log("undefined type");
                     }
-                    $ionicLoading.hide();
                 }
             );
 
@@ -209,8 +197,6 @@ angular.module('starter.controllers', [])
         };
 
         $scope.getBuses = function () {
-            $ionicLoading.show();
-
             $scope.data.val = true;
             $timeout(function () {
                 $scope.data.val = false;
@@ -218,12 +204,9 @@ angular.module('starter.controllers', [])
 
             var getBuses = AtStopService.getBuses($stateParams.stopId).then(function (results) {
                 $scope.data.results = results;
-                $ionicLoading.hide();
             });
 
-            $q.all([getBuses]).then(function () {
-                $ionicLoading.hide();
-            });
+            $q.all([getBuses]).then(function () {});
         };
 
         $scope.refresh = function () {
@@ -245,8 +228,6 @@ angular.module('starter.controllers', [])
         };
 
         $scope.getRoutesAndStops = function () {
-            $ionicLoading.show();
-
             var getRoutes = GeolocationService.getRoutes($stateParams.latitude, $stateParams.longitude).then(function (results) {
                 $scope.data.routes = results;
             });
@@ -255,9 +236,7 @@ angular.module('starter.controllers', [])
                 $scope.data.stops = results;
             });
 
-            $q.all([getRoutes, getStops]).then(function () {
-                $ionicLoading.hide();
-            });
+            $q.all([getRoutes, getStops]).then(function () {});
         };
 
         $scope.init = (function () {
@@ -272,15 +251,11 @@ angular.module('starter.controllers', [])
         };
 
         $scope.getRoutes = function () {
-            $ionicLoading.show();
-
             var getRoutes = StopcodeService.getRoutes($stateParams.stopId).then(function (results) {
                 $scope.data.routes = results.routes;
             });
 
-            $q.all([getRoutes]).then(function () {
-                $ionicLoading.hide();
-            });
+            $q.all([getRoutes]).then(function () {});
         };
 
         $scope.init = (function () {
@@ -299,8 +274,6 @@ angular.module('starter.controllers', [])
         };
 
         $scope.getDirectionsAndStops = function () {
-            $ionicLoading.show();
-
             var getDirections = RouteService.getDirections($stateParams.routeId).then(function (results) {
                 angular.forEach(results, function (val, key) {
                     if (val.directionId == 0) {
@@ -321,9 +294,7 @@ angular.module('starter.controllers', [])
                 $scope.data.direction_ = results;
             });
 
-            $q.all([getDirections, getStops, getStops_]).then(function () {
-                $ionicLoading.hide();
-            });
+            $q.all([getDirections, getStops, getStops_]).then(function () {});
         };
 
 
@@ -343,8 +314,6 @@ angular.module('starter.controllers', [])
         };
 
         $scope.getNearbyStops = function () {
-            $ionicLoading.show();
-
             $cordovaGeolocation
                 .getCurrentPosition()
                 .then(function (position) {
@@ -357,12 +326,9 @@ angular.module('starter.controllers', [])
                         console.log(results);
                     });
 
-                    $q.all([getStops]).then(function () {
-                        $ionicLoading.hide();
-                    });
+                    $q.all([getStops]).then(function () {});
                 }, function (err) {
                     $scope.data.stops = [];
-                    $ionicLoading.hide();
                     console.log(err);
                 }, {
                     maximumAge: 600000,
