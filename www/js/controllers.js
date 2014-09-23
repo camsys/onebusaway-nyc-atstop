@@ -108,13 +108,20 @@ angular.module('starter.controllers', [])
 
         $scope.data = {
             "results": [],
-            "searchKey": ''
+            "searchKey": '',
+            "notifications": ''
         };
 
         $scope.autocomplete = function () {
             SearchService.autocomplete($scope.data.searchKey).then(
                 function (matches) {
-                    $scope.data.results = matches;
+                    if (!angular.isUndefined(matches) && matches != null && matches.length > 0) {
+                        $scope.data.results = matches;
+                        $scope.data.notifications = "";
+                    } else {
+                        $scope.data.results = [];
+                        $scope.data.notifications = "No matches";
+                    }
                 }
             );
         };
@@ -133,6 +140,8 @@ angular.module('starter.controllers', [])
                         $scope.go("/tab/geolocation/" + matches.latitude + '/' + matches.longitude + '/' + matches.formattedAddress);
                         break;
                     default:
+                        $scope.data.results = [];
+                        $scope.data.notifications = "No matches";
                         console.log("undefined type");
                     }
                 }
@@ -144,7 +153,8 @@ angular.module('starter.controllers', [])
 .controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService',
     function ($scope, $ionicLoading, FavoritesService) {
         $scope.data = {
-            "favorites": []
+            "favorites": [],
+            "notifications": '',
         };
 
         $scope.remove = function (stopId) {
@@ -154,7 +164,11 @@ angular.module('starter.controllers', [])
 
         $scope.get = function () {
             FavoritesService.get().then(function (results) {
-                $scope.data.favorites = results;
+                if (!angular.isUndefined(results) && results != null && results.length > 0) {
+                    $scope.data.favorites = results;
+                } else {
+                    $scope.data.notifications = "You have no favorites";
+                }
             });
         };
 
@@ -169,7 +183,8 @@ angular.module('starter.controllers', [])
             "val": true,
             "inFavorites": false,
             "results": [],
-            "stopName": $stateParams.stopName
+            "stopName": $stateParams.stopName,
+            "notifications": ''
         };
 
         $scope.addToFavorites = function () {
@@ -188,7 +203,12 @@ angular.module('starter.controllers', [])
             }, 30000);
 
             var getBuses = AtStopService.getBuses($stateParams.stopId).then(function (results) {
-                $scope.data.results = results;
+
+                if (!angular.isUndefined(results) && results != null && results.length > 0) {
+                    $scope.data.results = results;
+                } else {
+                    $scope.data.notifications = "No data available right now";
+                }
             });
 
             $q.all([getBuses]).then(function () {});
@@ -209,7 +229,8 @@ angular.module('starter.controllers', [])
         $scope.data = {
             "routes": [],
             "stops": [],
-            "address": $stateParams.address
+            "address": $stateParams.address,
+            "notifications": ''
         };
 
         $scope.getRoutesAndStops = function () {
@@ -226,25 +247,6 @@ angular.module('starter.controllers', [])
 
         $scope.init = (function () {
             $scope.getRoutesAndStops();
-        })();
-}])
-
-.controller('StopcodeCtrl', ['$scope', 'StopcodeService', '$stateParams', '$q', '$ionicLoading',
-    function ($scope, StopcodeService, $stateParams, $q, $ionicLoading) {
-        $scope.data = {
-            "routes": []
-        };
-
-        $scope.getRoutes = function () {
-            var getRoutes = StopcodeService.getRoutes($stateParams.stopId).then(function (results) {
-                $scope.data.routes = results.routes;
-            });
-
-            $q.all([getRoutes]).then(function () {});
-        };
-
-        $scope.init = (function () {
-            $scope.getRoutes();
         })();
 }])
 
