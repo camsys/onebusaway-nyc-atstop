@@ -71,7 +71,8 @@ angular.module('starter.services', ['ionic'])
                 angular.forEach(data.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity, function (val, key) {
                     locations[key] = {
                         latitude: val.MonitoredVehicleJourney.VehicleLocation.Latitude,
-                        longitude: val.MonitoredVehicleJourney.VehicleLocation.Longitude
+                        longitude: val.MonitoredVehicleJourney.VehicleLocation.Longitude,
+                        angle: val.MonitoredVehicleJourney.Bearing
                     }
                 });
 

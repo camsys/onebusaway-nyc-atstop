@@ -52,7 +52,8 @@ angular.module('starter.controllers', [])
                 angular.forEach(results, function (val, key) {
                     buses[key] = {
                         lat: val.latitude,
-                        lng: val.longitude
+                        lng: val.longitude,
+                        iconAngle: val.angle
                     }
                 });
 
