@@ -213,6 +213,21 @@ angular.module('starter.services', ['ionic'])
 })
 
 .factory('GeolocationService', function ($q, $http) {
+
+    var promiseCurrentPosition = function (geolocationOptions) {
+        var deferred = $q.defer();
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                deferred.resolve(position);
+            },
+            function (error) {
+                deferred.reject(error);
+            },
+            geolocationOptions
+        );
+        return deferred.promise;
+    }
+
     var getRoutes = function (lat, lon) {
         var deferred = $q.defer();
         var routes = {};
@@ -267,6 +282,7 @@ angular.module('starter.services', ['ionic'])
     };
 
     return {
+        promiseCurrentPosition: promiseCurrentPosition,
         getRoutes: getRoutes,
         getStops: getStops
     }

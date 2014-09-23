@@ -10,6 +10,9 @@
         Khurshid N. Fayzullaev
     </author>
 
+    <!-- Permissions -->
+    <preference name="permissions" value="none" />
+
     <!--  Preferences  -->
     <preference name="phonegap-version" value="3.5.0" />
     <preference name="orientation" value="portrait" />
@@ -22,8 +25,7 @@
     <!--  Preferences / Android only -->
 
     <!-- Plugins -->
-    <gap:plugin name="org.apache.cordova.device" />
-    <gap:plugin name="org.apache.cordova.geolocation" />
     <gap:plugin name="org.apache.cordova.network-information" />
+    <gap:plugin name="org.apache.cordova.geolocation" />
     <gap:plugin name="org.apache.cordova.statusbar" />
 </widget>

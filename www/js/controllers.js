@@ -210,8 +210,6 @@ angular.module('starter.controllers', [])
                     $scope.data.notifications = "No data available right now";
                 }
             });
-
-            $q.all([getBuses]).then(function () {});
         };
 
         $scope.refresh = function () {
@@ -241,8 +239,6 @@ angular.module('starter.controllers', [])
             var getStops = GeolocationService.getStops($stateParams.latitude, $stateParams.longitude).then(function (results) {
                 $scope.data.stops = results;
             });
-
-            $q.all([getRoutes, getStops]).then(function () {});
         };
 
         $scope.init = (function () {
@@ -280,8 +276,6 @@ angular.module('starter.controllers', [])
             var getStops_ = RouteService.getStops($stateParams.routeId, "1").then(function (results) {
                 $scope.data.direction_ = results;
             });
-
-            $q.all([getDirections, getStops, getStops_]).then(function () {});
         };
 
 
@@ -290,10 +284,11 @@ angular.module('starter.controllers', [])
         })();
 }])
 
-.controller('NearbyStopsCtrl', ['$scope', 'GeolocationService', '$cordovaGeolocation', '$ionicLoading', '$q',
-    function ($scope, GeolocationService, $cordovaGeolocation, $ionicLoading, $q) {
+.controller('NearbyStopsCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup',
+    function ($scope, GeolocationService, $ionicLoading, $q, $ionicPopup) {
         $scope.data = {
-            "stops": []
+            "stops": [],
+            "notifications": ""
         };
 
         $scope.refresh = function () {
@@ -301,27 +296,35 @@ angular.module('starter.controllers', [])
         };
 
         $scope.getNearbyStops = function () {
-            $cordovaGeolocation
-                .getCurrentPosition()
-                .then(function (position) {
-                    var lat = position.coords.latitude
-                    var long = position.coords.longitude
+            $ionicLoading.show();
+            GeolocationService.promiseCurrentPosition({
+                enableHighAccuracy: false,
+                timeout: 5000,
+                maximumAge: 10000
+            }).then(
+                function (position) {
+                    $ionicLoading.hide();
+
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
 
                     var getStops = GeolocationService.getStops(lat, lon).then(function (results) {
                         $scope.data.stops = results;
-
-                        console.log(results);
                     });
+                }, function (error) {
+                    $ionicLoading.hide();
 
-                    $q.all([getStops]).then(function () {});
-                }, function (err) {
-                    $scope.data.stops = [];
-                    console.log(err);
-                }, {
-                    maximumAge: 600000,
-                    timeout: 10000,
-                    enableHighAccuracy: false
-                });
+                    $ionicPopup.alert({
+                        title: "Error",
+                        content: "Cannot retrieve position information."
+                    })
+                        .then(function (result) {
+                            if (result) {
+                                // ionic.Platform.exitApp();
+                            }
+                        });
+                }
+            );
         }
 
         $scope.init = (function () {
