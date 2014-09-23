@@ -203,8 +203,7 @@ angular.module('starter.controllers', [])
             }, 30000);
 
             var getBuses = AtStopService.getBuses($stateParams.stopId).then(function (results) {
-
-                if (!angular.isUndefined(results) && results != null && results.length > 0) {
+                if (!angular.isUndefined(results) && results != null) {
                     $scope.data.results = results;
                 } else {
                     $scope.data.notifications = "No data available right now";
@@ -309,7 +308,11 @@ angular.module('starter.controllers', [])
                     var lon = position.coords.longitude;
 
                     var getStops = GeolocationService.getStops(lat, lon).then(function (results) {
-                        $scope.data.stops = results;
+                        if (!angular.isUndefined(results) && results != null && results.length > 0) {
+                            $scope.data.stops = results;
+                        } else {
+                            $scope.data.notifications = "No matches";
+                        }
                     });
                 }, function (error) {
                     $ionicLoading.hide();
