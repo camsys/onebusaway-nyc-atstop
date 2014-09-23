@@ -112,21 +112,6 @@ angular.module('starter.controllers', [])
         };
 
         $scope.autocomplete = function () {
-
-            if (window.Connection) {
-                if (navigator.connection.type == Connection.NONE) {
-                    $ionicPopup.alert({
-                        title: "Internet Disconnected",
-                        content: "The internet is disconnected on your device."
-                    })
-                        .then(function (result) {
-                            if (result) {
-                                ionic.Platform.exitApp();
-                            }
-                        });
-                }
-            }
-
             SearchService.autocomplete($scope.data.searchKey).then(
                 function (matches) {
                     $scope.data.results = matches;

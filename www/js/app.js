@@ -1,6 +1,7 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova'])
 
-.run(function ($ionicPlatform, $ionicPopup, $cordovaNetwork) {
+/*
+.run(function ($rootScope, $ionicPlatform, $ionicPopup, $cordovaNetwork) {
     $ionicPlatform.ready(function () {
         if ($cordovaNetwork.isOffline()) {
             $ionicPopup.alert({
@@ -9,41 +10,65 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             })
                 .then(function (result) {
                     if (result) {
-                        // ionic.Platform.exitApp();
-                        // do nothing ...
+                        ionic.Platform.exitApp();
                     }
                 });
         }
     });
 })
+*/
 
 
 .config(function ($httpProvider) {
+    $httpProvider.defaults.timeout = 5000;
+
     $httpProvider.interceptors.push(function ($rootScope) {
         return {
             request: function (config) {
                 $rootScope.$broadcast('loading:show');
-                return config
+                return config;
+            },
+            requestError: function (rejection) {
+                $rootScope.$broadcast('requestRejection');
+                return rejection;
             },
             response: function (response) {
                 $rootScope.$broadcast('loading:hide');
-                return response
+                return response;
+            },
+            responseError: function (rejection) {
+                $rootScope.$broadcast('requestRejection');
+                return rejection;
             }
         }
     })
 })
 
-.run(function ($rootScope, $ionicLoading) {
+.run(function ($rootScope, $ionicLoading, $ionicPopup, $cordovaNetwork) {
     $rootScope.$on('loading:show', function () {
         $ionicLoading.show({
             template: 'Loading',
             showBackdrop: false
         })
-    })
+    });
 
     $rootScope.$on('loading:hide', function () {
         $ionicLoading.hide()
-    })
+    });
+
+    $rootScope.$on('requestRejection', function () {
+        $ionicLoading.hide();
+
+        $ionicPopup.alert({
+            title: "Error",
+            content: "Oops! Something went wrong. Please, check you internet connection!"
+        })
+            .then(function (result) {
+                if (result) {
+                    // ionic.Platform.exitApp();
+                }
+            });
+    });
 })
 
 .filter('encodeStopName', function () {
