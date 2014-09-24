@@ -49,11 +49,21 @@ angular.module('starter.controllers', [])
             VehicleMonitoringService.getLocations(route).then(function (results) {
                 var buses = {};
 
+
+                var iconTypes = {
+                    defaultIcon: {},
+                    bus: {
+                        iconUrl: 'img/bus.png',
+                        iconSize: [24, 24]
+                    }
+                }
+
+
                 angular.forEach(results, function (val, key) {
                     buses[key] = {
                         lat: val.latitude,
                         lng: val.longitude,
-                        iconAngle: val.angle
+                        icon: iconTypes.bus
                     }
                 });
 
@@ -151,9 +161,10 @@ angular.module('starter.controllers', [])
         };
 }])
 
-.controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService',
-    function ($scope, $ionicLoading, FavoritesService) {
+.controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q',
+    function ($scope, $ionicLoading, FavoritesService, $q) {
         $scope.data = {
+            "loaded": false,
             "favorites": [],
             "notifications": '',
         };
@@ -164,12 +175,16 @@ angular.module('starter.controllers', [])
         };
 
         $scope.get = function () {
-            FavoritesService.get().then(function (results) {
-                if (!angular.isUndefined(results) && results != null && results.length > 0) {
+            var getFavorites = FavoritesService.get().then(function (results) {
+                if (!angular.isUndefined(results) && results != null) {
                     $scope.data.favorites = results;
                 } else {
                     $scope.data.notifications = "You have no favorites";
                 }
+            });
+
+            $q.all([getFavorites]).then(function () {
+                $scope.data.loaded = true;
             });
         };
 
@@ -181,6 +196,7 @@ angular.module('starter.controllers', [])
 .controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout',
     function ($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout) {
         $scope.data = {
+            "loaded": false,
             "val": true,
             "inFavorites": false,
             "results": [],
@@ -210,6 +226,10 @@ angular.module('starter.controllers', [])
                     $scope.data.notifications = "No data available right now";
                 }
             });
+
+            $q.all([getBuses]).then(function () {
+                $scope.data.loaded = true;
+            });
         };
 
         $scope.refresh = function () {
@@ -225,6 +245,7 @@ angular.module('starter.controllers', [])
 .controller('GeolocationCtrl', ['$scope', 'GeolocationService', '$stateParams', '$ionicLoading', '$q',
     function ($scope, GeolocationService, $stateParams, $ionicLoading, $q) {
         $scope.data = {
+            "loaded": false,
             "routes": [],
             "stops": [],
             "address": $stateParams.address,
@@ -239,6 +260,10 @@ angular.module('starter.controllers', [])
             var getStops = GeolocationService.getStops($stateParams.latitude, $stateParams.longitude).then(function (results) {
                 $scope.data.stops = results;
             });
+
+            $q.all([getRoutes, getStops]).then(function () {
+                $scope.data.loaded = true;
+            });
         };
 
         $scope.init = (function () {
@@ -249,6 +274,7 @@ angular.module('starter.controllers', [])
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading',
     function ($scope, RouteService, $stateParams, $location, $q, $ionicLoading) {
         $scope.data = {
+            "loaded": false,
             "routeName": $stateParams.routeName,
             "direction": [],
             "directionName": "",
@@ -276,6 +302,10 @@ angular.module('starter.controllers', [])
             var getStops_ = RouteService.getStops($stateParams.routeId, "1").then(function (results) {
                 $scope.data.direction_ = results;
             });
+
+            $q.all([getDirections, getStops, getStops_]).then(function () {
+                $scope.data.loaded = true;
+            });
         };
 
 
@@ -287,6 +317,7 @@ angular.module('starter.controllers', [])
 .controller('NearbyStopsCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup',
     function ($scope, GeolocationService, $ionicLoading, $q, $ionicPopup) {
         $scope.data = {
+            "loaded": false,
             "stops": [],
             "notifications": ""
         };
@@ -314,6 +345,10 @@ angular.module('starter.controllers', [])
                         } else {
                             $scope.data.notifications = "No matches";
                         }
+                    });
+
+                    $q.all([getFavorites]).then(function () {
+                        $scope.data.loaded = true;
                     });
                 }, function (error) {
                     $ionicLoading.hide();

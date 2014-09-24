@@ -5,7 +5,7 @@
         </button>
     </ion-nav-buttons>
 
-    <ion-content>
+    <ion-content ng-show="data.loaded">
         <p>Nearby Stops:</p>
         <ion-list>
             <ion-item ng-repeat="item in data.stops" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
