@@ -196,6 +196,7 @@ angular.module('starter.controllers', [])
 .controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout',
     function ($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout) {
         $scope.data = {
+            "alerts": "",
             "loaded": false,
             "val": true,
             "inFavorites": false,
@@ -220,10 +221,16 @@ angular.module('starter.controllers', [])
             }, 30000);
 
             var getBuses = AtStopService.getBuses($stateParams.stopId).then(function (results) {
-                if (!angular.isUndefined(results) && results != null) {
-                    $scope.data.results = results;
+                if (!angular.isUndefined(results.arriving) && results.arriving != null) {
+                    $scope.data.results = results.arriving;
                 } else {
                     $scope.data.notifications = "No data available right now";
+                }
+
+                if (results.alerts.length > 0) {
+                    angular.forEach(results.alerts, function (val, key) {
+                        $scope.data.alerts += "\n" + val;
+                    });
                 }
             });
 

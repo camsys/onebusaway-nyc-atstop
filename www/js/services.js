@@ -292,7 +292,10 @@ angular.module('starter.services', ['ionic'])
 .factory('AtStopService', function ($q, $http) {
     var getBuses = function (stop) {
         var deferred = $q.defer();
-        var buses = {};
+        var buses = {
+            arriving: {},
+            alerts: ""
+        };
 
         var url = "http://bt.mta.info/api/siri/stop-monitoring.json?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
@@ -328,7 +331,18 @@ angular.module('starter.services', ['ionic'])
                         });
                     });
 
-                    buses = grouped;
+                    buses.arriving = grouped;
+                }
+
+                if (data.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {
+                    var alerts = [];
+                    angular.forEach(data.Siri.ServiceDelivery.SituationExchangeDelivery[0].Situations, function (val, key) {
+                        angular.forEach(val, function (v, k) {
+                            alerts.push(v.Description);
+                        });
+                    });
+
+                    buses.alerts = alerts;
                 }
             })
             .error(function (data, status, header, config) {
