@@ -53,17 +53,19 @@ angular.module('starter.controllers', [])
                 var iconTypes = {
                     defaultIcon: {},
                     bus: {
-                        iconUrl: 'img/bus.png',
+                        iconUrl: 'img/bus_icons/bus.png',
                         iconSize: [24, 24]
                     }
                 }
+
 
 
                 angular.forEach(results, function (val, key) {
                     buses[key] = {
                         lat: val.latitude,
                         lng: val.longitude,
-                        icon: iconTypes.bus
+                        icon: iconTypes.bus,
+                        focus: false
                     }
                 });
 
