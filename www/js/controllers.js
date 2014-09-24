@@ -11,6 +11,7 @@ angular.module('starter.controllers', [])
                 angular.forEach(results.stops, function (val, key) {
                     stopsAndRoute["stops" + key] = {
                         type: "circleMarker",
+                        color: '#008888',
                         radius: 2,
                         latlngs: {
                             lat: val.lat,
@@ -49,22 +50,24 @@ angular.module('starter.controllers', [])
             VehicleMonitoringService.getLocations(route).then(function (results) {
                 var buses = {};
 
-
-                var iconTypes = {
-                    defaultIcon: {},
-                    bus: {
-                        iconUrl: 'img/bus_icons/bus.png',
-                        iconSize: [24, 24]
-                    }
+                function round5(x) {
+                    return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
                 }
 
-
-
                 angular.forEach(results, function (val, key) {
+
+                    angle = round5(val.angle);
+                    if (angle == 360) {
+                        angle = 0;
+                    };
+
                     buses[key] = {
                         lat: val.latitude,
                         lng: val.longitude,
-                        icon: iconTypes.bus,
+                        icon: {
+                            iconUrl: 'img/bus_icons/vehicle-' + angle + '.png',
+                            iconSize: [51, 51]
+                        },
                         focus: false
                     }
                 });
