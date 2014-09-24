@@ -1,15 +1,15 @@
 <ion-view title="Nearby Routes &amp; Stops">
-    <ion-content ng-show="data.loaded">
+    <ion-content ng-show="data.loaded" has-bouncing="true">
         <p>Location: {{data.address}}</p>
 
-        <p>Routes:</p>
+        <p class="highlight">Routes:</p>
         <ion-list>
             <ion-item ng-repeat="item in data.routes" href="#/tab/route/{{item.id}}/{{item.shortName}}">
                 {{item.shortName}}
             </ion-item>
         </ion-list>
 
-        <p>Stops:</p>
+        <p class="highlight">Stops:</p>
         <ion-list>
             <ion-item ng-repeat="item in data.stops" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
                 {{item.name}}

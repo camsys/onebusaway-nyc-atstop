@@ -5,8 +5,9 @@
         </button>
     </ion-nav-buttons>
 
-    <ion-content ng-show="data.loaded">
-        <p>Nearby Stops:</p>
+    <ion-content ng-show="data.loaded" has-bouncing="true">
+        <p class="highlight">Nearby Stops:</p>
+
         <ion-list>
             <ion-item ng-repeat="item in data.stops" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
                 {{item.name}}

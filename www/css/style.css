@@ -2,3 +2,27 @@
 .angular-leaflet-map {
     height: 100%;
 }
+p {
+    margin: 15px;
+}
+p.highlight {
+    font-weight: bolder;
+    background: #eeeeee;
+    margin: 0;
+    padding: 15px;
+}
+p.alerts {
+    font-size: 12px;
+    color: #fa9fb5;
+}
+.route {
+    padding: 15px;
+}
+.bus {
+    padding-left: 5px;
+    padding-top: 5px;
+}
+body {
+    font-size: 14px;
+    text-transform: uppercase;
+}

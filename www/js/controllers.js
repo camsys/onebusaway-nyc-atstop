@@ -233,6 +233,8 @@ angular.module('starter.controllers', [])
                     angular.forEach(results.alerts, function (val, key) {
                         $scope.data.alerts += "\n" + val;
                     });
+                } else {
+                    $scope.data.alerts = "No Alerts";
                 }
             });
 

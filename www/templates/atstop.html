@@ -9,23 +9,21 @@
         </button>
     </ion-nav-buttons>
 
-    <ion-content ng-show="data.loaded">
+    <ion-content ng-show="data.loaded" has-bouncing="true">
         <p>Stop: {{data.stopName}}</p>
 
-        <p>Arriving Buses:</p>
-        <ion-list>
-            <ion-item ng-repeat="(routeId, info) in data.results">
-                <a class="button" href="#/tab/map/{{routeId}}">Map</a>
-                {{info.name}}
-                <ion-list>
-                    <ion-item ng-repeat="item in info.distances">
-                        {{item.distance}}
-                    </ion-item>
-                </ion-list>
-            </ion-item>
-        </ion-list>
+        <p class="highlight">Arriving Buses:</p>
+
+        <div ng-repeat="(routeId, info) in data.results" class="route">
+            <a class="button-clear" href="#/tab/map/{{routeId}}">{{info.name}} - Map</a>
+            <div class="bus" ng-repeat="item in info.distances">
+                {{item.distance}}
+            </div>
+        </div>
 
         <p>{{data.notifications}}</p>
-        <p>{{data.alerts}}</p>
+
+        <p class="highlight">Service Alerts:</p>
+        <p class="alerts">{{data.alerts}}</p>
     </ion-content>
 </ion-view>
