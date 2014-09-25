@@ -1,4 +1,4 @@
-<ion-view title="At Stop">
+<ion-view title="Stop">
     <ion-nav-buttons side="right">
         <button class="button button-clear" ng-click="refresh()" ng-disabled="data.val">
             <i class="icon ion-refresh"></i>
@@ -12,7 +12,7 @@
     <ion-content ng-show="data.loaded" has-bouncing="true">
         <p>Stop: {{data.stopName}}</p>
 
-        <p class="highlight">Arriving Buses:</p>
+        <p class="highlight">Upcoming Buses:</p>
 
         <div ng-repeat="(routeId, info) in data.results" class="route">
             <a class="button-clear" href="#/tab/map/{{routeId}}">{{info.name}} - Map</a>

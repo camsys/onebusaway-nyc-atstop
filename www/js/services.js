@@ -134,7 +134,7 @@ angular.module('starter.services', ['ionic'])
                 params: {
                     key: "TEST",
                     version: 2,
-                    includePolulines: false
+                    includePolylines: false
                 }
             })
             .success(function (data, status, header, config) {
