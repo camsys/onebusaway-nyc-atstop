@@ -1,9 +1,24 @@
+html {
+    font-family: sans-serif; /* 1 */
+    -ms-text-size-adjust: 100%; /* 2 */
+    -webkit-text-size-adjust: 100%; /* 2 */
+}
 .scroll,
 .angular-leaflet-map {
     height: 100%;
 }
 p {
     margin: 15px;
+}
+div.route{
+    font-size: 1.4em;
+    vertical-align: middle;
+ }
+.rightAlign{
+    float: right;
+}
+.largeIcon{
+    font-size: 1.5em;
 }
 p.highlight {
     font-weight: bolder;
@@ -20,6 +35,24 @@ p.alerts {
     padding-top: 5px;
 }
 body {
-    font-size: 14px;
-    text-transform: uppercase;
+    font-size: 1em;
+    line-height: 1.4;
+    margin: 0;
 }
+pre {
+    overflow: auto;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+    color: inherit; /* 1 */
+    font: inherit; /* 2 */
+    margin: 0; /* 3 */
+}
+button,
+select {
+    text-transform: none;
+}
+

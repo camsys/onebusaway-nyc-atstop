@@ -10,21 +10,29 @@
     </ion-nav-buttons>
 
     <ion-content ng-show="data.loaded" has-bouncing="true">
-        <p>Stop: {{data.stopName}}</p>
+        <div class="card">
+            <p>{{data.stopName}}</p>
 
 
-        <p class="highlight" ng-show="data.alertsHide">Service Alerts:</p>
-        <p class="alerts" ng-show="data.alertsHide">{{data.alerts}}</p>
+            <p class="highlight" ng-show="data.alertsHide">Service Alerts:</p>
+            <p class="alerts" ng-show="data.alertsHide">{{data.alerts}}</p>
 
-        <p class="highlight">Upcoming Buses:</p>
+            <p class="highlight">Upcoming Buses:</p>
 
-        <div ng-repeat="(routeId, info) in data.results" class="route">
-            <a class="button button-full button-positive" href="#/tab/map/{{routeId}}">{{info.name}} - Map</a>
-            <div class="bus" ng-repeat="item in info.distances">
+            <div ng-repeat="(routeId, info) in data.results" class=" ">
+                <div class="row item item-divider">
+                    <div class="route col">{{info.name}}</div>
+                    <a class="button button-full button-positive ion-earth rightAlign largeIcon" href="#/tab/map/{{routeId}}">
+                        </a>
+                </div>
+                <ion-list>
+                <ion-item ng-repeat="item in info.distances">
                 {{item.distance}}
+                </ion-list>
             </div>
         </div>
 
         <p>{{data.notifications}}</p>
+        </div>
     </ion-content>
 </ion-view>
