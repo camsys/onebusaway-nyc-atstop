@@ -311,12 +311,23 @@ angular.module('starter.services', ['ionic'])
                     var grouped_tmp = [];
                     var grouped = {};
 
+
+                    var counter = {};
+
                     angular.forEach(data.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit, function (value, key) {
-                        tmp.push({
-                            routeId: value.MonitoredVehicleJourney.LineRef,
-                            name: value.MonitoredVehicleJourney.PublishedLineName,
-                            distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance
-                        });
+                        if (angular.isUndefined(counter[value.MonitoredVehicleJourney.LineRef]) || counter[value.MonitoredVehicleJourney.LineRef] == null) {
+                            counter[value.MonitoredVehicleJourney.LineRef] = 1;
+                        } else {
+                            counter[value.MonitoredVehicleJourney.LineRef] += 1;
+                        }
+
+                        if (counter[value.MonitoredVehicleJourney.LineRef] < 4) {
+                            tmp.push({
+                                routeId: value.MonitoredVehicleJourney.LineRef,
+                                name: value.MonitoredVehicleJourney.PublishedLineName,
+                                distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance
+                            });
+                        }
                     });
 
                     grouped_tmp = _.groupBy(tmp, "routeId");

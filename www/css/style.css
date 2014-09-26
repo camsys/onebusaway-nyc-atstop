@@ -15,10 +15,7 @@ p.alerts {
     font-size: 12px;
     color: #fa9fb5;
 }
-.route {
-    padding: 15px;
-}
-.bus {
+.route {} .bus {
     padding-left: 5px;
     padding-top: 5px;
 }
