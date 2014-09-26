@@ -19,7 +19,7 @@
         <p class="highlight">Upcoming Buses:</p>
 
         <div ng-repeat="(routeId, info) in data.results" class="route">
-            <a class="button-clear" href="#/tab/map/{{routeId}}">{{info.name}} - Map</a>
+            <a class="button button-full button-positive" href="#/tab/map/{{routeId}}">{{info.name}} - Map</a>
             <div class="bus" ng-repeat="item in info.distances">
                 {{item.distance}}
             </div>
