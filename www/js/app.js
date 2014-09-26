@@ -44,6 +44,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     })
 })
 
+
 .run(function ($rootScope, $ionicLoading, $ionicPopup, $cordovaNetwork) {
     $rootScope.$on('loading:show', function () {
         $ionicLoading.show({
@@ -70,6 +71,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             });
     });
 })
+
 
 .filter('encodeStopName', function () {
     return function (input) {

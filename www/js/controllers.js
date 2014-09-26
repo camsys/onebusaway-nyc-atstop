@@ -207,7 +207,8 @@ angular.module('starter.controllers', [])
             "inFavorites": false,
             "results": [],
             "stopName": $stateParams.stopName,
-            "notifications": ''
+            "notifications": '',
+            "alertsHide" : false
         };
 
         $scope.addToFavorites = function () {
@@ -233,11 +234,14 @@ angular.module('starter.controllers', [])
                 }
 
                 if (results.alerts.length > 0) {
+                    $scope.data.alertsHide = true;
                     angular.forEach(results.alerts, function (val, key) {
                         $scope.data.alerts += "\n" + val;
+
                     });
                 } else {
-                    $scope.data.alerts = "No Alerts";
+
+                    $scope.data.alertsHide = false;
                 }
             });
 
