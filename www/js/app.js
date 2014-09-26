@@ -1,6 +1,6 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova'])
 
-/*
+
 .run(function ($rootScope, $ionicPlatform, $ionicPopup, $cordovaNetwork) {
     $ionicPlatform.ready(function () {
         if ($cordovaNetwork.isOffline()) {
@@ -16,7 +16,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
     });
 })
-*/
+
 
 
 .config(function ($httpProvider) {
@@ -61,7 +61,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
         $ionicPopup.alert({
             title: "Error",
-            content: "Oops! Something went wrong. Please, check you internet connection!"
+            content: "Something went wrong. Please check your internet connection."
         })
             .then(function (result) {
                 if (result) {
