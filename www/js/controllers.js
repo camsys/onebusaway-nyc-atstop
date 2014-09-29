@@ -141,14 +141,20 @@ angular.module('starter.controllers', [])
                 }
             );
         };
-
+		$scope.noSchedService = function(route){
+			$scope.data.notifications = "There is no scheduled service on this route at this time.";
+		}
         $scope.searchAndGo = function (term) {
             SearchService.search(term).then(
                 function (matches) {
                     switch (matches.type) {
                     case "RouteResult":
+						//if (matches.hasUpcomingScheduledService){
                         $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
-                        break;
+						//}else {
+						//$scope.noSchedService(matches.shortName);
+						//}
+						break;
                     case "StopResult":
                         $scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
                         break;
@@ -220,6 +226,23 @@ angular.module('starter.controllers', [])
             FavoritesService.remove($stateParams.stopId);
         };
 
+        $scope.handleLayovers = function(results){
+            console.log(results);
+            angular.forEach(results['arriving'], function(val, key){
+                angular.forEach(val['distances'], function (v,k) {
+                    if(v['progress']=='prevTrip'){
+                       v['distance'] = v['distance'] + "+ Scheduled Layover At Terminal";
+                    }
+                    else if(v['progress']=='layover,prevTrip'){
+                        //aagh, dates!
+                        v['distance'] = v['distance'] + "+ At terminal. Scheduled to depart at " + v['departs'];
+                    }
+                })
+
+            })
+
+        };
+
         $scope.getBuses = function () {
             $scope.data.val = true;
             $timeout(function () {
@@ -228,6 +251,7 @@ angular.module('starter.controllers', [])
 
             var getBuses = AtStopService.getBuses($stateParams.stopId).then(function (results) {
                 if (!angular.isUndefined(results.arriving) && results.arriving != null) {
+                    $scope.handleLayovers(results);
                     $scope.data.results = results.arriving;
                 } else {
                     $scope.data.notifications = "No data available right now";
@@ -297,7 +321,8 @@ angular.module('starter.controllers', [])
             "direction": [],
             "directionName": "",
             "direction_": [],
-            "directionName_": ""
+            "directionName_": "",
+
         };
 
         $scope.getDirectionsAndStops = function () {

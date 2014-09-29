@@ -326,7 +326,7 @@ angular.module('starter.services', ['ionic'])
                                 distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance,
                                 destination: value.MonitoredVehicleJourney.DestinationName,
                                 progress: value.MonitoredVehicleJourney.ProgressStatus,
-                                departs: value.MonitoredVehicleJourney.OriginAimedDepartureTime
+                                departs: Date(value.MonitoredVehicleJourney.OriginAimedDepartureTime)
                             });
                         }
                     });
