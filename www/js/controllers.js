@@ -141,14 +141,20 @@ angular.module('starter.controllers', [])
                 }
             );
         };
-
+		$scope.noSchedService = function(route){
+			$scope.data.notifications = "There is no scheduled service on this route at this time.";
+		}
         $scope.searchAndGo = function (term) {
             SearchService.search(term).then(
                 function (matches) {
                     switch (matches.type) {
                     case "RouteResult":
+						if (matches.hasUpcomingScheduledService){
                         $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
-                        break;
+						}else {
+						$scope.noSchedService(matches.shortName);
+						}
+						break;
                     case "StopResult":
                         $scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
                         break;
@@ -297,7 +303,8 @@ angular.module('starter.controllers', [])
             "direction": [],
             "directionName": "",
             "direction_": [],
-            "directionName_": ""
+            "directionName_": "",
+			
         };
 
         $scope.getDirectionsAndStops = function () {
