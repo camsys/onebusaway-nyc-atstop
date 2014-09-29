@@ -325,7 +325,8 @@ angular.module('starter.services', ['ionic'])
                             tmp.push({
                                 routeId: value.MonitoredVehicleJourney.LineRef,
                                 name: value.MonitoredVehicleJourney.PublishedLineName,
-                                distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance
+                                distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance,
+                                destination: value.MonitoredVehicleJourney.DestinationName
                             });
                         }
                     });
@@ -334,6 +335,7 @@ angular.module('starter.services', ['ionic'])
 
                     angular.forEach(grouped_tmp, function (val, key) {
                         var tmp = _.groupBy(val, "name");
+
                         angular.forEach(tmp, function (v, k) {
                             grouped[key] = {
                                 name: k,
@@ -341,7 +343,6 @@ angular.module('starter.services', ['ionic'])
                             };
                         });
                     });
-
                     buses.arriving = grouped;
                 }
 

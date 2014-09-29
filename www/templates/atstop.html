@@ -13,7 +13,6 @@
         <div class="card">
             <p>{{data.stopName}}</p>
 
-
             <p class="highlight" ng-show="data.alertsHide">Service Alerts:</p>
             <p class="alerts" ng-show="data.alertsHide">{{data.alerts}}</p>
 
@@ -27,7 +26,9 @@
                 </div>
                 <ion-list>
                 <ion-item ng-repeat="item in info.distances">
-                {{item.distance}}
+                <h2>{{item.destination}}</h2>
+                 <p>  {{item.distance}}</p>
+                    </ion-item>
                 </ion-list>
             </div>
         </div>

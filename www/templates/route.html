@@ -1,21 +1,27 @@
-<ion-view title="Route Stops">
+<ion-view title="Stops">
     <ion-content ng-show="data.loaded" has-bouncing="true">
-        <p>Route: {{data.routeName}}</p>
+        <div class="card">
+        <div class="route">{{data.routeName}}</div>
 
-        <p class="highlight">{{data.directionName}}</p>
-        <ion-list>
-            <ion-item ng-repeat="item in data.direction" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
-                {{item.name}}
-            </ion-item>
-        </ion-list>
+        <!--<a href="#direction0">{{data.directionName}}</a>-->
+        <!--<a href="#direction1">{{data.directionName_}}</a>-->
+        </div>
+        <div class="card">
+            <p class="item-divider" id="direction0">{{data.directionName}}</p>
+            <ion-list>
+                <ion-item ng-repeat="item in data.direction" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+                    {{item.name}}
+                </ion-item>
+            </ion-list>
 
-        <p class="highlight">{{data.directionName_}}</p>
-        <ion-list>
-            <ion-item ng-repeat="item in data.direction_" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
-                {{item.name}}
-            </ion-item>
-        </ion-list>
+            <p class="item-divider" id="direction1">{{data.directionName_}}</p>
+            <ion-list>
+                <ion-item ng-repeat="item in data.direction_" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+                    {{item.name}}
+                </ion-item>
+            </ion-list>
 
-        <p>{{data.notifications}}</p>
+            <p>{{data.notifications}}</p>
+        </div>
     </ion-content>
 </ion-view>
