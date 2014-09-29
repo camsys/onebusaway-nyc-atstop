@@ -310,8 +310,6 @@ angular.module('starter.services', ['ionic'])
                     var tmp = [];
                     var grouped_tmp = [];
                     var grouped = {};
-
-
                     var counter = {};
 
                     angular.forEach(data.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit, function (value, key) {
@@ -326,7 +324,9 @@ angular.module('starter.services', ['ionic'])
                                 routeId: value.MonitoredVehicleJourney.LineRef,
                                 name: value.MonitoredVehicleJourney.PublishedLineName,
                                 distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance,
-                                destination: value.MonitoredVehicleJourney.DestinationName
+                                destination: value.MonitoredVehicleJourney.DestinationName,
+                                progress: value.MonitoredVehicleJourney.ProgressStatus,
+                                departs: value.MonitoredVehicleJourney.OriginAimedDepartureTime
                             });
                         }
                     });
@@ -335,7 +335,6 @@ angular.module('starter.services', ['ionic'])
 
                     angular.forEach(grouped_tmp, function (val, key) {
                         var tmp = _.groupBy(val, "name");
-
                         angular.forEach(tmp, function (v, k) {
                             grouped[key] = {
                                 name: k,
@@ -381,7 +380,7 @@ angular.module('starter.services', ['ionic'])
         var url = "http://bt.mta.info/api/where/stop/" + stop + ".json?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
-                    key: "TEST",
+                    key: "TEST"
                 }
             })
             .success(function (data, status, header, config) {
