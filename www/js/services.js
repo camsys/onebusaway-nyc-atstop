@@ -1,4 +1,4 @@
-angular.module('starter.services', ['ionic'])
+angular.module('starter.services', ['ionic', 'configuration'])
 
 .factory('$localstorage', ['$window',
     function ($window) {
@@ -55,15 +55,15 @@ angular.module('starter.services', ['ionic'])
     }
 })
 
-.factory('VehicleMonitoringService', function ($q, $http) {
+.factory('VehicleMonitoringService', function ($q, $http, API_END_POINT, API_KEY) {
     var getLocations = function (route) {
         var deferred = $q.defer();
         var locations = {};
 
-        var url = "http://bt.mta.info/api/siri/vehicle-monitoring.json?callback=JSON_CALLBACK";
+        var url = API_END_POINT + "api/siri/vehicle-monitoring.json?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
-                    key: "TEST",
+                    key: API_KEY,
                     LineRef: route
                 }
             })
@@ -93,7 +93,7 @@ angular.module('starter.services', ['ionic'])
     }
 })
 
-.factory('RouteService', function ($q, $http) {
+.factory('RouteService', function ($q, $http, API_END_POINT, API_KEY) {
 
     var getPolylines = function (route) {
         var deferred = $q.defer();
@@ -102,12 +102,14 @@ angular.module('starter.services', ['ionic'])
             polylines: []
         };
 
-        var url = "http://bt.mta.info/api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK";
+        var url = API_END_POINT + "api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK";
+
         var responsePromise = $http.jsonp(url, {
+
                 params: {
-                    key: "TEST",
+                    key: API_KEY,
                     version: 2,
-                    includePolulines: false
+                    includePolylines: true
                 }
             })
             .success(function (data, status, header, config) {
@@ -132,10 +134,11 @@ angular.module('starter.services', ['ionic'])
         var deferred = $q.defer();
         var directions = {};
 
-        var url = "http://bt.mta.info/api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK";
+        var url = API_END_POINT + "api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK";
+
         var responsePromise = $http.jsonp(url, {
                 params: {
-                    key: "TEST",
+                    key: API_KEY,
                     version: 2,
                     includePolylines: false
                 }
@@ -188,11 +191,12 @@ angular.module('starter.services', ['ionic'])
         var deferred = $q.defer();
         var stops = {};
 
-        var url = "http://bt.mta.info/api/stops-on-route-for-direction?callback=JSON_CALLBACK";
+        var url = API_END_POINT + "api/stops-on-route-for-direction?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
                     routeId: route,
-                    directionId: direction
+                    directionId: direction,
+                    key: API_KEY
                 }
             })
             .success(function (data, status, header, config) {
@@ -232,14 +236,14 @@ angular.module('starter.services', ['ionic'])
         return deferred.promise;
     }
 
-    var getRoutes = function (lat, lon) {
+    var getRoutes = function (lat, lon, API_END_POINT, API_KEY) {
         var deferred = $q.defer();
         var routes = {};
 
-        var url = "http://bt.mta.info/api/where/routes-for-location.json?callback=JSON_CALLBACK";
+        var url = API_END_POINT + "api/where/routes-for-location.json?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
-                    key: "TEST",
+                    key: API_KEY,
                     lat: lat,
                     lon: lon,
                     radius: 300
@@ -259,14 +263,14 @@ angular.module('starter.services', ['ionic'])
         return deferred.promise;
     };
 
-    var getStops = function (lat, lon) {
+    var getStops = function (lat, lon, API_END_POINT, API_KEY) {
         var deferred = $q.defer();
         var stops = {};
 
-        var url = "http://bt.mta.info/api/where/stops-for-location.json?callback=JSON_CALLBACK";
+        var url = API_END_POINT +"api/where/stops-for-location.json?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
-                    key: "TEST",
+                    key: API_KEY,
                     lat: lat,
                     lon: lon
                 }
@@ -292,7 +296,7 @@ angular.module('starter.services', ['ionic'])
     }
 })
 
-.factory('AtStopService', function ($q, $http) {
+.factory('AtStopService', function ($q, $http, API_END_POINT, API_KEY) {
     var getBuses = function (stop) {
         var deferred = $q.defer();
         var buses = {
@@ -300,10 +304,10 @@ angular.module('starter.services', ['ionic'])
             alerts: ""
         };
 
-        var url = "http://bt.mta.info/api/siri/stop-monitoring.json?callback=JSON_CALLBACK";
+        var url = API_END_POINT+"api/siri/stop-monitoring.json?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
-                    key: "TEST",
+                    key: API_KEY,
                     OperatorRef: "MTA",
                     MonitoringRef: stop
                 }
@@ -375,15 +379,15 @@ angular.module('starter.services', ['ionic'])
     }
 })
 
-.factory('StopcodeService', function ($q, $http) {
+.factory('StopcodeService', function ($q, $http, API_END_POINT, API_KEY) {
     var getRoutes = function (stop) {
         var deferred = $q.defer();
         var routes = {};
 
-        var url = "http://bt.mta.info/api/where/stop/" + stop + ".json?callback=JSON_CALLBACK";
+        var url = API_END_POINT+"api/where/stop/" + stop + ".json?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
-                    key: "TEST"
+                    key: API_KEY
                 }
             })
             .success(function (data, status, header, config) {
@@ -407,12 +411,12 @@ angular.module('starter.services', ['ionic'])
     }
 })
 
-.factory('SearchService', function ($q, $http) {
+.factory('SearchService', function ($q, $http, API_END_POINT, API_KEY) {
     var autocomplete = function (searchKey) {
         var deferred = $q.defer();
         var matches = [];
 
-        var url = "http://bt.mta.info/api/autocomplete?callback=JSON_CALLBACK";
+        var url = API_END_POINT+"api/autocomplete?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
                     term: searchKey
@@ -436,13 +440,15 @@ angular.module('starter.services', ['ionic'])
         var deferred = $q.defer();
         var matches = {};
 
-        var url = "http://bt.mta.info/api/search?callback=JSON_CALLBACK";
+        var url = API_END_POINT+"api/search?callback=JSON_CALLBACK";
+
         var responsePromise = $http.jsonp(url, {
                 params: {
                     q: term
                 }
             })
             .success(function (data, status, header, config) {
+                console.log(data);
                 if (data.searchResults.empty === false && data.searchResults.matches.length > 0) {
                     var matchesData = data.searchResults.matches[0];
                     switch (data.searchResults.resultType) {
