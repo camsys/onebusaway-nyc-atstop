@@ -9,7 +9,7 @@
         <p class="highlight">Nearby Stops:</p>
 
         <ion-list>
-            <ion-item ng-repeat="item in data.stops" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+            <ion-item ng-repeat="item in data.stops | limitTo:10" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
                 {{item.name}}
             </ion-item>
         </ion-list>

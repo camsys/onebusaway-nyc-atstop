@@ -4,14 +4,14 @@
 
         <p class="highlight">Routes:</p>
         <ion-list>
-            <ion-item ng-repeat="item in data.routes" href="#/tab/route/{{item.id}}/{{item.shortName}}">
+            <ion-item ng-repeat="item in data.routes |limitTo:10" href="#/tab/route/{{item.id}}/{{item.shortName}}">
                 {{item.shortName}}
             </ion-item>
         </ion-list>
 
         <p class="highlight">Stops:</p>
         <ion-list>
-            <ion-item ng-repeat="item in data.stops" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+            <ion-item ng-repeat="item in data.stops| limitTo:10" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
                 {{item.name}}
             </ion-item>
         </ion-list>

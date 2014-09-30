@@ -230,10 +230,10 @@ angular.module('starter.controllers', [])
             angular.forEach(results['arriving'], function(val, key){
                 angular.forEach(val['distances'], function (v,k) {
                     if(v['progress']=='prevTrip'){
-                       v['distance'] = v['distance'] + "+ Scheduled Layover At Terminal";
+                       v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
                     }
                     else if(v['progress']=='layover,prevTrip'){
-                        v['distance'] = v['distance'] + "+ At terminal. Scheduled to depart at " + $filter('date')(v['departs'],'shortTime');
+                        v['distance'] = [v['distance'],"+ At terminal. Scheduled to depart at ",$filter('date')(v['departs'],'shortTime')];
                     }
                 })
 
