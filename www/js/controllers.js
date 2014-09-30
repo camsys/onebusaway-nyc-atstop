@@ -3,16 +3,20 @@ angular.module('starter.controllers', [])
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService', 'VehicleMonitoringService', '$ionicLoading', '$timeout',
     function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout) {
         $scope.val = true;
+        $scope.stops = {};
 
         $scope.drawPolylines = function (route) {
             RouteService.getPolylines(route).then(function (results) {
                 var stopsAndRoute = {};
 
                 angular.forEach(results.stops, function (val, key) {
-                    stopsAndRoute["stops" + key] = {
+                    stopsAndRoute[key] = {
                         type: "circleMarker",
                         color: '#008888',
-                        radius: 2,
+                        radius: 1,
+                        name: val.name,
+                        id: val.id,
+                        routeIds: val.routeIds,
                         latlngs: {
                             lat: val.lat,
                             lng: val.lon
@@ -25,7 +29,7 @@ angular.module('starter.controllers', [])
                         color: '#008888',
                         weight: 3,
                         latlngs: []
-                    }
+                    };
 
                     angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function (v, k) {
                         stopsAndRoute[key].latlngs.push({
@@ -36,7 +40,7 @@ angular.module('starter.controllers', [])
                 });
 
                 $scope.paths = stopsAndRoute;
-            })
+                })
         };
 
         $scope.drawBuses = function (route) {
@@ -45,25 +49,23 @@ angular.module('starter.controllers', [])
                 $scope.val = false;
             }, 30000);
 
-
             $scope.markers = {};
             VehicleMonitoringService.getLocations(route).then(function (results) {
                 var buses = {};
-
                 function round5(x) {
                     return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
                 }
 
                 angular.forEach(results, function (val, key) {
-
                     angle = round5(val.angle);
                     if (angle == 360) {
                         angle = 0;
                     };
-
                     buses[key] = {
                         lat: val.latitude,
                         lng: val.longitude,
+                        message: "Vehicle " + val.vehicleId + "<br> <h4>" + val.destination + "</h4>"
+                            + "<br> <h5>Next Stop: " + val.stopPointName + "</h5>",
                         icon: {
                             iconUrl: 'img/bus_icons/vehicle-' + angle + '.png',
                             iconSize: [51, 51]
@@ -74,7 +76,6 @@ angular.module('starter.controllers', [])
 
                 $scope.markers = buses;
             });
-
         };
 
         $scope.refresh = function () {
@@ -82,7 +83,6 @@ angular.module('starter.controllers', [])
         };
 
         $scope.map = function () {
-
 
             angular.extend($scope, {
                 center: {
@@ -106,6 +106,7 @@ angular.module('starter.controllers', [])
         $scope.init = (function () {
             $scope.map();
             $scope.drawPolylines($stateParams.routeId);
+            
             $scope.drawBuses($stateParams.routeId);
         })();
 }])
@@ -177,7 +178,7 @@ angular.module('starter.controllers', [])
         $scope.data = {
             "loaded": false,
             "favorites": [],
-            "notifications": '',
+            "notifications": ''
         };
 
         $scope.remove = function (stopId) {
@@ -204,8 +205,8 @@ angular.module('starter.controllers', [])
         })();
     }])
 
-.controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout',
-    function ($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout) {
+.controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter',
+    function ($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter) {
         $scope.data = {
             "alerts": "",
             "loaded": false,
@@ -227,15 +228,13 @@ angular.module('starter.controllers', [])
         };
 
         $scope.handleLayovers = function(results){
-            console.log(results);
             angular.forEach(results['arriving'], function(val, key){
                 angular.forEach(val['distances'], function (v,k) {
                     if(v['progress']=='prevTrip'){
                        v['distance'] = v['distance'] + "+ Scheduled Layover At Terminal";
                     }
                     else if(v['progress']=='layover,prevTrip'){
-                        //aagh, dates!
-                        v['distance'] = v['distance'] + "+ At terminal. Scheduled to depart at " + v['departs'];
+                        v['distance'] = v['distance'] + "+ At terminal. Scheduled to depart at " + $filter('date')(v['departs'],'shortTime');
                     }
                 })
 
@@ -321,7 +320,7 @@ angular.module('starter.controllers', [])
             "direction": [],
             "directionName": "",
             "direction_": [],
-            "directionName_": "",
+            "directionName_": ""
 
         };
 

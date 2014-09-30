@@ -72,6 +72,9 @@ angular.module('starter.services', ['ionic'])
                     locations[key] = {
                         latitude: val.MonitoredVehicleJourney.VehicleLocation.Latitude,
                         longitude: val.MonitoredVehicleJourney.VehicleLocation.Longitude,
+                        destination: val.MonitoredVehicleJourney.DestinationName,
+                        stopPointName: val.MonitoredVehicleJourney.MonitoredCall.StopPointName,
+                        vehicleId: val.MonitoredVehicleJourney.VehicleRef.replace(/\D/g,''),
                         angle: val.MonitoredVehicleJourney.Bearing
                     }
                 });
@@ -326,7 +329,7 @@ angular.module('starter.services', ['ionic'])
                                 distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance,
                                 destination: value.MonitoredVehicleJourney.DestinationName,
                                 progress: value.MonitoredVehicleJourney.ProgressStatus,
-                                departs: Date(value.MonitoredVehicleJourney.OriginAimedDepartureTime)
+                                departs: value.MonitoredVehicleJourney.OriginAimedDepartureTime
                             });
                         }
                     });
