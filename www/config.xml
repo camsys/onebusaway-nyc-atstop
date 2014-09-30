@@ -79,16 +79,16 @@
         <splash src="img/screen/android/splash-port-xhdpi.png" density="port-xhdpi" />
     </platform>
 
-    <!-- iOS Splash Screens ->
+    <!-- iOS Splash Screens -->
     <platform name="ios">
         <!-- images are determined by width and height. The following are supported -->
-    <splash src="img/screen/ios/Default~iphone.png" width="320" height="480" />
-    <splash src="img/screen/ios/Default@2x~iphone.png" width="640" height="960" />
-    <splash src="img/screen/ios/Default-Portrait~ipad.png" width="768" height="1024" />
-    <splash src="img/screen/ios/Default-Portrait@2x~ipad.png" width="1536" height="2048" />
-    <splash src="img/screen/ios/Default-Landscape~ipad.png" width="1024" height="768" />
-    <splash src="img/screen/ios/Default-Landscape@2x~ipad.png" width="2048" height="1536" />
-    <splash src="img/screen/ios/Default-568h@2x~iphone.png" width="640" height="1136" />
+        <splash src="img/screen/ios/Default~iphone.png" width="320" height="480" />
+        <splash src="img/screen/ios/Default@2x~iphone.png" width="640" height="960" />
+        <splash src="img/screen/ios/Default-Portrait~ipad.png" width="768" height="1024" />
+        <splash src="img/screen/ios/Default-Portrait@2x~ipad.png" width="1536" height="2048" />
+        <splash src="img/screen/ios/Default-Landscape~ipad.png" width="1024" height="768" />
+        <splash src="img/screen/ios/Default-Landscape@2x~ipad.png" width="2048" height="1536" />
+        <splash src="img/screen/ios/Default-568h@2x~iphone.png" width="640" height="1136" />
     </platform>
 
 </widget>
