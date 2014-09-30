@@ -28,4 +28,67 @@
     <gap:plugin name="org.apache.cordova.network-information" />
     <gap:plugin name="org.apache.cordova.geolocation" />
     <gap:plugin name="org.apache.cordova.statusbar" />
+
+    <!-- Android Icons -->
+    <platform name="android">
+        <icon src="img/android/ldpi.png" density="ldpi" />
+        <icon src="img/android/mdpi.png" density="mdpi" />
+        <icon src="img/android/hdpi.png" density="hdpi" />
+        <icon src="img/android/xhdpi.png" density="xhdpi" />
+    </platform>
+
+    <!-- iOS Icons -->
+    <platform name="ios">
+        <!-- iOS 7.0+ -->
+        <!-- iPhone / iPod Touch  -->
+        <icon src="img/ios/icon-60.png" width="60" height="60" />
+        <icon src="img/ios/icon-60@2x.png" width="120" height="120" />
+        <!-- iPad -->
+        <icon src="img/ios/icon-76.png" width="76" height="76" />
+        <icon src="img/ios/icon-76@2x.png" width="152" height="152" />
+        <!-- iOS 6.1 -->
+        <!-- Spotlight Icon -->
+        <icon src="img/ios/icon-40.png" width="40" height="40" />
+        <icon src="img/ios/icon-40@2x.png" width="80" height="80" />
+        <!-- iPhone / iPod Touch -->
+        <icon src="img/ios/icon.png" width="57" height="57" />
+        <icon src="img/ios/icon@2x.png" width="114" height="114" />
+        <!-- iPad -->
+        <icon src="img/ios/icon-72.png" width="72" height="72" />
+        <icon src="img/ios/icon-72@2x.png" width="144" height="144" />
+        <!-- iPhone Spotlight and Settings Icon -->
+        <icon src="img/ios/icon-small.png" width="29" height="29" />
+        <icon src="img/ios/icon-small@2x.png" width="58" height="58" />
+        <!-- iPad Spotlight and Settings Icon -->
+        <icon src="img/ios/icon-50.png" width="50" height="50" />
+        <icon src="img/ios/icon-50@2x.png" width="100" height="100" />
+    </platform>
+
+
+    <!-- Android Splash Screens -->
+    <platform name="android">
+        <!-- you can use any density that exists in the Android project -->
+        <splash src="img/screen/android/splash-land-hdpi.png" density="land-hdpi" />
+        <splash src="img/screen/android/splash-land-ldpi.png" density="land-ldpi" />
+        <splash src="img/screen/android/splash-land-mdpi.png" density="land-mdpi" />
+        <splash src="img/screen/android/splash-land-xhdpi.png" density="land-xhdpi" />
+
+        <splash src="img/screen/android/splash-port-hdpi.png" density="port-hdpi" />
+        <splash src="img/screen/android/splash-port-ldpi.png" density="port-ldpi" />
+        <splash src="img/screen/android/splash-port-mdpi.png" density="port-mdpi" />
+        <splash src="img/screen/android/splash-port-xhdpi.png" density="port-xhdpi" />
+    </platform>
+
+    <!-- iOS Splash Screens ->
+    <platform name="ios">
+        <!-- images are determined by width and height. The following are supported -->
+    <splash src="img/screen/ios/Default~iphone.png" width="320" height="480" />
+    <splash src="img/screen/ios/Default@2x~iphone.png" width="640" height="960" />
+    <splash src="img/screen/ios/Default-Portrait~ipad.png" width="768" height="1024" />
+    <splash src="img/screen/ios/Default-Portrait@2x~ipad.png" width="1536" height="2048" />
+    <splash src="img/screen/ios/Default-Landscape~ipad.png" width="1024" height="768" />
+    <splash src="img/screen/ios/Default-Landscape@2x~ipad.png" width="2048" height="1536" />
+    <splash src="img/screen/ios/Default-568h@2x~iphone.png" width="640" height="1136" />
+    </platform>
+
 </widget>
