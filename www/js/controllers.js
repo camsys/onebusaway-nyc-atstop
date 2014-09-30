@@ -3,7 +3,6 @@ angular.module('starter.controllers', [])
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService', 'VehicleMonitoringService', '$ionicLoading', '$timeout',
     function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout) {
         $scope.val = true;
-        $scope.stops = {};
 
         $scope.drawPolylines = function (route) {
             RouteService.getPolylines(route).then(function (results) {
@@ -142,20 +141,20 @@ angular.module('starter.controllers', [])
                 }
             );
         };
-		$scope.noSchedService = function(route){
-			$scope.data.notifications = "There is no scheduled service on this route at this time.";
-		}
+        $scope.noSchedService = function (route) {
+            $scope.data.notifications = "There is no scheduled service on this route at this time.";
+        }
         $scope.searchAndGo = function (term) {
             SearchService.search(term).then(
                 function (matches) {
                     switch (matches.type) {
                     case "RouteResult":
-						//if (matches.hasUpcomingScheduledService){
+                        //if (matches.hasUpcomingScheduledService){
                         $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
-						//}else {
-						//$scope.noSchedService(matches.shortName);
-						//}
-						break;
+                        //}else {
+                        //$scope.noSchedService(matches.shortName);
+                        //}
+                        break;
                     case "StopResult":
                         $scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
                         break;
@@ -178,7 +177,7 @@ angular.module('starter.controllers', [])
         $scope.data = {
             "loaded": false,
             "favorites": [],
-            "notifications": ''
+            "notifications": '',
         };
 
         $scope.remove = function (stopId) {
@@ -215,7 +214,7 @@ angular.module('starter.controllers', [])
             "results": [],
             "stopName": $stateParams.stopName,
             "notifications": '',
-            "alertsHide" : false
+            "alertsHide": false
         };
 
         $scope.addToFavorites = function () {
@@ -389,7 +388,7 @@ angular.module('starter.controllers', [])
                         }
                     });
 
-                    $q.all([getFavorites]).then(function () {
+                    $q.all(getStops).then(function () {
                         $scope.data.loaded = true;
                     });
                 }, function (error) {
