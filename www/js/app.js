@@ -6,7 +6,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         if ($cordovaNetwork.isOffline()) {
             $ionicPopup.alert({
                 title: "Internet Disconnected",
-                content: "The internet is disconnected on your device."
+                content: "The internet is not available on your device."
             })
                 .then(function (result) {
                     if (result) {
