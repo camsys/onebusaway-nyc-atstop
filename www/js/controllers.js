@@ -1,8 +1,11 @@
 angular.module('starter.controllers', [])
 
-.controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService', 'VehicleMonitoringService', '$ionicLoading', '$timeout',
-    function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout) {
+.controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
+        'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers',
+    function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers) {
         $scope.val = true;
+        $scope.paths = {};
+        var bounds = {};
 
         $scope.drawPolylines = function (route) {
             RouteService.getPolylines(route).then(function (results) {
@@ -39,6 +42,19 @@ angular.module('starter.controllers', [])
                 });
 
                 $scope.paths = stopsAndRoute;
+
+                //console.log(stopsAndRoute['0']['latlngs'][0]['lat']);console.log(stopsAndRoute['1']['latlngs'][0]);
+                console.log($scope.bounds);
+                bounds = leafletBoundsHelpers.createBoundsFromArray([
+               [$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lng']],
+               [$scope.paths['0']['latlngs'][1]['lat'], $scope.paths['0']['latlngs'][1]['lng']]
+                ]) ;
+
+                angular.extend($scope,{
+                    bounds: bounds
+                });
+
+                console.log($scope.bounds);
                 })
         };
 
@@ -81,14 +97,23 @@ angular.module('starter.controllers', [])
             $scope.drawBuses($stateParams.routeId);
         };
 
+//        $scope.zoomToRoute = function() {
+//            console.log(paths);
+//            var routeBounds = [
+//                [$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lon']],
+//                [$scope.paths['0']['latlngs'][1]['lat'], $scope.paths['0']['latlngs'][1]['lon']]
+//            ] ;
+//        };
+
         $scope.map = function () {
 
             angular.extend($scope, {
                 center: {
-                    lat: 40.7142700,
-                    lng: -74.0059700,
+                    lat: 40.8142700,
+                    lng: -73.959700,
                     zoom: 10
                 },
+                bounds: bounds,
                 defaults: {
                     tileLayer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                     tileLayerOptions: {
@@ -105,9 +130,8 @@ angular.module('starter.controllers', [])
         $scope.init = (function () {
             $scope.map();
             $scope.drawPolylines($stateParams.routeId);
-            
             $scope.drawBuses($stateParams.routeId);
-        })();
+         })();
 }])
 
 .controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform',
