@@ -5,7 +5,6 @@ angular.module('starter.controllers', [])
     function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers) {
         $scope.val = true;
         $scope.paths = {};
-        var bounds = {};
 
         $scope.drawPolylines = function (route) {
             RouteService.getPolylines(route).then(function (results) {
@@ -44,18 +43,26 @@ angular.module('starter.controllers', [])
                 $scope.paths = stopsAndRoute;
 
                 //console.log(stopsAndRoute['0']['latlngs'][0]['lat']);console.log(stopsAndRoute['1']['latlngs'][0]);
-                console.log($scope.bounds);
+                /*
                 bounds = leafletBoundsHelpers.createBoundsFromArray([
                [$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lng']],
                [$scope.paths['0']['latlngs'][1]['lat'], $scope.paths['0']['latlngs'][1]['lng']]
-                ]) ;
+                ]);
+                */
 
-                angular.extend($scope,{
-                    bounds: bounds
-                });
+                $scope.maxbounds = {
+                    northEast: {
+                        lat: $scope.paths['0']['latlngs'][0]['lat'],
+                        lng: $scope.paths['0']['latlngs'][0]['lng']
+                    },
+                    southWest: {
+                        lat: $scope.paths['0']['latlngs'][1]['lat'],
+                        lng: $scope.paths['0']['latlngs'][1]['lng']
+                    }
+                };
 
-                console.log($scope.bounds);
-                })
+                console.log($scope.maxbounds);
+            })
         };
 
         $scope.drawBuses = function (route) {
@@ -67,6 +74,7 @@ angular.module('starter.controllers', [])
             $scope.markers = {};
             VehicleMonitoringService.getLocations(route).then(function (results) {
                 var buses = {};
+
                 function round5(x) {
                     return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
                 }
@@ -79,8 +87,7 @@ angular.module('starter.controllers', [])
                     buses[key] = {
                         lat: val.latitude,
                         lng: val.longitude,
-                        message: "Vehicle " + val.vehicleId + "<br> <h4>" + val.destination + "</h4>"
-                            + "<br> <h5>Next Stop: " + val.stopPointName + "</h5>",
+                        message: "Vehicle " + val.vehicleId + "<br> <h4>" + val.destination + "</h4>" + "<br> <h5>Next Stop: " + val.stopPointName + "</h5>",
                         icon: {
                             iconUrl: 'img/bus_icons/vehicle-' + angle + '.png',
                             iconSize: [51, 51]
@@ -97,23 +104,19 @@ angular.module('starter.controllers', [])
             $scope.drawBuses($stateParams.routeId);
         };
 
-//        $scope.zoomToRoute = function() {
-//            console.log(paths);
-//            var routeBounds = [
-//                [$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lon']],
-//                [$scope.paths['0']['latlngs'][1]['lat'], $scope.paths['0']['latlngs'][1]['lon']]
-//            ] ;
-//        };
+        //        $scope.zoomToRoute = function() {
+        //            console.log(paths);
+        //            var routeBounds = [
+        //                [$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lon']],
+        //                [$scope.paths['0']['latlngs'][1]['lat'], $scope.paths['0']['latlngs'][1]['lon']]
+        //            ] ;
+        //        };
 
         $scope.map = function () {
 
             angular.extend($scope, {
-                center: {
-                    lat: 40.8142700,
-                    lng: -73.959700,
-                    zoom: 10
-                },
-                bounds: bounds,
+                center: {},
+                maxbounds: {},
                 defaults: {
                     tileLayer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                     tileLayerOptions: {
@@ -131,7 +134,7 @@ angular.module('starter.controllers', [])
             $scope.map();
             $scope.drawPolylines($stateParams.routeId);
             $scope.drawBuses($stateParams.routeId);
-         })();
+        })();
 }])
 
 .controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform',
@@ -250,18 +253,16 @@ angular.module('starter.controllers', [])
             FavoritesService.remove($stateParams.stopId);
         };
 
-        $scope.handleLayovers = function(results){
-            angular.forEach(results['arriving'], function(val, key){
+        $scope.handleLayovers = function (results) {
+            angular.forEach(results['arriving'], function (val, key) {
                 //updates distances to an array of strings so that multi-line entries come out cleaner.
-                angular.forEach(val['distances'], function (v,k) {
-                    if(v['progress']=='prevTrip'){
-                       v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
-                    }
-                    else if(v['progress']=='layover,prevTrip'){
-                        v['distance'] = [v['distance'],"At terminal.", ("Scheduled to depart at " + $filter('date')(v['departs'],'shortTime'))];
-                    }
-                    else{
-                        v['distance'] =[v['distance']];
+                angular.forEach(val['distances'], function (v, k) {
+                    if (v['progress'] == 'prevTrip') {
+                        v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
+                    } else if (v['progress'] == 'layover,prevTrip') {
+                        v['distance'] = [v['distance'], "At terminal.", ("Scheduled to depart at " + $filter('date')(v['departs'], 'shortTime'))];
+                    } else {
+                        v['distance'] = [v['distance']];
                     }
                 })
 
