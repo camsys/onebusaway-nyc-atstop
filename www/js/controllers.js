@@ -41,14 +41,7 @@ angular.module('starter.controllers', [])
                 });
 
                 $scope.paths = stopsAndRoute;
-
-                //console.log(stopsAndRoute['0']['latlngs'][0]['lat']);console.log(stopsAndRoute['1']['latlngs'][0]);
-                /*
-                bounds = leafletBoundsHelpers.createBoundsFromArray([
-               [$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lng']],
-               [$scope.paths['0']['latlngs'][1]['lat'], $scope.paths['0']['latlngs'][1]['lng']]
-                ]);
-                */
+                console.log(stopsAndRoute);
 
                 $scope.maxbounds = {
                     northEast: {
@@ -60,8 +53,6 @@ angular.module('starter.controllers', [])
                         lng: $scope.paths['0']['latlngs'][1]['lng']
                     }
                 };
-
-                console.log($scope.maxbounds);
             })
         };
 
@@ -104,16 +95,7 @@ angular.module('starter.controllers', [])
             $scope.drawBuses($stateParams.routeId);
         };
 
-        //        $scope.zoomToRoute = function() {
-        //            console.log(paths);
-        //            var routeBounds = [
-        //                [$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lon']],
-        //                [$scope.paths['0']['latlngs'][1]['lat'], $scope.paths['0']['latlngs'][1]['lon']]
-        //            ] ;
-        //        };
-
         $scope.map = function () {
-
             angular.extend($scope, {
                 center: {},
                 maxbounds: {},
