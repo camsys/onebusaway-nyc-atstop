@@ -236,7 +236,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
         return deferred.promise;
     }
 
-    var getRoutes = function (lat, lon, API_END_POINT, API_KEY) {
+    var getRoutes = function (lat, lon) {
         var deferred = $q.defer();
         var routes = {};
 
@@ -263,7 +263,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
         return deferred.promise;
     };
 
-    var getStops = function (lat, lon, API_END_POINT, API_KEY) {
+    var getStops = function (lat, lon) {
         var deferred = $q.defer();
         var stops = {};
 
