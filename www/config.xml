@@ -10,10 +10,6 @@
         Khurshid N. Fayzullaev
     </author>
 
-    <preference name="SplashScreen" value="screen" />
-    <preference name="SplashScreenDelay" value="10000" />
-
-
     <!-- Permissions -->
     <preference name="permissions" value="none" />
 
