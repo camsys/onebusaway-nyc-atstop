@@ -99,9 +99,9 @@ angular.module('starter.controllers', ['configuration'])
                 center: {},
                 maxbounds: {},
                 defaults: {
-                    tileLayer: "https://{s}.tiles.mapbox.com/v3/mapbox.open-streets-nyc/{z}/{x}/{y}.png",
+                    tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
                     tileLayerOptions: {
-                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        attribution: 'Map:<a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data:<a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
                     },
                     scrollWheelZoom: false,
                     key: MAPBOX_KEY
@@ -135,7 +135,16 @@ angular.module('starter.controllers', ['configuration'])
         $scope.data = {
             "results": [],
             "searchKey": '',
-            "notifications": ''
+            "notifications": '',
+            exampleRoutes: [
+                "B15", "Bx1", "M15-SBS", "S44", "Q58"
+            ],
+            exampleStops: [
+                "100138", "200460","308215", "402659", "502030"
+            ],
+            exampleIntersections: [
+                "Main Street & Kissena Boulevard"
+            ]
         };
 
         $scope.autocomplete = function () {
@@ -277,7 +286,7 @@ angular.module('starter.controllers', ['configuration'])
 
                     $scope.data.alertsHide = false;
                 }
-                console.log(results);
+
             });
 
             $q.all([getBuses]).then(function () {

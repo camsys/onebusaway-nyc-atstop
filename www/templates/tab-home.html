@@ -12,6 +12,20 @@
                 </ion-item>
             </ion-list>
         </div>
+        <div class="list card">
+
+            Try these example searches:
+            <div class="button-bar">
+            Routes: &nbsp;
+            <span class="button" ng-repeat="s in data.exampleRoutes" ng-click="searchAndGo(s)">{{s}} &nbsp;</span>
+            </div>
+            <div class="button-bar">Stops:
+            <span class="button" ng-repeat="s in data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &nbsp;</span>
+            </div>
+            <p>Intersections:
+            <i class="item" ng-repeat="s in data.exampleIntersections" ng-click="searchAndGo(s)">{{s}}</i>
+            </p>
+        </div>
 
         <p>{{data.notifications}}</p>
     </ion-content>

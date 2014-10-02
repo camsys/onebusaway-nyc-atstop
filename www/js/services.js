@@ -220,7 +220,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
     }
 })
 
-.factory('GeolocationService', function ($q, $http) {
+.factory('GeolocationService', function ($q, $http, API_END_POINT, API_KEY) {
 
     var promiseCurrentPosition = function (geolocationOptions) {
         var deferred = $q.defer();
