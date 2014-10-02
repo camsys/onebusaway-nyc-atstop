@@ -1,8 +1,8 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['configuration'])
 
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
         'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers',
-    function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers) {
+    function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, MAPBOX_KEY, leafletBoundsHelpers) {
         $scope.val = true;
         $scope.paths = {};
 
@@ -41,7 +41,6 @@ angular.module('starter.controllers', [])
                 });
 
                 $scope.paths = stopsAndRoute;
-                console.log(stopsAndRoute);
 
                 $scope.maxbounds = {
                     northEast: {
@@ -49,8 +48,8 @@ angular.module('starter.controllers', [])
                         lng: $scope.paths['0']['latlngs'][0]['lng']
                     },
                     southWest: {
-                        lat: $scope.paths['0']['latlngs'][1]['lat'],
-                        lng: $scope.paths['0']['latlngs'][1]['lng']
+                        lat: $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length -1]['lat'],
+                        lng: $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length -1]['lng']
                     }
                 };
             })
@@ -100,11 +99,12 @@ angular.module('starter.controllers', [])
                 center: {},
                 maxbounds: {},
                 defaults: {
-                    tileLayer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    tileLayer: "https://{s}.tiles.mapbox.com/v3/mapbox.open-streets-nyc/{z}/{x}/{y}.png",
                     tileLayerOptions: {
                         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     },
-                    scrollWheelZoom: false
+                    scrollWheelZoom: false,
+                    key: MAPBOX_KEY
                 },
                 markers: {},
                 paths: {}
@@ -113,6 +113,7 @@ angular.module('starter.controllers', [])
         };
 
         $scope.init = (function () {
+
             $scope.map();
             $scope.drawPolylines($stateParams.routeId);
             $scope.drawBuses($stateParams.routeId);
