@@ -14,16 +14,18 @@
         </div>
         <div class="list card">
 
-            Try these example searches:
-            <div class="button-bar">
+            <p>You can search for Stops, Routes, or Intersections in the bar above, or try one of the examples below:</p>
+            <p><i class="item">
             Routes: &nbsp;
-            <span class="button" ng-repeat="s in data.exampleRoutes" ng-click="searchAndGo(s)">{{s}} &nbsp;</span>
-            </div>
-            <div class="button-bar">Stops:
-            <span class="button" ng-repeat="s in data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &nbsp;</span>
-            </div>
-            <p>Intersections:
-            <i class="item" ng-repeat="s in data.exampleIntersections" ng-click="searchAndGo(s)">{{s}}</i>
+            <span class="button-clear" ng-repeat="s in data.exampleRoutes" ng-click="searchAndGo(s)">{{s}} &nbsp;</span>
+            </i></p>
+            <p>
+            <i class="item">Stops:
+            <span class="button-clear" ng-repeat="s in data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &nbsp;</span>
+            </i></p>
+            <p><i class="item">Intersections:
+
+            <span class="button-clear" ng-repeat="s in data.exampleIntersections" ng-click="searchAndGo(s)">{{s}}</i>
             </p>
         </div>
 
