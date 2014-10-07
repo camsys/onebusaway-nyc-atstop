@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['configuration'])
+angular.module('starter.controllers', ['configuration','filters'])
 
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
         'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers',
@@ -223,8 +223,8 @@ angular.module('starter.controllers', ['configuration'])
         })();
     }])
 
-.controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter',
-    function ($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter) {
+.controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService',
+    function ($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService) {
         $scope.data = {
             "alerts": "",
             "loaded": false,
@@ -252,7 +252,7 @@ angular.module('starter.controllers', ['configuration'])
                     if (v['progress'] == 'prevTrip') {
                         v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
                     } else if (v['progress'] == 'layover,prevTrip') {
-                        v['distance'] = [v['distance'], "At terminal.", ("Scheduled to depart at " + $filter('date')(v['departs'], 'shortTime'))];
+                        v['distance'] = [v['distance'], "At terminal.", ("Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime'))];
                     } else {
                         v['distance'] = [v['distance']];
                     }
@@ -271,6 +271,7 @@ angular.module('starter.controllers', ['configuration'])
             var getBuses = AtStopService.getBuses($stateParams.stopId).then(function (results) {
                 if (!angular.isUndefined(results.arriving) && results.arriving != null) {
                     $scope.handleLayovers(results);
+                    $scope.updateArrivalTimes(results);
                     $scope.data.results = results.arriving;
                 } else {
                     $scope.data.notifications = "No data available right now";
@@ -279,7 +280,7 @@ angular.module('starter.controllers', ['configuration'])
                 if (results.alerts.length > 0) {
                     $scope.data.alertsHide = true;
                     angular.forEach(results.alerts, function (val, key) {
-                        $scope.data.alerts += "\n" + val;
+                        $scope.data.alerts += "\r\n" + val;
 
                     });
                 } else {
@@ -288,9 +289,22 @@ angular.module('starter.controllers', ['configuration'])
                 }
 
             });
-
             $q.all([getBuses]).then(function () {
                 $scope.data.loaded = true;
+            });
+        };
+
+        $scope.tick = function () {
+            $scope.currentTime = moment();
+            $scope.updateArrivalTimes($scope.data.results);
+            $timeout($scope.tick,30000);
+        }
+
+        $scope.updateArrivalTimes = function (results){
+            angular.forEach(results['arriving'], function (val, key) {
+                angular.forEach(val['distances'], function (v, k) {
+                    v.arrivingIn = datetimeService.getRemainingTime(v.expectedArrivalTime);
+                });
             });
         };
 
@@ -301,6 +315,7 @@ angular.module('starter.controllers', ['configuration'])
         $scope.init = (function () {
             $scope.data.inFavorites = FavoritesService.inFavorites($stateParams.stopId);
             $scope.getBuses();
+            $timeout($scope.tick, 30000);
         })();
 }])
 

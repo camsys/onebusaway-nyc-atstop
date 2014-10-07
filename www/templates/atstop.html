@@ -27,6 +27,7 @@
                 <ion-list>
                 <ion-item ng-repeat="item in info.distances">
                 <h2>{{item.destination}}</h2>
+                    <p class="novmargin" ng-hide="!item.expectedArrivalTime"><strong>{{item.arrivingIn|durationView}}</strong></p>
                  <p class="novmargin" ng-repeat="d in item.distance"> {{d}}</p>
                     </ion-item>
                 </ion-list>

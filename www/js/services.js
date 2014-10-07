@@ -333,7 +333,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                                 distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance,
                                 destination: value.MonitoredVehicleJourney.DestinationName,
                                 progress: value.MonitoredVehicleJourney.ProgressStatus,
-                                departs: value.MonitoredVehicleJourney.OriginAimedDepartureTime
+                                departsTerminal: value.MonitoredVehicleJourney.OriginAimedDepartureTime,
+                                expectedArrivalTime: value.MonitoredVehicleJourney.MonitoredCall.ExpectedArrivalTime
                             });
                         }
                     });
@@ -533,4 +534,27 @@ angular.module('starter.services', ['ionic', 'configuration'])
         autocomplete: autocomplete,
         search: search
     }
-});
+})
+    .factory('datetimeService', ['$timeout', function ($timeout) {
+        var duration = function (timeSpan) {
+            var days = Math.floor(timeSpan / 86400000);
+            var diff = timeSpan - days * 86400000;
+            var hours = Math.floor(diff / 3600000);
+            diff = diff - hours * 3600000;
+            var minutes = Math.floor(diff / 60000);
+            diff = diff - minutes * 60000;
+            var secs = Math.floor(diff / 1000);
+            return { 'days': days, 'hours': hours, 'minutes': minutes, 'seconds': secs };
+        };
+        function getRemainingTime(referenceTime) {
+            var now = moment().utc();
+            return moment(referenceTime) - now;
+        }
+        return {
+            duration: duration,
+            getRemainingTime: getRemainingTime
+        };
+    }]);
+
+
+
