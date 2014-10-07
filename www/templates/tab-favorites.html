@@ -1,5 +1,6 @@
 <ion-view title="Favorites">
     <ion-content ng-show="data.loaded" has-bouncing="true">
+
         <ion-list>
             <ion-item ng-repeat="item in data.favorites " href="#/tab/atstop/{{item.stopId}}/{{item.stopName}}">
                 {{item.stopName}}
@@ -10,5 +11,6 @@
         </ion-list>
 
         <p>{{data.notifications}}</p>
+        <p>Swipe left to delete.</p>
     </ion-content>
 </ion-view>

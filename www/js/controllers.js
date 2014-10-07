@@ -197,6 +197,7 @@ angular.module('starter.controllers', ['configuration','filters'])
             "loaded": false,
             "favorites": [],
             "notifications": '',
+            "alerts": []
         };
 
         $scope.remove = function (stopId) {
@@ -252,7 +253,7 @@ angular.module('starter.controllers', ['configuration','filters'])
                     if (v['progress'] == 'prevTrip') {
                         v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
                     } else if (v['progress'] == 'layover,prevTrip') {
-                        v['distance'] = [v['distance'], "At terminal.", ("Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime'))];
+                        v['distance'] = [v['distance'], "At terminal. " + "Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime')];
                     } else {
                         v['distance'] = [v['distance']];
                     }
@@ -279,12 +280,8 @@ angular.module('starter.controllers', ['configuration','filters'])
 
                 if (results.alerts.length > 0) {
                     $scope.data.alertsHide = true;
-                    angular.forEach(results.alerts, function (val, key) {
-                        $scope.data.alerts += "\r\n" + val;
-
-                    });
+                    $scope.data.alerts = results.alerts;
                 } else {
-
                     $scope.data.alertsHide = false;
                 }
 

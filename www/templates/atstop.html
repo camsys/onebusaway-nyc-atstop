@@ -14,7 +14,7 @@
             <p>{{data.stopName}}</p>
 
             <p class="highlight" ng-show="data.alertsHide">Service Alerts:</p>
-            <p class="alerts" ng-show="data.alertsHide">{{data.alerts}}</p>
+            <p class="alerts" ng-show="data.alertsHide" ng-repeat="a in data.alerts">{{a}}</p>
 
             <p class="highlight">Upcoming Buses:</p>
 
