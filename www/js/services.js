@@ -449,7 +449,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
                 }
             })
             .success(function (data, status, header, config) {
-                console.log(data);
                 if (data.searchResults.empty === false && data.searchResults.matches.length > 0) {
                     var matchesData = data.searchResults.matches[0];
                     switch (data.searchResults.resultType) {
