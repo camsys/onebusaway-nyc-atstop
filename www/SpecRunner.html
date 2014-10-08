@@ -53,7 +53,7 @@
 
         });
 
-        describe('Filter: encodeStopName', function () {
+        describe('Function: Is Empty Object?', function () {
             var isEmpty;
 
             beforeEach(module('starter'));
@@ -61,7 +61,7 @@
                 isEmpty = $filter('isEmptyObject');
             }));
 
-            it('should be able to replace a forward slash with & character', function () {
+            it('should detect an empty object', function () {
                 var bar;
                 var foo = {
                     test: 5
