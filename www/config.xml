@@ -10,6 +10,11 @@
         Khurshid N. Fayzullaev
     </author>
 
+    <!-- Platforms -->
+    <gap:platform name="ios" />
+    <gap:platform name="android" />
+    <gap:platform name="winphone" />
+
     <!-- Permissions -->
     <preference name="permissions" value="none" />
 
