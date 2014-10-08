@@ -18,6 +18,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 
+.filter('isEmptyObject', function () {
+    var bar;
+    return function (obj) {
+        for (bar in obj) {
+            if (obj.hasOwnProperty(bar)) {
+                return false;
+            }
+        }
+        return true;
+    };
+})
+
 
 .config(function ($httpProvider) {
     $httpProvider.defaults.timeout = 5000;
