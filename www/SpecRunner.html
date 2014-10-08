@@ -52,6 +52,25 @@
             });
 
         });
+
+        describe('Filter: encodeStopName', function () {
+            var isEmpty;
+
+            beforeEach(module('starter'));
+            beforeEach(inject(function ($filter) {
+                isEmpty = $filter('isEmptyObject');
+            }));
+
+            it('should be able to replace a forward slash with & character', function () {
+                var bar;
+                var foo = {
+                    test: 5
+                };
+                expect(isEmpty(bar)).toBe(true);
+                expect(isEmpty(foo)).toBe(false);
+            });
+
+        });
     </script>
 </head>
 

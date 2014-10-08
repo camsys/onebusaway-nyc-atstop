@@ -1,6 +1,5 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova'])
 
-
 .run(function ($rootScope, $ionicPlatform, $ionicPopup, $cordovaNetwork) {
     $ionicPlatform.ready(function () {
         if ($cordovaNetwork.isOffline()) {
@@ -15,19 +14,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 });
         }
     });
-})
-
-
-.filter('isEmptyObject', function () {
-    var bar;
-    return function (obj) {
-        for (bar in obj) {
-            if (obj.hasOwnProperty(bar)) {
-                return false;
-            }
-        }
-        return true;
-    };
 })
 
 
@@ -84,24 +70,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     });
 })
 
-
-.filter('encodeStopName', function () {
-    return function (input) {
-        return input.replace("/", " & ");
-    }
-})
-
-.filter('encode', function () {
-    return function (input) {
-        return encodeURIComponent(input);
-    };
-})
-
-.filter('decode', function () {
-    return function (input) {
-        return decodeURIComponent(input);
-    }
-})
 
 .directive('ngEnter', function () {
     return function (scope, element, attrs) {
