@@ -1,6 +1,6 @@
 <ion-view title="Search">
     <ion-content has-bouncing="true">
-        <div class="list">
+        <div class="list list-inset">
             <label class="item item-input">
                 <i class="icon ion-search placeholder-icon"></i>
                 <input type="search" placeholder="Search" ng-change="autocomplete()" ng-enter="searchAndGo(data.searchKey)" ng-model="data.searchKey">
@@ -15,9 +15,9 @@
         <div class="list card">
 
             <p>You can search for Stops, Routes, or Intersections in the bar above, or try one of the examples below:</p>
-            <p><i class="item">
-            Routes: &nbsp;
-            <span class="button-clear" ng-repeat="s in data.exampleRoutes" ng-click="searchAndGo(s)">{{s}} &nbsp;</span>
+            <p><i class="item item-divider">
+            Routes: &nbsp;</i>
+            <i class="item"><span class="button-clear" ng-repeat="s in data.exampleRoutes" ng-click="searchAndGo(s)">{{s}} &nbsp;</span>
             </i></p>
             <p>
             <i class="item">Stops:

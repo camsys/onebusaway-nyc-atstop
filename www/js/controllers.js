@@ -253,7 +253,7 @@ angular.module('starter.controllers', ['configuration','filters'])
                     if (v['progress'] == 'prevTrip') {
                         v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
                     } else if (v['progress'] == 'layover,prevTrip') {
-                        v['distance'] = [v['distance'], "At terminal. " + "Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime')];
+                        v['distance'] = [v['distance'], "At terminal. ",  "Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime')];
                     } else {
                         v['distance'] = [v['distance']];
                     }
@@ -270,12 +270,14 @@ angular.module('starter.controllers', ['configuration','filters'])
             }, 30000);
 
             var getBuses = AtStopService.getBuses($stateParams.stopId).then(function (results) {
-                if (!angular.isUndefined(results.arriving) && results.arriving != null) {
+                console.log(results);
+                if (!angular.isUndefined(results.arriving) && results.arriving != null && results.length > 0) {
+                    console.log(angular.isUndefined(results.arriving));
                     $scope.handleLayovers(results);
                     $scope.updateArrivalTimes(results);
                     $scope.data.results = results.arriving;
                 } else {
-                    $scope.data.notifications = "No data available right now";
+                    $scope.data.notifications = "We are not tracking any buses to this stop at this time";
                 }
 
                 if (results.alerts.length > 0) {

@@ -1,4 +1,4 @@
-<ion-view title="Stop">
+<ion-view title="{{data.stopName}}">
     <ion-nav-buttons side="right">
         <button class="button button-clear" ng-click="refresh()" ng-disabled="data.val">
             <i class="icon ion-refresh"></i>
@@ -11,7 +11,6 @@
 
     <ion-content ng-show="data.loaded" has-bouncing="true">
         <div class="card">
-            <p>{{data.stopName}}</p>
 
             <p class="highlight" ng-show="data.alertsHide">Service Alerts:</p>
             <p class="alerts" ng-show="data.alertsHide" ng-repeat="a in data.alerts">{{a}}</p>

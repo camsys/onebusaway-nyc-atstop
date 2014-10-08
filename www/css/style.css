@@ -39,6 +39,9 @@ p.alerts {
 .novmargin {
     margin:0;
 }
+.greytext {
+    color: #666;
+}
 body {
     font-size: 1em;
     line-height: 1.4;
@@ -59,5 +62,9 @@ textarea {
 button,
 select {
     text-transform: none;
+}
+label.item.item-input {
+    margin-top: 1px;
+    border-color: #111;
 }
 
