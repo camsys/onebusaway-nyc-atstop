@@ -120,13 +120,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         })();
 }])
 
-.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform',
+.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'FavoritesService',
 
-    function ($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform) {
+    function ($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, FavoritesService) {
 
-        $scope.init = (function () {
-            // do nothing ...
-        })();
 
         $scope.go = function (path) {
             $location.path(path);
@@ -144,7 +141,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             ],
             exampleIntersections: [
                 "Main Street & Kissena Boulevard"
-            ]
+            ],
+            "favorites": [],
+            "showFavs": false,
+            "showTips": true
         };
 
         $scope.autocomplete = function () {
@@ -160,9 +160,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 }
             );
         };
+
         $scope.noSchedService = function (route) {
             $scope.data.notifications = "There is no scheduled service on this route at this time.";
         }
+
         $scope.searchAndGo = function (term) {
             SearchService.search(term).then(
                 function (matches) {
@@ -187,8 +189,24 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     }
                 }
             );
-
         };
+
+        $scope.get = function () {
+            FavoritesService.get().then(function (results) {
+                if (!angular.isUndefined(results) && results != null && !$filter('isEmptyObject')(results)) {
+                    $scope.data.favorites = results;
+                    $scope.data.showFavs = true;
+                    $scope.data.showTips = false;
+                } else {
+                    $scope.data.showFavs = false;
+                    $scope.data.showTips = true;
+                }
+            });
+        };
+
+        $scope.init = (function () {
+            $scope.get();
+        })();
 }])
 
 .controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q',

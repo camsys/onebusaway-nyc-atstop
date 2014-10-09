@@ -12,21 +12,35 @@
                 </ion-item>
             </ion-list>
         </div>
-        <div class="list card">
+
+        <!-- Tips for a new user -->
+        <div class="list card" ng-show="data.showTips">
 
             <p>You can search for Stops, Routes, or Intersections in the bar above, or try one of the examples below:</p>
             <p><i class="item item-divider">
             Routes: &nbsp;</i>
-            <i class="item"><span class="button-clear" ng-repeat="s in data.exampleRoutes" ng-click="searchAndGo(s)">{{s}} &nbsp;</span>
-            </i></p>
+                <i class="item"><span class="button-clear" ng-repeat="s in data.exampleRoutes" ng-click="searchAndGo(s)">{{s}} &nbsp;</span>
+            </i>
+            </p>
             <p>
-            <i class="item">Stops:
+                <i class="item">Stops:
             <span class="button-clear" ng-repeat="s in data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &nbsp;</span>
-            </i></p>
+            </i>
+            </p>
             <p><i class="item">Intersections:
 
             <span class="button-clear" ng-repeat="s in data.exampleIntersections" ng-click="searchAndGo(s)">{{s}}</i>
             </p>
+        </div>
+
+        <!-- Favorites -->
+        <div class="card" ng-show="data.showFavs">
+            <p>Favorites</p>
+            <ion-list>
+                <ion-item ng-repeat="item in data.favorites " href="#/tab/atstop/{{item.stopId}}/{{item.stopName}}">
+                    {{item.stopName}}
+                </ion-item>
+            </ion-list>
         </div>
 
         <p>{{data.notifications}}</p>
