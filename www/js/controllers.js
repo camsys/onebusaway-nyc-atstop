@@ -1,8 +1,8 @@
 angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
-        'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers',
-    function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, MAPBOX_KEY, leafletBoundsHelpers) {
+        'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData',
+    function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, MAPBOX_KEY) {
         $scope.val = true;
         $scope.paths = {};
         $scope.markers = {};
@@ -43,16 +43,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
                 $scope.paths = stopsAndRoute;
 
-                $scope.maxbounds = {
-                    northEast: {
-                        lat: $scope.paths['0']['latlngs'][0]['lat'],
-                        lng: $scope.paths['0']['latlngs'][0]['lng']
-                    },
-                    southWest: {
-                        lat: $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lat'],
-                        lng: $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lng']
-                    }
-                };
+                leafletData.getMap().then(function (map) {
+                    map.fitBounds([
+                     [$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lng']],
+                     [$scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lat'], $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lng']]]);
+                });
             })
         };
 
@@ -98,7 +93,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         $scope.map = function () {
             angular.extend($scope, {
                 center: {},
-                maxbounds: {},
                 defaults: {
                     tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
                     tileLayerOptions: {
