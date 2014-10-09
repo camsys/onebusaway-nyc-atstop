@@ -3,7 +3,9 @@
         <div class="list list-inset">
             <label class="item item-input">
                 <i class="icon ion-search placeholder-icon"></i>
-                <input type="search" placeholder="Search" ng-change="autocomplete()" ng-enter="searchAndGo(data.searchKey)" ng-model="data.searchKey">
+                <input type="search" placeholder="Search" ng-change="autocomplete()" ng-enter="searchAndGo(data.searchKey)" ng-model="data.searchKey"></input>    <button class="button button-small">
+						Search
+					</button>
             </label>
 
             <ion-list>
@@ -20,12 +22,12 @@
             <i class="item"><span class="button-clear" ng-repeat="s in data.exampleRoutes" ng-click="searchAndGo(s)">{{s}} &nbsp;</span>
             </i></p>
             <p>
-            <i class="item">Stops:
-            <span class="button-clear" ng-repeat="s in data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &nbsp;</span>
+            <i class="item item-divider">Stops:</i>
+            <i class="item"><span class="button-clear" ng-repeat="s in data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &nbsp;</span>
             </i></p>
-            <p><i class="item">Intersections:
+            <p><i class="item item-divider">Intersections:</i>
 
-            <span class="button-clear" ng-repeat="s in data.exampleIntersections" ng-click="searchAndGo(s)">{{s}}</i>
+            <i class="item"><span class="button-clear" ng-repeat="s in data.exampleIntersections" ng-click="searchAndGo(s)">{{s}}</i>
             </p>
         </div>
 
