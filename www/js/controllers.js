@@ -134,10 +134,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             "searchKey": '',
             "notifications": '',
             exampleRoutes: [
-                "B15", "Bx1", "M15-SBS", "S44", "Q58"
+                "Bx1", "M15-SBS", "S44", "Q58"
             ],
             exampleStops: [
-                "100138", "200460", "308215", "402659", "502030"
+                "200460", "308215", "502030"
             ],
             exampleIntersections: [
                 "Main Street & Kissena Boulevard"
