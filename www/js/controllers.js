@@ -5,6 +5,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
     function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, MAPBOX_KEY, leafletBoundsHelpers) {
         $scope.val = true;
         $scope.paths = {};
+        $scope.markers = {};
 
         $scope.drawPolylines = function (route) {
             RouteService.getPolylines(route).then(function (results) {
