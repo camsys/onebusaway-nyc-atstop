@@ -1,10 +1,7 @@
 <ion-view title="{{data.routeName}}">
     <ion-content ng-show="data.loaded" has-bouncing="true">
-        <!--        <div class="card">-->
 
-        <!--<a href="#direction0">{{data.directionName}}</a>-->
-        <!--<a href="#direction1">{{data.directionName_}}</a>-->
-        <!--        </div>-->
+        <!--
         <div class="card">
             <p class="item-divider" id="direction0">{{data.directionName}}</p>
             <ion-list>
@@ -22,5 +19,20 @@
 
             <p>{{data.notifications}}</p>
         </div>
+        -->
+
+
+
+        <ion-list>
+            <div ng-repeat="group in groups">
+                <ion-item class="item-stable" ng-click="toggleGroup(group)" ng-class="{active: isGroupShown(group)}">
+                    <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
+                    &nbsp; {{group.name}}
+                </ion-item>
+                <ion-item class="item-accordion" ng-repeat="item in group.items" ng-show="isGroupShown(group)" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+                    {{item.name}}
+                </ion-item>
+            </div>
+        </ion-list>
     </ion-content>
 </ion-view>

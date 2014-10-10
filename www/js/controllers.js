@@ -360,6 +360,37 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading',
     function ($scope, RouteService, $stateParams, $location, $q, $ionicLoading) {
+
+
+
+        $scope.groups = [];
+        $scope.groups[0] = {
+            name: "",
+            items: []
+        };
+
+        $scope.groups[1] = {
+            name: "",
+            items: []
+        };
+
+        /*
+         * if given group is the selected group, deselect it
+         * else, select the given group
+         */
+        $scope.toggleGroup = function (group) {
+            if ($scope.isGroupShown(group)) {
+                $scope.shownGroup = null;
+            } else {
+                $scope.shownGroup = group;
+            }
+        };
+        $scope.isGroupShown = function (group) {
+            return $scope.shownGroup === group;
+        };
+
+
+
         $scope.data = {
             "loaded": false,
             "routeName": $stateParams.routeName,
@@ -375,20 +406,24 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 angular.forEach(results, function (val, key) {
                     if (val.directionId == 0) {
                         $scope.data.directionName = val.destination;
+                        $scope.groups[0].name = val.destination;
                     }
 
                     if (val.directionId == 1) {
                         $scope.data.directionName_ = val.destination;
+                        $scope.groups[1].name = val.destination;
                     }
                 });
             });
 
             var getStops = RouteService.getStops($stateParams.routeId, "0").then(function (results) {
                 $scope.data.direction = results;
+                $scope.groups[0].items = results;
             });
 
             var getStops_ = RouteService.getStops($stateParams.routeId, "1").then(function (results) {
                 $scope.data.direction_ = results;
+                $scope.groups[1].items = results;
             });
 
             $q.all([getDirections, getStops, getStops_]).then(function () {
