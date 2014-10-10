@@ -1,7 +1,10 @@
 html {
-    font-family: sans-serif; /* 1 */
-    -ms-text-size-adjust: 100%; /* 2 */
-    -webkit-text-size-adjust: 100%; /* 2 */
+    font-family: sans-serif;
+    /* 1 */
+    -ms-text-size-adjust: 100%;
+    /* 2 */
+    -webkit-text-size-adjust: 100%;
+    /* 2 */
 }
 .scroll,
 .angular-leaflet-map {
@@ -10,14 +13,14 @@ html {
 p {
     margin: 15px;
 }
-div.route{
+div.route {
     font-size: 1.4em;
     vertical-align: middle;
- }
-.rightAlign{
+}
+.rightAlign {
     float: right;
 }
-.largeIcon{
+.largeIcon {
     font-size: 1.5em;
 }
 p.highlight {
@@ -37,7 +40,7 @@ p.alerts {
     padding-top: 5px;
 }
 .novmargin {
-    margin:0;
+    margin: 0;
 }
 .greytext {
     color: #666;
@@ -55,9 +58,12 @@ input,
 optgroup,
 select,
 textarea {
-    color: inherit; /* 1 */
-    font: inherit; /* 2 */
-    margin: 0; /* 3 */
+    color: inherit;
+    /* 1 */
+    font: inherit;
+    /* 2 */
+    margin: 0;
+    /* 3 */
 }
 button,
 select {
@@ -67,4 +73,3 @@ label.item.item-input {
     margin-top: 1px;
     border-color: #111;
 }
-
