@@ -129,7 +129,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             "searchKey": '',
             "notifications": '',
             exampleRoutes: [
-                "Bx1", "M15-SBS", "S44", "Q58"
+                "Bx1", "M15-SBS", "Q58"
             ],
             exampleStops: [
                 "200460", "308215", "502030"
