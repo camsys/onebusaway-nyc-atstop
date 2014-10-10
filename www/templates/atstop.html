@@ -20,14 +20,15 @@
             <div ng-repeat="(routeId, info) in data.results" class=" ">
                 <div class="row item item-divider">
                     <div class="route col">{{info.name}}</div>
-                    <a class="button button-full button-positive ion-earth rightAlign largeIcon" href="#/tab/map/{{routeId}}">
-                        </a>
+                    <a class="button button-full button-clear button-positive ion-earth rightAlign largeIcon" href="#/tab/map/{{routeId}}">
+                    </a>
                 </div>
                 <ion-list>
-                <ion-item ng-repeat="item in info.distances">
-                <h2>{{item.destination}}</h2>
-                    <p class="novmargin" ng-hide="!item.expectedArrivalTime"><strong>{{item.arrivingIn|durationView}}</strong></p>
-                 <p class="novmargin" ng-repeat="d in item.distance"> {{d}}</p>
+                    <ion-item ng-repeat="item in info.distances">
+                        <h2>{{item.destination}}</h2>
+                        <p class="novmargin" ng-hide="!item.expectedArrivalTime"><strong>{{item.arrivingIn|durationView}}</strong>
+                        </p>
+                        <p class="novmargin" ng-repeat="d in item.distance">{{d}}</p>
                     </ion-item>
                 </ion-list>
             </div>
