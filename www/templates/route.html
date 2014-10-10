@@ -5,7 +5,7 @@
         <!--<a href="#direction0">{{data.directionName}}</a>-->
         <!--<a href="#direction1">{{data.directionName_}}</a>-->
         <!--        </div>-->
-        <div class="card">
+        <p class="highlight"> Choose a stop:</p>
             <p class="item-divider" id="direction0">{{data.directionName}}</p>
             <ion-list>
                 <ion-item ng-repeat="item in data.direction" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
@@ -21,6 +21,6 @@
             </ion-list>
 
             <p>{{data.notifications}}</p>
-        </div>
+
     </ion-content>
 </ion-view>
