@@ -135,7 +135,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 "200460", "308215", "502030"
             ],
             exampleIntersections: [
-                "Main Street & Kissena Boulevard"
+                "Main Street & Kissena Bl"
             ],
             "favorites": [],
             "showFavs": false,

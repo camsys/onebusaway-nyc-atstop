@@ -272,7 +272,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                 params: {
                     key: API_KEY,
                     lat: lat,
-                    lon: lon
+                    lon: lon,
+					radius: 300
                 }
             })
             .success(function (data, status, header, config) {
@@ -416,7 +417,9 @@ angular.module('starter.services', ['ionic', 'configuration'])
     var autocomplete = function (searchKey) {
         var deferred = $q.defer();
         var matches = [];
-
+		
+		searchKey = encodeURIComponent(searchKey);
+		
         var url = API_END_POINT + "api/autocomplete?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
@@ -440,9 +443,10 @@ angular.module('starter.services', ['ionic', 'configuration'])
     var search = function (term) {
         var deferred = $q.defer();
         var matches = {};
-
+		
+		
         var url = API_END_POINT + "api/search?callback=JSON_CALLBACK";
-
+	
         var responsePromise = $http.jsonp(url, {
                 params: {
                     q: term
