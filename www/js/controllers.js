@@ -437,19 +437,48 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         })();
 }])
 
-.controller('NearbyStopsCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup',
+.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup',
     function ($scope, GeolocationService, $ionicLoading, $q, $ionicPopup) {
         $scope.data = {
             "loaded": false,
             "stops": [],
+            "routes": [],
             "notifications": ""
         };
 
         $scope.refresh = function () {
-            $scope.getNearbyStops();
+            $scope.getNearbyStopsAndRoutes();
         };
 
-        $scope.getNearbyStops = function () {
+
+
+
+        // For testing only
+        $scope.getNearbyStopsAndRoutesTest = function () {
+            // To test only. lat: 40.635081, lon: -73.967235 (near Coney Island and 18th Ave, Brooklyn, NY)
+            var getStopsTest = GeolocationService.getStops(40.635081, -73.967235).then(function (results) {
+                if (!angular.isUndefined(results) && results != null && results.length > 0) {
+                    $scope.data.stops = results;
+                } else {
+                    $scope.data.notifications = "No matches";
+                }
+            });
+
+
+            var getRoutesTest = GeolocationService.getRoutes(40.635081, -73.967235).then(function (results) {
+                if (!angular.isUndefined(results) && results != null && results.length > 0) {
+                    $scope.data.routes = results;
+                } else {
+                    $scope.data.notifications = "No matches";
+                }
+            });
+
+            $q.all(getStopsTest, getRoutesTest).then(function () {
+                $scope.data.loaded = true;
+            });
+        }
+
+        $scope.getNearbyStopsAndRoutes = function () {
             $ionicLoading.show();
             GeolocationService.promiseCurrentPosition({
                 enableHighAccuracy: false,
@@ -470,7 +499,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         }
                     });
 
-                    $q.all(getStops).then(function () {
+                    var getRoutes = GeolocationService.getRoutes(lat, lon).then(function (results) {
+                        if (!angular.isUndefined(results) && results != null && results.length > 0) {
+                            $scope.data.routes = results;
+                        } else {
+                            $scope.data.notifications = "No matches";
+                        }
+                    });
+
+                    $q.all(getStops, getRoutes).then(function () {
                         $scope.data.loaded = true;
                     });
                 }, function (error) {
@@ -490,6 +527,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         }
 
         $scope.init = (function () {
-            $scope.getNearbyStops();
+            $scope.getNearbyStopsAndRoutes();
+
+            // getNearbyStopsAndRoutesTest() should test the 'getNearbyStopsAndRoutes' function by substituting the location variables with the real ones
+            //$scope.getNearbyStopsAndRoutesTest();
         })();
 }]);

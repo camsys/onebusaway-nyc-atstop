@@ -1,4 +1,4 @@
-<ion-view title="Nearby Stops">
+<ion-view title="Nearby Stops & Routes">
     <ion-nav-buttons side="right">
         <button class="button button-clear" ng-click="refresh()">
             <i class="icon ion-refresh"></i>
@@ -10,7 +10,18 @@
 
         <ion-list>
             <ion-item ng-repeat="item in data.stops | limitTo:10" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
-                {{item.name}} <div ng-repeat="routes.route in item">{{route}}</div>
+                {{item.name}}
+                <!-- Cannot understand the purpose of this code? -->
+                <!--<div ng-repeat="routes.route in item">{{route}}</div>-->
+            </ion-item>
+        </ion-list>
+
+
+        <p class="highlight">Nearby Routes:</p>
+
+        <ion-list>
+            <ion-item ng-repeat="item in data.routes |limitTo:10" href="#/tab/route/{{item.id}}/{{item.shortName}}">
+                {{item.shortName}}
             </ion-item>
         </ion-list>
 

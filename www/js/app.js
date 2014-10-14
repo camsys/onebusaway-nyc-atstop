@@ -125,12 +125,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
     })
 
-    .state('tab.nearby-stops', {
-        url: '/nearby-stops',
+    .state('tab.nearby-stops-and-routes', {
+        url: '/nearby-stops-and-routes',
         views: {
-            'tab-nearby-stops': {
-                templateUrl: 'templates/tab-nearby-stops.html',
-                controller: 'NearbyStopsCtrl'
+            'tab-nearby-stops-and-routes': {
+                templateUrl: 'templates/tab-nearby-stops-and-routes.html',
+                controller: 'NearbyStopsAndRoutesCtrl'
             }
         }
     })
