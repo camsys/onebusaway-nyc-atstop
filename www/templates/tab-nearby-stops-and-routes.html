@@ -11,8 +11,7 @@
         <ion-list>
             <ion-item ng-repeat="item in data.stops | limitTo:10" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
                 {{item.name}}
-                <!-- Cannot understand the purpose of this code? -->
-                <!--<div ng-repeat="routes.route in item">{{route}}</div>-->
+                <div ng-repeat="routes.route in item">{{route}}</div>
             </ion-item>
         </ion-list>
 
