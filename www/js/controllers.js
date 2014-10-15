@@ -1,8 +1,8 @@
 angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
-        'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData',
-    function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, MAPBOX_KEY) {
+        'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService',
+    function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, MAPBOX_KEY) {
         $scope.val = true;
         $scope.paths = {};
         $scope.markers = {};
@@ -12,20 +12,39 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 var stopsAndRoute = {};
 
                 angular.forEach(results.stops, function (val, key) {
-                    stopsAndRoute[key] = {
-                        type: "circleMarker",
-                        color: '#ffffff',
-                        opacity: 1,
-                        fillColor: '#cb181d',
-                        fillOpacity: 1,
-                        weight: 1,
-                        radius: 5,
-                        name: val.name,
-                        id: val.id,
-                        routeIds: val.routeIds,
-                        latlngs: {
-                            lat: val.lat,
-                            lng: val.lon
+                    if (val.id == $stateParams.stopId) {
+                        stopsAndRoute[key] = {
+                            type: "circleMarker",
+                            color: '#2166ac',
+                            opacity: 0.75,
+                            fillColor: '#2166ac',
+                            fillOpacity: 1,
+                            weight: 30,
+                            radius: 5,
+                            name: val.name,
+                            id: val.id,
+                            routeIds: val.routeIds,
+                            latlngs: {
+                                lat: val.lat,
+                                lng: val.lon
+                            }
+                        }
+                    } else {
+                        stopsAndRoute[key] = {
+                            type: "circleMarker",
+                            color: '#ffffff',
+                            opacity: 1,
+                            fillColor: '#cb181d',
+                            fillOpacity: 1,
+                            weight: 1,
+                            radius: 5,
+                            name: val.name,
+                            id: val.id,
+                            routeIds: val.routeIds,
+                            latlngs: {
+                                lat: val.lat,
+                                lng: val.lon
+                            }
                         }
                     }
                 });
@@ -251,7 +270,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             "results": [],
             "stopName": $stateParams.stopName,
             "notifications": '',
-            "alertsHide": false
+            "alertsHide": false,
+            "stopId": $stateParams.stopId
         };
 
         $scope.addToFavorites = function () {

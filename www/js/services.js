@@ -273,7 +273,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     key: API_KEY,
                     lat: lat,
                     lon: lon,
-					radius: 300
+                    radius: 300
                 }
             })
             .success(function (data, status, header, config) {
@@ -408,8 +408,34 @@ angular.module('starter.services', ['ionic', 'configuration'])
         return deferred.promise;
     };
 
+    var getCoordinates = function (stop) {
+        var deferred = $q.defer();
+        var coordinates = {};
+
+        var url = API_END_POINT + "api/where/stop/" + stop + ".json?callback=JSON_CALLBACK";
+        var responsePromise = $http.jsonp(url, {
+                params: {
+                    key: API_KEY
+                }
+            })
+            .success(function (data, status, header, config) {
+                coordinates['lat'] = data.data.lat;
+                coordinates['lon'] = data.data.lon;
+            })
+            .error(function (data, status, header, config) {
+                console.log('error');
+            });
+
+        responsePromise.then(function () {
+            deferred.resolve(coordinates);
+        });
+
+        return deferred.promise;
+    };
+
     return {
-        getRoutes: getRoutes
+        getRoutes: getRoutes,
+        getCoordinates: getCoordinates
     }
 })
 
@@ -417,9 +443,9 @@ angular.module('starter.services', ['ionic', 'configuration'])
     var autocomplete = function (searchKey) {
         var deferred = $q.defer();
         var matches = [];
-		
-		searchKey = encodeURIComponent(searchKey);
-		
+
+        searchKey = encodeURIComponent(searchKey);
+
         var url = API_END_POINT + "api/autocomplete?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
@@ -443,10 +469,10 @@ angular.module('starter.services', ['ionic', 'configuration'])
     var search = function (term) {
         var deferred = $q.defer();
         var matches = {};
-		
-		
+
+
         var url = API_END_POINT + "api/search?callback=JSON_CALLBACK";
-	
+
         var responsePromise = $http.jsonp(url, {
                 params: {
                     q: term
