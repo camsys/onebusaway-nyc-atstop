@@ -14,8 +14,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 angular.forEach(results.stops, function (val, key) {
                     stopsAndRoute[key] = {
                         type: "circleMarker",
-                        color: '#008888',
-                        radius: 1,
+                        color: '#ffffff',
+                        opacity: 1,
+                        fillColor: '#cb181d',
+                        fillOpacity: 1,
+                        weight: 1,
+                        radius: 5,
                         name: val.name,
                         id: val.id,
                         routeIds: val.routeIds,
@@ -28,7 +32,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
                 angular.forEach(results.polylines, function (val, key) {
                     stopsAndRoute[key] = {
-                        color: '#008888',
+                        color: '#fb6a4a',
                         weight: 3,
                         latlngs: []
                     };
