@@ -382,8 +382,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         })();
 }])
 
-.controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading',
-    function ($scope, RouteService, $stateParams, $location, $q, $ionicLoading) {
+.controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate',
+    function ($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate) {
 
 
 
@@ -408,6 +408,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             } else {
                 $scope.shownGroup = group;
             }
+
+            $ionicScrollDelegate.resize();
         };
         $scope.isGroupShown = function (group) {
             return $scope.shownGroup === group;

@@ -19,7 +19,7 @@
     <preference name="permissions" value="none" />
 
     <!--  Preferences  -->
-    <preference name="phonegap-version" value="3.5.0" />
+    <preference name="phonegap-version" value="3.6.3" />
     <preference name="orientation" value="portrait" />
 
     <!--  Preferences / iOS only -->
