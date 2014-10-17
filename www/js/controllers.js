@@ -541,7 +541,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
                     $ionicPopup.alert({
                         title: "Error",
-                        content: "Cannot retrieve position information."
+                        content: "Cannot retrieve your location. Please make sure location services are enabled."
                     })
                         .then(function (result) {
                             if (result) {
