@@ -64,7 +64,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var responsePromise = $http.jsonp(url, {
                 params: {
                     key: API_KEY,
-                    LineRef: httpTimeout
+                    LineRef: route
                 },
                 timeout: httpTimeout
             })
