@@ -190,6 +190,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     case "RouteResult":
                         //if (matches.hasUpcomingScheduledService){
                         $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
+                        console.log(matches);
                         //}else {
                         //$scope.noSchedService(matches.shortName);
                         //}
@@ -386,7 +387,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
     function ($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate) {
 
 
-
+        $scope.oneDirection = false;
         $scope.groups = [];
         $scope.groups[0] = {
             name: "",
@@ -398,8 +399,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             items: []
         };
 
-        /*
-         * if given group is the selected group, deselect it
+        /* if given group is the selected group, deselect it
          * else, select the given group
          */
         $scope.toggleGroup = function (group) {
@@ -429,30 +429,40 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.getDirectionsAndStops = function () {
             var getDirections = RouteService.getDirections($stateParams.routeId).then(function (results) {
-                angular.forEach(results, function (val, key) {
-                    if (val.directionId == 0) {
-                        $scope.data.directionName = val.destination;
-                        $scope.groups[0].name = val.destination;
-                    }
 
-                    if (val.directionId == 1) {
-                        $scope.data.directionName_ = val.destination;
-                        $scope.groups[1].name = val.destination;
-                    }
-                });
+                if (Object.keys(results).length >1 ) {
+                    angular.forEach(results, function (val, key) {
+                        if (val.directionId == 0) {
+                            $scope.data.directionName = val.destination;
+                            $scope.groups[0].name = val.destination;
+                        }
+
+                        if (val.directionId == 1) {
+                            $scope.data.directionName_ = val.destination;
+                            $scope.groups[1].name = val.destination;
+                        }
+                    });
+                } else {
+                    // with one direction, set destination and remove second.
+                    $scope.data.directionName = results[0].destination;
+                    $scope.groups[0].name = results[0].destination;
+                    $scope.groups.splice(1);
+                    $scope.oneDirection = true;
+            }
+                console.log($scope.groups);
             });
 
             var getStops = RouteService.getStops($stateParams.routeId, "0").then(function (results) {
                 $scope.data.direction = results;
                 $scope.groups[0].items = results;
+                if (!$scope.oneDirection){
+                    //console.log("1D 4eva");
+                    $scope.data.direction_ = results;
+                    $scope.groups[1].items = results;
+                }
             });
 
-            var getStops_ = RouteService.getStops($stateParams.routeId, "1").then(function (results) {
-                $scope.data.direction_ = results;
-                $scope.groups[1].items = results;
-            });
-
-            $q.all([getDirections, getStops, getStops_]).then(function () {
+            $q.all([getDirections, getStops]).then(function () {
                 $scope.data.loaded = true;
             });
         };
