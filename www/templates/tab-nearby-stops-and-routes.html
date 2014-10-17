@@ -11,11 +11,14 @@
         <ion-list>
             <ion-item ng-repeat="item in data.stops | limitTo:10" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
                 {{item.name}}
-                <div ng-repeat="routes.route in item">{{route}}</div>
+                <p>Routes:<span ng-repeat="r in item.routes"> {{r.shortName}} </span>
+                </p>
             </ion-item>
         </ion-list>
 
 
+        <!-- Optional / Since every stop display routes passing it-->
+        <!-- 
         <p class="highlight">Nearby Routes:</p>
 
         <ion-list>
@@ -23,6 +26,7 @@
                 {{item.shortName}}
             </ion-item>
         </ion-list>
+        -->
 
         <p>{{data.notifications}}</p>
     </ion-content>

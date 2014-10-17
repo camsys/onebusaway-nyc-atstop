@@ -1,5 +1,9 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova'])
 
+
+// global timeout variable
+.value('httpTimeout', 5000)
+
 .run(function ($rootScope, $ionicPlatform, $ionicPopup, $cordovaNetwork) {
     $ionicPlatform.ready(function () {
         if ($cordovaNetwork.isOffline()) {
@@ -18,8 +22,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 
 .config(function ($httpProvider) {
-    $httpProvider.defaults.timeout = 5000;
-
     $httpProvider.interceptors.push(function ($rootScope) {
         return {
             request: function (config) {

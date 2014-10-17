@@ -55,7 +55,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
     }
 })
 
-.factory('VehicleMonitoringService', function ($q, $http, API_END_POINT, API_KEY) {
+.factory('VehicleMonitoringService', function ($q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getLocations = function (route) {
         var deferred = $q.defer();
         var locations = {};
@@ -64,8 +64,9 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var responsePromise = $http.jsonp(url, {
                 params: {
                     key: API_KEY,
-                    LineRef: route
-                }
+                    LineRef: httpTimeout
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 angular.forEach(data.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity, function (val, key) {
@@ -93,7 +94,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
     }
 })
 
-.factory('RouteService', function ($q, $http, API_END_POINT, API_KEY) {
+.factory('RouteService', function ($q, $http, httpTimeout, API_END_POINT, API_KEY) {
 
     var getPolylines = function (route) {
         var deferred = $q.defer();
@@ -110,7 +111,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     key: API_KEY,
                     version: 2,
                     includePolylines: true
-                }
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 results.stops = data.data.references.stops;
@@ -141,7 +143,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     key: API_KEY,
                     version: 2,
                     includePolylines: false
-                }
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 if (data.data.entry.stopGroupings[0].stopGroups[0]) {
@@ -197,7 +200,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     routeId: route,
                     directionId: direction,
                     key: API_KEY
-                }
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 stops = data.stops;
@@ -220,7 +224,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
     }
 })
 
-.factory('GeolocationService', function ($q, $http, API_END_POINT, API_KEY) {
+.factory('GeolocationService', function ($q, $http, httpTimeout, API_END_POINT, API_KEY) {
 
     var promiseCurrentPosition = function (geolocationOptions) {
         var deferred = $q.defer();
@@ -247,7 +251,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     lat: lat,
                     lon: lon,
                     radius: 300
-                }
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 routes = data.data.routes;
@@ -274,7 +279,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     lat: lat,
                     lon: lon,
                     radius: 300
-                }
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 stops = data.data.stops;
@@ -297,7 +303,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
     }
 })
 
-.factory('AtStopService', function ($q, $http, API_END_POINT, API_KEY) {
+.factory('AtStopService', function ($q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getBuses = function (stop) {
         var deferred = $q.defer();
         var buses = {
@@ -311,7 +317,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     key: API_KEY,
                     OperatorRef: "MTA",
                     MonitoringRef: stop
-                }
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 if (data.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit.length > 0) {
@@ -381,7 +388,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
     }
 })
 
-.factory('StopcodeService', function ($q, $http, API_END_POINT, API_KEY) {
+.factory('StopcodeService', function ($q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getRoutes = function (stop) {
         var deferred = $q.defer();
         var routes = {};
@@ -390,7 +397,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var responsePromise = $http.jsonp(url, {
                 params: {
                     key: API_KEY
-                }
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 routes['stopId'] = data.data.id;
@@ -416,7 +424,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var responsePromise = $http.jsonp(url, {
                 params: {
                     key: API_KEY
-                }
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 coordinates['lat'] = data.data.lat;
@@ -439,7 +448,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
     }
 })
 
-.factory('SearchService', function ($q, $http, API_END_POINT, API_KEY) {
+.factory('SearchService', function ($q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var autocomplete = function (searchKey) {
         var deferred = $q.defer();
         var matches = [];
@@ -450,7 +459,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var responsePromise = $http.jsonp(url, {
                 params: {
                     term: searchKey
-                }
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 matches = data;
@@ -476,7 +486,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var responsePromise = $http.jsonp(url, {
                 params: {
                     q: term
-                }
+                },
+                timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
                 if (data.searchResults.empty === false && data.searchResults.matches.length > 0) {
