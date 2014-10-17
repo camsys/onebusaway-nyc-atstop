@@ -415,8 +415,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             return $scope.shownGroup === group;
         };
 
-
-
         $scope.data = {
             "loaded": false,
             "routeName": $stateParams.routeName,
@@ -424,7 +422,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             "directionName": "",
             "direction_": [],
             "directionName_": ""
-
         };
 
         $scope.getDirectionsAndStops = function () {
@@ -443,13 +440,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         }
                     });
                 } else {
-                    // with one direction, set destination and remove second.
+                    // with one direction, set destination and remove second group.
                     $scope.data.directionName = results[0].destination;
                     $scope.groups[0].name = results[0].destination;
                     $scope.groups.splice(1);
                     $scope.oneDirection = true;
+                    $scope.toggleGroup($scope.groups[0]);
             }
-                console.log($scope.groups);
             });
 
             var getStops = RouteService.getStops($stateParams.routeId, "0").then(function (results) {
