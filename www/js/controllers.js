@@ -408,8 +408,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             } else {
                 $scope.shownGroup = group;
             }
-
             $ionicScrollDelegate.resize();
+            $ionicScrollDelegate.scrollTop();
         };
         $scope.isGroupShown = function (group) {
             return $scope.shownGroup === group;
