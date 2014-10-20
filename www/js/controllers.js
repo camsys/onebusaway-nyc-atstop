@@ -179,22 +179,25 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             );
         };
 
-        $scope.noSchedService = function (route) {
+        $scope.noSchedService = function (routeDirection) {
             $scope.data.notifications = "There is no scheduled service on this route at this time.";
         }
 
         $scope.searchAndGo = function (term) {
             SearchService.search(term).then(
                 function (matches) {
+                    console.log(matches);
                     switch (matches.type) {
-                    case "RouteResult":
-                        //if (matches.hasUpcomingScheduledService){
+                        case "RouteResult":
+                        if (matches.directions[0].hasUpcomingScheduledService && matches.directions[1].hasUpcomingScheduledService){
                         $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
-                        console.log(matches);
-                        //}else {
-                        //$scope.noSchedService(matches.shortName);
-                        //}
-                        break;
+                        } else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService){
+                        $scope.noSchedService(matches.shortName);
+                        } else {
+                        // one direction with no service-- handle on route/stop page.
+                            break;
+                        }
+
                     case "StopResult":
                         $scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
                         break;
