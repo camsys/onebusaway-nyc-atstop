@@ -1,3 +1,4 @@
 .idea/
 *.swp
 www/js/config.js
+www/config.xml
