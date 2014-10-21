@@ -188,13 +188,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 function (matches) {
                     console.log(matches);
                     switch (matches.type) {
-                        case "RouteResult":
-                        if (matches.directions[0].hasUpcomingScheduledService && matches.directions[1].hasUpcomingScheduledService){
-                        $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
-                        } else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService){
-                        $scope.noSchedService(matches.shortName);
+                    case "RouteResult":
+                        if (matches.directions[0].hasUpcomingScheduledService && matches.directions[1].hasUpcomingScheduledService) {
+                            $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
+                        } else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService) {
+                            $scope.noSchedService(matches.shortName);
                         } else {
-                        // one direction with no service-- handle on route/stop page.
+                            // one direction with no service-- handle on route/stop page.
                             break;
                         }
 
@@ -430,7 +430,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         $scope.getDirectionsAndStops = function () {
             var getDirections = RouteService.getDirections($stateParams.routeId).then(function (results) {
 
-                if (Object.keys(results).length >1 ) {
+                if (Object.keys(results).length > 1) {
                     angular.forEach(results, function (val, key) {
                         if (val.directionId == 0) {
                             $scope.data.directionName = val.destination;
@@ -449,13 +449,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     $scope.groups.splice(1);
                     $scope.oneDirection = true;
                     $scope.toggleGroup($scope.groups[0]);
-            }
+                }
             });
 
             var getStops = RouteService.getStops($stateParams.routeId, "0").then(function (results) {
                 $scope.data.direction = results;
                 $scope.groups[0].items = results;
-                if (!$scope.oneDirection){
+                if (!$scope.oneDirection) {
                     //console.log("1D 4eva");
                     $scope.data.direction_ = results;
                     $scope.groups[1].items = results;
