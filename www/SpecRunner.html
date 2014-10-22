@@ -13,6 +13,7 @@
     <script src="http://cdn.jsdelivr.net/jasmine/2.0.0/jasmine-html.js"></script>
     <script src="http://cdn.jsdelivr.net/jasmine/2.0.0/boot.js"></script>
 
+
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
@@ -72,23 +73,55 @@
 
         });
 
+
         describe('No Scheduled Service Tests', function () {
             var ctrl, scope;
 
             beforeEach(module('starter'));
-            beforeEach(inject(function ($scope, $controller) {
-                scope = $scope;
-                ctrl = $controller('searchCtrl', {$scope: scope});
-
-                console.log(ctrl);
+            beforeEach(inject(function ($rootScope, $controller) {
+                scope = $rootScope;
+                ctrl = $controller('SearchCtrl', {
+                    $scope: scope}
+                );
             }));
 
             it('should not return the nssm if only one direction', function(){
                 var matches = {"directions": [{"hasUpcomingScheduledService":true}]};
-                ctrl.handleRouteSearch(matches);
-                expect($scope.data.notifications).not.toBeTruthy();
+                scope.handleRouteSearch(matches);
+                expect(scope.data.notifications).toEqual('');
             });
-        })
+
+            it('should display nssm if no service', function() {
+                var matches = {"directions": [{"hasUpcomingScheduledService":false}, {"hasUpcomingScheduledService":false}]};
+                scope.handleRouteSearch(matches);
+                expect(scope.data.notifications).toEqual('');
+            });
+
+            it('should not display nssm if active service in one direction', function(){
+                var matches = {"directions": [{"hasUpcomingScheduledService":true}, {"hasUpcomingScheduledService":true}]};
+                scope.handleRouteSearch(matches);
+            });
+        });
+
+        describe('Test SearchCtrl', function () {
+            var scope, newSearchCtrl, results = [];
+
+            beforeEach(module('starter'));
+
+            beforeEach(inject(function ($rootScope, $controller) {
+                scope = $rootScope;
+
+                newSearchCtrl = $controller('SearchCtrl', {
+                    $scope: scope
+                });
+            }));
+
+
+            it("Results should initially be empty", function () {
+                expect(scope.data.results).toEqual(results);
+            });
+        });
+
     </script>
 </head>
 
