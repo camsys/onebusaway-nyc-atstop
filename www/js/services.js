@@ -359,6 +359,9 @@ angular.module('starter.services', ['ionic', 'configuration'])
                         });
                     });
                     buses.arriving = grouped;
+                } // check for sched svc:
+                else {
+
                 }
 
                 if (data.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {

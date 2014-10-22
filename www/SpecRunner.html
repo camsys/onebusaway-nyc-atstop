@@ -71,6 +71,24 @@
             });
 
         });
+
+        describe('No Scheduled Service Tests', function () {
+            var ctrl, scope;
+
+            beforeEach(module('starter'));
+            beforeEach(inject(function ($scope, $controller) {
+                scope = $scope;
+                ctrl = $controller('searchCtrl', {$scope: scope});
+
+                console.log(ctrl);
+            }));
+
+            it('should not return the nssm if only one direction', function(){
+                var matches = {"directions": [{"hasUpcomingScheduledService":true}]};
+                ctrl.handleRouteSearch(matches);
+                expect($scope.data.notifications).not.toBeTruthy();
+            });
+        })
     </script>
 </head>
 
