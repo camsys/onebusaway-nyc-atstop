@@ -71,6 +71,25 @@
             });
 
         });
+
+        describe('Test SearchCtrl', function () {
+            var scope, newSearchCtrl, results = [];
+
+            beforeEach(module('starter'));
+
+            beforeEach(inject(function ($rootScope, $controller) {
+                scope = $rootScope;
+
+                newSearchCtrl = $controller('SearchCtrl', {
+                    $scope: scope
+                });
+            }));
+
+
+            it("Results should initially be empty", function () {
+                expect(scope.data.results).toEqual(results);
+            });
+        });
     </script>
 </head>
 
