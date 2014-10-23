@@ -12,9 +12,10 @@
                     Search
                 </button>
             </div>
+            <p class="highlight">{{data.notifications}}</p>
             <ion-list>
                 <ion-item ng-repeat="item in data.results" ng-click="searchAndGo(item)">
-                    {{item}}
+                    <strong>{{item}}</strong>
                 </ion-item>
             </ion-list>
         </div>
@@ -47,6 +48,6 @@
             </ion-list>
         </div>
 
-        <p>{{data.notifications}}</p>
+
     </ion-content>
 </ion-view>
