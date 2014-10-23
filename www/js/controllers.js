@@ -78,7 +78,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 $scope.val = true;
                 $timeout(function () {
                     $scope.val = false;
-                }, 30000);
+                }, 5000);
 
                 $scope.markers = {};
                 VehicleMonitoringService.getLocations(route).then(function (results) {
@@ -322,7 +322,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 $scope.data.val = true;
                 $timeout(function () {
                     $scope.data.val = false;
-                }, 30000);
+                }, 5000);
 
                 var getBuses = AtStopService.getBuses($stateParams.stopId).then(function (results) {
                     if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {

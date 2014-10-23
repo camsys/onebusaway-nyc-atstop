@@ -15,13 +15,17 @@ p {
 }
 div.route {
     font-size: 1.4em;
-    vertical-align: middle;
 }
 .rightAlign {
     float: right;
 }
 .largeIcon {
     font-size: 1.5em;
+}
+.vcenter {
+  position: relative;
+  top: 50%;
+  transform: translateY(25%);
 }
 p.highlight {
     font-weight: bolder;

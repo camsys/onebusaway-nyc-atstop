@@ -94,12 +94,13 @@
             it('should display nssm if no service', function() {
                 var matches = {"directions": [{"hasUpcomingScheduledService":false}, {"hasUpcomingScheduledService":false}]};
                 scope.handleRouteSearch(matches);
-                expect(scope.data.notifications).toEqual('');
+                expect(scope.data.notifications).not.toEqual('');
             });
 
             it('should not display nssm if active service in one direction', function(){
-                var matches = {"directions": [{"hasUpcomingScheduledService":true}, {"hasUpcomingScheduledService":true}]};
+                var matches = {"directions": [{"hasUpcomingScheduledService":false}, {"hasUpcomingScheduledService":true}]};
                 scope.handleRouteSearch(matches);
+				expect(scope.data.notifications).toEqual('');
             });
         });
 
@@ -115,7 +116,6 @@
                     $scope: scope
                 });
             }));
-
 
             it("Results should initially be empty", function () {
                 expect(scope.data.results).toEqual(results);
