@@ -478,7 +478,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     $scope.groups[1].items = results2;
                     });
                 }
-                console.log($scope.groups);
             });
 
             $q.all([getDirections, getStops]).then(function () {
