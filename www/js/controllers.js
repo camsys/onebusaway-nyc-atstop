@@ -446,7 +446,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.getDirectionsAndStops = function () {
             var getDirections = RouteService.getDirections($stateParams.routeId).then(function (results) {
-
                 if (Object.keys(results).length > 1) {
                     angular.forEach(results, function (val, key) {
                         if (val.directionId == 0) {
@@ -473,10 +472,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 $scope.data.direction = results;
                 $scope.groups[0].items = results;
                 if (!$scope.oneDirection) {
-                    //console.log("1D 4eva");
-                    $scope.data.direction_ = results;
-                    $scope.groups[1].items = results;
+                    //console.log("1D 4eva!");
+                    RouteService.getStops($stateParams.routeId, "1").then(function(results2) {
+                    $scope.data.direction_ = results2;
+                    $scope.groups[1].items = results2;
+                    });
                 }
+                console.log($scope.groups);
             });
 
             $q.all([getDirections, getStops]).then(function () {
