@@ -12,9 +12,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 var stopsAndRoute = {};
 
                 angular.forEach(results.stops, function (val, key) {
-                    console.log($stateParams.stopId, val.id);
+                    console.log(val.id);
                     if (val.id == $stateParams.stopId) {
-                        stopsAndRoute[key] = {
+                        stopsAndRoute[val.id] = {
                             type: "circleMarker",
                             color: '#2166ac',
                             opacity: 0.75,
@@ -31,7 +31,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                             }
                         }
                     } else {
-                        stopsAndRoute[key] = {
+                        stopsAndRoute[val.id] = {
                             type: "circleMarker",
                             color: '#ffffff',
                             opacity: 1,
