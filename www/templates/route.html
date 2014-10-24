@@ -10,7 +10,7 @@
                 &nbsp; {{group.name}}
             </ion-item>
             <ion-item class="item-accordion" ng-repeat="item in group.items" ng-show="isGroupShown(group)" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
-                {{item.name}}
+                {{item.name | encodeStopName}}
             </ion-item>
         </div>
 

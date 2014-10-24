@@ -12,6 +12,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 var stopsAndRoute = {};
 
                 angular.forEach(results.stops, function (val, key) {
+                    console.log($stateParams.stopId, val.id);
                     if (val.id == $stateParams.stopId) {
                         stopsAndRoute[key] = {
                             type: "circleMarker",
@@ -210,6 +211,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     switch (matches.type) {
                     case "RouteResult":
                         $scope.handleRouteSearch(matches);
+                        break;
                     case "StopResult":
                         $scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
                         break;
