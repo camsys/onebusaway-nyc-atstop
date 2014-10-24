@@ -142,7 +142,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                 params: {
                     key: API_KEY,
                     version: 2,
-                    includePolylines: false
+                    includePolylines: false,
+                    includeReferences: false
                 },
                 timeout: httpTimeout
             })
@@ -250,7 +251,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     key: API_KEY,
                     lat: lat,
                     lon: lon,
-                    radius: 300
+                    radius: 300,
+                    includeReferences: false
                 },
                 timeout: httpTimeout
             })
