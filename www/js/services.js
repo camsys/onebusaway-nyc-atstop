@@ -458,8 +458,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var deferred = $q.defer();
         var matches = [];
 
-        searchKey = encodeURIComponent(searchKey);
-
         var url = API_END_POINT + "api/autocomplete?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
                 params: {
