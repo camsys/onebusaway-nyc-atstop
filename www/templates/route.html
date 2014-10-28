@@ -7,7 +7,7 @@
         <div ng-repeat="group in groups">
             <ion-item class="item-stable" ng-click="toggleGroup(group)" ng-class="{active: isGroupShown(group)}">
                 <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
-                &nbsp; {{group.name}}
+                <strong>&nbsp; {{group.name}}</strong>
             </ion-item>
             <ion-item class="item-accordion" ng-repeat="item in group.items" ng-show="isGroupShown(group)" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
                 {{item.name | encodeStopName}}
