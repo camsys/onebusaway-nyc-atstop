@@ -2,20 +2,24 @@
     <ion-content ng-show="data.loaded" has-bouncing="true">
         <p>Location: {{data.address}}</p>
 
-        <p class="highlight">Stops:</p>
+        <p class="highlight">Stops &amp; Routes:</p>
         <ion-list>
             <ion-item ng-repeat="item in data.stops| limitTo:8" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
-                {{item.name}} 
-				<p> Routes:<span ng-repeat="r in item.routes"> {{r.shortName}} </span> </p>
+                {{item.name}}
+                <p>Routes:<span ng-repeat="r in item.routes"> {{r.shortName}} </span> 
+                </p>
             </ion-item>
         </ion-list>
 
+
+        <!--
         <p class="highlight">Routes:</p>
         <ion-list>
             <ion-item ng-repeat="item in data.routes |limitTo:20" href="#/tab/route/{{item.id}}/{{item.shortName}}">
-                {{item.shortName}} 
+                {{item.shortName}}
             </ion-item>
         </ion-list>
+        -->
 
         <p>{{data.notifications}}</p>
     </ion-content>
