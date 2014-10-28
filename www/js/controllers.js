@@ -309,7 +309,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     if (v['progress'] == 'prevTrip') {
                         v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
                     } else if (v['progress'] == 'layover,prevTrip') {
-                        v['distance'] = [v['distance'], "At terminal. ", "Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime')];
+                        v['distance'] = [v['distance'], "At terminal. "];
+                                if (!angular.isUndefinedOrEmpty(v['departsTerminal'])){
+                                v['distance'].push("Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime'));
+                                }
                     } else {
                         v['distance'] = [v['distance']];
                     }
