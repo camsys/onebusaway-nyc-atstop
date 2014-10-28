@@ -473,9 +473,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 $scope.groups[0].items = results;
                 if (!$scope.oneDirection) {
                     //console.log("1D 4eva!");
-                    RouteService.getStops($stateParams.routeId, "1").then(function(results2) {
-                    $scope.data.direction_ = results2;
-                    $scope.groups[1].items = results2;
+                    RouteService.getStops($stateParams.routeId, "1").then(function (results2) {
+                        $scope.data.direction_ = results2;
+                        $scope.groups[1].items = results2;
                     });
                 }
             });
@@ -491,8 +491,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         })();
         }])
 
-.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup',
-        function ($scope, GeolocationService, $ionicLoading, $q, $ionicPopup) {
+.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation',
+        function ($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation) {
         $scope.data = {
             "loaded": false,
             "stops": [],
@@ -534,10 +534,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.getNearbyStopsAndRoutes = function () {
             $ionicLoading.show();
-            GeolocationService.promiseCurrentPosition({
+            $cordovaGeolocation.getCurrentPosition({
                 enableHighAccuracy: false,
-                timeout: 5000,
-                maximumAge: 10000
+                timeout: 5000
             }).then(
                 function (position) {
                     $ionicLoading.hide();
