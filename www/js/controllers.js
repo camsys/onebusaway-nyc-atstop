@@ -629,9 +629,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         }
 
         $scope.init = (function () {
-            //$scope.getNearbyStopsAndRoutes();
+            $scope.getNearbyStopsAndRoutes();
 
             // getNearbyStopsAndRoutesTest() should test the 'getNearbyStopsAndRoutes' function by substituting the location variables with the real ones
-            $scope.getNearbyStopsAndRoutesTest();
+            //$scope.getNearbyStopsAndRoutesTest();
         })();
         }]);
