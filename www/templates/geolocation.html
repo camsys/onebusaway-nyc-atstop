@@ -1,5 +1,12 @@
 <ion-view title="Nearby Routes &amp; Stops">
     <ion-content ng-show="data.loaded" has-bouncing="true">
+
+        <ion-nav-buttons side="right">
+            <a class="button button-clear" href="#/tab/map-nearby/{{data.lat}}/{{data.lon}}">
+                <i class="icon ion-earth"></i>
+            </a>
+        </ion-nav-buttons>
+
         <p>Location: {{data.address}}</p>
 
         <p class="highlight">Stops &amp; Routes:</p>

@@ -1,8 +1,8 @@
 angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
-        'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService',
-        function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, MAPBOX_KEY) {
+        'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService', 'GeolocationService',
+        function ($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, GeolocationService, MAPBOX_KEY) {
         $scope.val = true;
         $scope.paths = {};
         $scope.markers = {};
@@ -12,9 +12,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 var stopsAndRoute = {};
 
                 angular.forEach(results.stops, function (val, key) {
+
                     console.log(val.id);
                     if (val.id == $stateParams.stopId) {
                         stopsAndRoute[val.id] = {
+                            message: '<p><strong>' + val.name + '</strong></p>',
                             type: "circleMarker",
                             color: '#2166ac',
                             opacity: 0.75,
@@ -32,6 +34,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         }
                     } else {
                         stopsAndRoute[val.id] = {
+                            message: '<p><strong>' + val.name + '</strong></p>',
                             type: "circleMarker",
                             color: '#ffffff',
                             opacity: 1,
@@ -131,11 +134,41 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         };
 
-        $scope.init = (function () {
+        $scope.drawNearbyStopsAndRoutes = function (lclLat, lclLon) {
+            GeolocationService.getStops(lclLat, lclLon).then(function (results) {
+                var stops = {};
 
+                angular.forEach(results, function (val, key) {
+                    stops[key] = {
+                        message: '<p><strong>' + val.name + '</strong></p>',
+                        type: "circleMarker",
+                        color: '#ffffff',
+                        opacity: 1,
+                        fillColor: '#cb181d',
+                        fillOpacity: 1,
+                        weight: 1,
+                        radius: 5,
+                        latlngs: {
+                            lat: val.lat,
+                            lng: val.lon
+                        }
+                    }
+                });
+
+                $scope.paths = stops;
+            });
+        }
+
+        $scope.init = (function () {
             $scope.map();
-            $scope.drawPolylines($stateParams.routeId);
-            $scope.drawBuses($stateParams.routeId);
+            if ($location.$$path.indexOf('/tab/map-nearby') >= 0) {
+                // Test
+                // $scope.drawNearbyStopsAndRoutes(40.635081, -73.967235);
+                $scope.drawNearbyStopsAndRoutes($stateParams.lat, $stateParams.lon);
+            } else {
+                $scope.drawPolylines($stateParams.routeId);
+                $scope.drawBuses($stateParams.routeId);
+            }
         })();
         }])
 
@@ -378,6 +411,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 .controller('GeolocationCtrl', ['$scope', 'GeolocationService', '$stateParams', '$ionicLoading', '$q',
         function ($scope, GeolocationService, $stateParams, $ionicLoading, $q) {
         $scope.data = {
+            "lat": $stateParams.latitude,
+            "lon": $stateParams.longitude,
             "loaded": false,
             "routes": [],
             "stops": [],
@@ -501,7 +536,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             "loaded": false,
             "stops": [],
             "routes": [],
-            "notifications": ""
+            "notifications": "",
+            "val": true,
+            "lat": '',
+            "lon": ''
         };
 
         $scope.refresh = function () {
@@ -513,6 +551,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         // For testing only
         $scope.getNearbyStopsAndRoutesTest = function () {
+            $scope.data.val = false;
+            $scope.data.lat = 40.635081;
+            $scope.data.lon = -73.967235;
+
             // To test only. lat: 40.635081, lon: -73.967235 (near Coney Island and 18th Ave, Brooklyn, NY)
             var getStopsTest = GeolocationService.getStops(40.635081, -73.967235).then(function (results) {
                 if (!angular.isUndefined(results) && results != null && results.length > 0) {
@@ -544,6 +586,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             }).then(
                 function (position) {
                     $ionicLoading.hide();
+                    $scope.data.val = false;
+                    $scope.data.lat = position.coords.latitude;
+                    $scope.data.lon = position.coords.longitude;
 
                     var lat = position.coords.latitude;
                     var lon = position.coords.longitude;
@@ -584,9 +629,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         }
 
         $scope.init = (function () {
-            $scope.getNearbyStopsAndRoutes();
+            //$scope.getNearbyStopsAndRoutes();
 
             // getNearbyStopsAndRoutesTest() should test the 'getNearbyStopsAndRoutes' function by substituting the location variables with the real ones
-            //$scope.getNearbyStopsAndRoutesTest();
+            $scope.getNearbyStopsAndRoutesTest();
         })();
         }]);
