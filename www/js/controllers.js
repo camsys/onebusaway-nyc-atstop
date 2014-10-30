@@ -156,6 +156,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 });
 
                 $scope.paths = stops;
+
+                leafletData.getMap().then(function (map) {
+                    map.setView([lclLat, lclLon], 15);
+                });
             });
         }
 
