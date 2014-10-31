@@ -23,14 +23,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                             fillColor: '#2166ac',
                             fillOpacity: 1,
                             weight: 30,
-                            radius: 5,
+                            radius: 8,
                             name: val.name,
                             id: val.id,
                             routeIds: val.routeIds,
                             latlngs: {
                                 lat: val.lat,
                                 lng: val.lon
-                            }
+                            },
+                            clickable: true
                         }
                     } else {
                         stopsAndRoute[val.id] = {
@@ -41,14 +42,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                             fillColor: '#cb181d',
                             fillOpacity: 1,
                             weight: 1,
-                            radius: 5,
+                            radius: 8,
                             name: val.name,
                             id: val.id,
                             routeIds: val.routeIds,
                             latlngs: {
                                 lat: val.lat,
                                 lng: val.lon
-                            }
+                            },
+                            clickable: true
                         }
                     }
                 });
@@ -57,7 +59,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     stopsAndRoute[key] = {
                         color: '#fb6a4a',
                         weight: 3,
-                        latlngs: []
+                        latlngs: [],
+                        clickable: false
                     };
 
                     angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function (v, k) {
@@ -97,7 +100,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     if (angle == 360) {
                         angle = 0;
                     };
-                    buses[key] = {
+                    buses[val.vehicleId] = {
                         lat: val.latitude,
                         lng: val.longitude,
                         message: "Vehicle " + val.vehicleId + "<br> <h4>" + val.destination + "</h4>" + "<br> <h5>Next Stop: " + val.stopPointName + "</h5>",
@@ -118,7 +121,35 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.map = function () {
+
+            $scope.$on('leafletDirectiveMap.click', function (event, args) {
+                var latlng = args.leafletEvent.latlng;
+                console.log('Lat: ' + latlng.lat + '<br>Lng: ' + latlng.lng);
+            });
+
+            $scope.$on('leafletDirectiveMarker.click', function (event, args) {
+                console.log('marker clicked: ' + args.markerName);
+            });
+
+            $scope.$on('leafletDirectivePath.click', function (event, args) {
+                console.log(args);
+            });
+
             angular.extend($scope, {
+                events: {
+                    map: {
+                        enable: ['click', 'drag', 'blur', 'touchstart'],
+                        logic: 'emit'
+                    },
+                    markers: {
+                        enable: ['click'],
+                        logic: 'emit'
+                    },
+                    paths: {
+                        enable: ['click'],
+                        logic: 'emit'
+                    }
+                },
                 center: {},
                 defaults: {
                     tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
@@ -147,7 +178,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         fillColor: '#cb181d',
                         fillOpacity: 1,
                         weight: 1,
-                        radius: 5,
+                        radius: 8,
                         latlngs: {
                             lat: val.lat,
                             lng: val.lon
@@ -174,7 +205,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 $scope.drawBuses($stateParams.routeId);
             }
         })();
-        }])
+}])
 
 .controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'FavoritesService',
 
