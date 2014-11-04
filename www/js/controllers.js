@@ -533,7 +533,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.getDirectionsAndStops = function () {
             var getDirections = RouteService.getDirections($stateParams.routeId).then(function (results) {
+                //console.log(Object.keys(results).length);
+                //console.log(Object.keys(results).length > 1);
                 if (Object.keys(results).length > 1) {
+                    $scope.oneDirection = false;
                     angular.forEach(results, function (val, key) {
                         if (val.directionId == 0) {
                             $scope.data.directionName = val.destination;
@@ -552,19 +555,25 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     $scope.groups.splice(1);
                     $scope.oneDirection = true;
                     $scope.toggleGroup($scope.groups[0]);
+                    //console.log($scope.oneDirection);
                 }
             });
 
-            var getStops = RouteService.getStops($stateParams.routeId, "0").then(function (results) {
-                $scope.data.direction = results;
-                $scope.groups[0].items = results;
-                if (!$scope.oneDirection) {
-                    //console.log("1D 4eva!");
-                    RouteService.getStops($stateParams.routeId, "1").then(function (results2) {
-                        $scope.data.direction_ = results2;
-                        $scope.groups[1].items = results2;
-                    });
-                }
+            var getStops;
+
+            $q.all([getDirections]).then(function () {
+                getStops = RouteService.getStops($stateParams.routeId, "0").then(function (results) {
+                    $scope.data.direction = results;
+                    $scope.groups[0].items = results;
+                    //console.log($scope.oneDirection);
+                    if ($scope.oneDirection === false) {
+                        //console.log("1D 4eva!");
+                        RouteService.getStops($stateParams.routeId, "1").then(function (results2) {
+                            $scope.data.direction_ = results2;
+                            $scope.groups[1].items = results2;
+                        });
+                    }
+                });
             });
 
             $q.all([getDirections, getStops]).then(function () {
