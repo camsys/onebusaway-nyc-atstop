@@ -2,7 +2,7 @@ angular.module('filters', [])
 
 .filter('isUndefinedOrEmpty', function () {
     return function (a) {
-        console.log('Filter result: ' + a);
+        //console.log('Filter result: ' + a);
         return angular.isUndefined(a) || null === a;
     }
 })

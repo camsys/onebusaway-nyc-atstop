@@ -90,3 +90,6 @@ label.item.item-input {
 .list .item.item-accordion.ng-hide-remove {
     display: block !important;
 }
+.leaflet-popup-close-button {
+    display: none;
+}
