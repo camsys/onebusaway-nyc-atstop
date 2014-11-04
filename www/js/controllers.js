@@ -437,6 +437,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.refresh = function () {
             $scope.getBuses();
+            $scope.$broadcast('scroll.refreshComplete');
         };
 
         $scope.init = (function () {
