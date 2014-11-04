@@ -1,5 +1,12 @@
 angular.module('filters', [])
 
+.filter('isUndefinedOrEmpty', function () {
+    return function (a) {
+        console.log('Filter result: ' + a);
+        return angular.isUndefined(a) || null === a;
+    }
+})
+
 .filter('isEmptyObject', function () {
     var bar;
     return function (obj) {

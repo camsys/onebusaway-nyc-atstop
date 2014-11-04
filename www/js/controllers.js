@@ -332,6 +332,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             var getFavorites = FavoritesService.get().then(function (results) {
                 if (!angular.isUndefined(results) && results != null) {
                     $scope.data.favorites = results;
+                    $scope.data.notifications = "";
                 } else {
                     $scope.data.notifications = "You have no favorites";
                 }
@@ -378,7 +379,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
                     } else if (v['progress'] == 'layover,prevTrip') {
                         v['distance'] = [v['distance'], "At terminal. "];
-                        if (!angular.isUndefinedOrEmpty(v['departsTerminal'])) {
+
+                        if (!$filter('isUndefinedOrEmpty')(v['departsTerminal'])) {
                             v['distance'].push("Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime'));
                         }
                     } else {
@@ -401,6 +403,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     $scope.handleLayovers(results);
                     $scope.updateArrivalTimes(results);
                     $scope.data.results = results.arriving;
+                    $scope.data.notifications = "";
                 } else {
                     $scope.data.notifications = "We are not tracking any buses to this stop at this time";
                 }
@@ -457,11 +460,21 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.getRoutesAndStops = function () {
             var getRoutes = GeolocationService.getRoutes($stateParams.latitude, $stateParams.longitude).then(function (results) {
-                $scope.data.routes = results;
+                if (!angular.isUndefined(results) && results != null && results.length > 0) {
+                    $scope.data.routes = results;
+                    $scope.data.notifications = "";
+                } else {
+                    $scope.data.notifications = "No matches";
+                }
             });
 
             var getStops = GeolocationService.getStops($stateParams.latitude, $stateParams.longitude).then(function (results) {
-                $scope.data.stops = results;
+                if (!angular.isUndefined(results) && results != null && results.length > 0) {
+                    $scope.data.stops = results;
+                    $scope.data.notifications = "";
+                } else {
+                    $scope.data.notifications = "No matches";
+                }
             });
 
             $q.all([getRoutes, getStops]).then(function () {
@@ -594,6 +607,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             var getStopsTest = GeolocationService.getStops(40.635081, -73.967235).then(function (results) {
                 if (!angular.isUndefined(results) && results != null && results.length > 0) {
                     $scope.data.stops = results;
+                    $scope.data.notifications = "";
                 } else {
                     $scope.data.notifications = "No matches";
                 }
@@ -603,6 +617,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             var getRoutesTest = GeolocationService.getRoutes(40.635081, -73.967235).then(function (results) {
                 if (!angular.isUndefined(results) && results != null && results.length > 0) {
                     $scope.data.routes = results;
+                    $scope.data.notifications = "";
                 } else {
                     $scope.data.notifications = "No matches";
                 }
@@ -631,6 +646,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     var getStops = GeolocationService.getStops(lat, lon).then(function (results) {
                         if (!angular.isUndefined(results) && results != null && results.length > 0) {
                             $scope.data.stops = results;
+                            $scope.data.notifications = "";
                         } else {
                             $scope.data.notifications = "No matches";
                         }
@@ -639,6 +655,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     var getRoutes = GeolocationService.getRoutes(lat, lon).then(function (results) {
                         if (!angular.isUndefined(results) && results != null && results.length > 0) {
                             $scope.data.routes = results;
+                            $scope.data.notifications = "";
                         } else {
                             $scope.data.notifications = "No matches";
                         }
