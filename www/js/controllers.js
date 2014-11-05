@@ -13,7 +13,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
                 angular.forEach(results.stops, function (val, key) {
 
-                    console.log(val.id);
                     if (val.id == $stateParams.stopId) {
                         stopsAndRoute[val.id] = {
                             message: '<p><strong>' + val.name + '</strong></p>',
