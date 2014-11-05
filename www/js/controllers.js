@@ -354,7 +354,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             "alerts": "",
             "loaded": false,
             "val": true,
-            "inFavorites": false,
+            "favClass": "",
             "results": [],
             "stopName": $stateParams.stopName,
             "notifications": '',
@@ -362,14 +362,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             "stopId": $stateParams.stopId
         };
 
-        $scope.addToFavorites = function () {
-            FavoritesService.add($stateParams.stopId, $stateParams.stopName);
-            $scope.data.inFavorites = true;
-        };
-
-        $scope.removeFromFavorites = function () {
-            FavoritesService.remove($stateParams.stopId);
-        };
+        $scope.toggleFavorites = function () {
+            if (FavoritesService.inFavorites($stateParams.stopId)) {
+                FavoritesService.remove($stateParams.stopId);
+                $scope.data.favClass = "";
+            } else {
+                FavoritesService.add($stateParams.stopId, $stateParams.stopName);
+                $scope.data.favClass = "button-energized";
+            }
+        }
 
         $scope.handleLayovers = function (results) {
             angular.forEach(results['arriving'], function (val, key) {
@@ -441,7 +442,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.init = (function () {
-            $scope.data.inFavorites = FavoritesService.inFavorites($stateParams.stopId);
+            if (FavoritesService.inFavorites($stateParams.stopId)) {
+                $scope.data.favClass = "button-energized";
+            } else {
+                $scope.data.favClass = "";
+            };
             $scope.getBuses();
             $timeout($scope.tick, 5000);
         })();

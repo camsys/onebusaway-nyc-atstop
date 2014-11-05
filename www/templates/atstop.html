@@ -1,16 +1,19 @@
 <ion-view title="{{data.stopName}}">
     <ion-nav-buttons side="right">
+        <!-- Pull Refresh Alternative -->
+        <!--
         <button class="button button-clear" ng-click="refresh()" ng-disabled="data.val">
             <i class="icon ion-refresh"></i>
         </button>
+        -->
 
-        <button class="button button-clear" ng-click="addToFavorites()" ng-disabled="data.inFavorites">
+        <button class="button button-clear {{data.favClass}}" ng-click="toggleFavorites()">
             <i class="icon ion-star"></i>
         </button>
     </ion-nav-buttons>
 
     <ion-content ng-show="data.loaded" has-bouncing="true">
-        <ion-refresher  pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
 
         <div class="card">
 
