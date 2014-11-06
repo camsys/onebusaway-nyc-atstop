@@ -7,16 +7,20 @@
             </a>
         </ion-nav-buttons>
 
-        <p>Location: {{data.address}}</p>
 
-        <p class="highlight">Stops &amp; Routes:</p>
-        <ion-list>
+        <div class="list">
+            <p>Location: {{data.address}}</p>
+            <p class="highlight">Stops &amp; Routes:</p>
+
+
             <ion-item ng-repeat="item in data.stops| limitTo:8" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
                 {{item.name}}
                 <p>Routes:<span ng-repeat="r in item.routes"> {{r.shortName}} </span> 
                 </p>
             </ion-item>
-        </ion-list>
+        </div>
+
+        <p>{{data.notifications}}</p>
 
 
         <!--
@@ -28,6 +32,5 @@
         </ion-list>
         -->
 
-        <p>{{data.notifications}}</p>
     </ion-content>
 </ion-view>
