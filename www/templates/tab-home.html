@@ -1,7 +1,7 @@
 <ion-view title="Search">
     <ion-content has-bouncing="true">
 
-        <div class="list ">
+        <div class="list">
             <div class="item-input-inset">
                 <label class="item-input-wrapper">
                     <i class="icon ion-search placeholder-icon"></i>
@@ -20,7 +20,7 @@
             </ion-list>
         </div>
 
-        <div class="list card" ng-show="data.showTips">
+        <div class="list" ng-show="data.showTips">
 
             <p>You can search for Stops, Routes, or Intersections in the bar above, or try one of the examples below:</p>
             <p><i class="item item-divider">
@@ -39,7 +39,7 @@
             </p>
         </div>
 
-        <div class="card" ng-show="data.showFavs">
+        <div class="list" ng-show="data.showFavs">
             <p>Your Favorite Stops:</p>
             <ion-list>
                 <ion-item ng-repeat="item in data.favorites " href="#/tab/atstop/{{item.stopId}}/{{item.stopName}}">

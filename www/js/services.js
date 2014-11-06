@@ -310,7 +310,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var deferred = $q.defer();
         var buses = {
             arriving: {},
-            alerts: ""
+            alerts: "",
+            responseTimestamp: ""
         };
 
         var url = API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK";
@@ -323,6 +324,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                 timeout: httpTimeout
             })
             .success(function (data, status, header, config) {
+                buses.responseTimestamp = data.Siri.ServiceDelivery.ResponseTimestamp;
                 if (data.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit.length > 0) {
                     var tmp = [];
                     var grouped_tmp = [];

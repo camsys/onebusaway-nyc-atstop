@@ -351,6 +351,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         function ($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService) {
             $scope.data = {
                 "alerts": "",
+            "responseTime": "",
                 "loaded": false,
                 "val": true,
                 "favClass": "",
@@ -400,6 +401,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
                 var getBuses = AtStopService.getBuses($stateParams.stopId).then(function (results) {
                     if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
+                    $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
                         $scope.handleLayovers(results);
                         $scope.updateArrivalTimes(results);
                         $scope.data.results = results.arriving;
