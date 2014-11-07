@@ -22,7 +22,7 @@ p {
 }
 div.route {
     font-size: 1.4em;
-    text-align: center;
+    padding: 0px 14px;
 
 }
 .stopname {

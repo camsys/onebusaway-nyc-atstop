@@ -430,8 +430,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
             $scope.tick = function () {
                 $scope.currentTime = moment();
-                $scope.updateArrivalTimes($scope.data.results);
-                $timeout($scope.tick, 15000);
+                $scope.getBuses();
+                $timeout($scope.tick, 75000);
             }
 
             $scope.updateArrivalTimes = function (results) {
