@@ -20,12 +20,11 @@
 
             <p class="highlight" ng-show="data.alertsHide">Service Alerts:</p>
             <p class="alerts" ng-show="data.alertsHide" ng-repeat="a in data.alerts">{{a}}</p>
-
-            <p class="highlight">Upcoming Buses (Updated {{data.responseTime}}):</p>
+            <div class="updated">Updated {{data.responseTime}}</div>
 
             <div ng-repeat="(routeId, info) in data.results" class=" ">
                 <div class="row item item-divider">
-                    <div class="route col vcenter">{{info.name}}</div>
+                    <div class="route col vcenter"><a href="#/tab/route/{{routeId}}/{{info.name}}">{{info.name}}</a></div>
                     <a class="button button-full button-clear button-positive ion-earth rightAlign largeIcon vcenter" href="#/tab/map/{{routeId}}/{{data.stopId}}">
                     </a>
                 </div>
