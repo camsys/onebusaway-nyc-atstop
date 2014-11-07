@@ -19,21 +19,21 @@
             -->
 
             <p class="highlight" ng-show="data.alertsHide">Service Alerts:</p>
-            <p class="alerts" ng-show="data.alertsHide" ng-repeat="a in data.alerts">{{a}}</p>
+            <p class="alerts" ng-show="data.alertsHide" bindonce ng-repeat="a in data.alerts">{{a}}</p>
             <div class="updated">Updated {{data.responseTime}}</div>
 
-            <div ng-repeat="(routeId, info) in data.results" class=" ">
+            <div bindonce ng-repeat="(routeId, info) in data.results" class=" ">
                 <div class="row item item-divider">
                     <div class="route col vcenter"><a href="#/tab/route/{{routeId}}/{{info.name}}">{{info.name}}</a></div>
                     <a class="button button-full button-clear button-positive ion-earth rightAlign largeIcon vcenter" href="#/tab/map/{{routeId}}/{{data.stopId}}">
                     </a>
                 </div>
                 <ion-list>
-                    <ion-item ng-repeat="item in info.distances">
+                    <ion-item bindonce ng-repeat="item in info.distances">
                         <h2>{{item.destination}}</h2>
                         <p class="novmargin" ng-hide="!item.expectedArrivalTime"><strong>{{item.arrivingIn|durationView}}</strong>
                         </p>
-                        <p class="novmargin" ng-repeat="d in item.distance">{{d}}</p>
+                        <p class="novmargin" bindonce ng-repeat="d in item.distance">{{d}}</p>
                     </ion-item>
                 </ion-list>
             </div>
