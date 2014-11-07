@@ -14,7 +14,7 @@
             </div>
             <p class="highlight">{{data.notifications}}</p>
             <ion-list>
-                <ion-item ng-repeat="item in data.results" ng-click="searchAndGo(item)">
+                <ion-item bindonce ng-repeat="item in data.results" ng-click="searchAndGo(item)">
                     <strong>{{item}}</strong>
                 </ion-item>
             </ion-list>
@@ -25,24 +25,24 @@
             <p>You can search for Stops, Routes, or Intersections in the bar above, or try one of the examples below:</p>
             <p><i class="item item-divider">
                 Routes: &nbsp;</i>
-                <i class="item"><span class="button-clear" ng-repeat="s in data.exampleRoutes" ng-click="searchAndGo(s)">{{s}} &nbsp;</span>
+                <i class="item"><span class="button-clear" bindonce ng-repeat="s in data.exampleRoutes" ng-click="searchAndGo(s)">{{s}} &nbsp;</span>
                 </i>
             </p>
             <p>
                 <i class="item item-divider">Stops:</i>
-                <i class="item"><span class="button-clear" ng-repeat="s in data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &nbsp;</span>
+                <i class="item"><span class="button-clear" bindonce ng-repeat="s in data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &nbsp;</span>
                 </i>
             </p>
             <p><i class="item item-divider">Intersections:</i>
 
-                <i class="item"><span class="button-clear" ng-repeat="s in data.exampleIntersections" ng-click="searchAndGo(s)">{{s}}</i>
+                <i class="item"><span class="button-clear" bindonce ng-repeat="s in data.exampleIntersections" ng-click="searchAndGo(s)">{{s}}</i>
             </p>
         </div>
 
         <div class="list" ng-show="data.showFavs">
             <p>Your Favorite Stops:</p>
             <ion-list>
-                <ion-item ng-repeat="item in data.favorites " href="#/tab/atstop/{{item.stopId}}/{{item.stopName}}">
+                <ion-item bindonce ng-repeat="item in data.favorites " href="#/tab/atstop/{{item.stopId}}/{{item.stopName}}">
                     {{item.stopName}}
                 </ion-item>
             </ion-list>

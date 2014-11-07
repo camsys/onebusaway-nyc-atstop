@@ -3,7 +3,7 @@
         <h1>Routes At Stop</h1>
 
         <ion-list>
-            <ion-item ng-repeat="item in data.routes" href="#/tab/route/{{item.id}}/{{item.shortName}}">
+            <ion-item bindonce ng-repeat="item in data.routes" href="#/tab/route/{{item.id}}/{{item.shortName}}">
                 {{item.shortName}} {{item.description}}
             </ion-item>
         </ion-list>
