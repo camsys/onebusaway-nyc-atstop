@@ -94,6 +94,7 @@ p.highlight {
 }
 a {
     text-decoration: none;
+    color: inherit;
 }
 body {
     font-size: 1em;
