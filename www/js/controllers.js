@@ -9,12 +9,31 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
             $scope.drawPolylines = function (route) {
                 RouteService.getPolylines(route).then(function (results) {
-                    var stopsAndRoute = {};
+                    var stopsAndRoute = [];
+                    var i =0;
+
+                    angular.forEach(results.polylines, function (val, key) {
+
+                        stopsAndRoute[i] = {
+                            color: '#fb6a4a',
+                            weight: 3,
+                            latlngs: [],
+                            clickable: false
+                        };
+
+                        angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function (v, k) {
+                            stopsAndRoute[i].latlngs.push({
+                                lat: v.lat,
+                                lng: v.lng
+                            });
+                        });
+                        i++;
+                    });
 
                     angular.forEach(results.stops, function (val, key) {
 
                         if (val.id == $stateParams.stopId) {
-                            stopsAndRoute[val.id] = {
+                            stopsAndRoute[i] = {
                                 message: '<p><strong>' + val.name + '</strong></p>',
                                 type: "circleMarker",
                                 color: '#2166ac',
@@ -33,7 +52,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                                 clickable: true
                             }
                         } else {
-                            stopsAndRoute[val.id] = {
+                            stopsAndRoute[i] = {
                                 message: '<p><strong>' + val.name + '</strong></p>',
                                 type: "circleMarker",
                                 color: '#ffffff',
@@ -51,24 +70,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                                 },
                                 clickable: true
                             }
+                            i++;
                         }
                     });
 
-                    angular.forEach(results.polylines, function (val, key) {
-                        stopsAndRoute[key] = {
-                            color: '#fb6a4a',
-                            weight: 3,
-                            latlngs: [],
-                            clickable: false
-                        };
 
-                        angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function (v, k) {
-                            stopsAndRoute[key].latlngs.push({
-                                lat: v.lat,
-                                lng: v.lng
-                            });
-                        });
-                    });
 
                     $scope.paths = stopsAndRoute;
 
@@ -351,7 +357,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         function ($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService) {
             $scope.data = {
                 "alerts": "",
-            "responseTime": "",
+                "responseTime": "",
                 "loaded": false,
                 "val": true,
                 "favClass": "",
@@ -401,12 +407,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
                 var getBuses = AtStopService.getBuses($stateParams.stopId).then(function (results) {
                     if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
-                    $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
+                        $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
                         $scope.handleLayovers(results);
                         $scope.updateArrivalTimes(results.arriving);
-
                         $scope.data.results = results.arriving;
-                        console.log($scope.data.results);
                         $scope.data.notifications = "";
                     } else {
                         $scope.data.notifications = "We are not tracking any buses to this stop at this time. Check back later for an update.";
@@ -711,6 +715,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         function($scope, PRIV_POLICY_TEXT){
 
             console.log(PRIV_POLICY_TEXT);
-                $scope.text = PRIV_POLICY_TEXT;
+            $scope.text = PRIV_POLICY_TEXT;
 
         }]);
