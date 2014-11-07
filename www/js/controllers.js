@@ -403,11 +403,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
                     $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
                         $scope.handleLayovers(results);
-                        $scope.updateArrivalTimes(results);
+                        $scope.updateArrivalTimes(results.arriving);
+
                         $scope.data.results = results.arriving;
+                        console.log($scope.data.results);
                         $scope.data.notifications = "";
                     } else {
-                        $scope.data.notifications = "We are not tracking any buses to this stop at this time";
+                        $scope.data.notifications = "We are not tracking any buses to this stop at this time. Check back later for an update.";
                     }
 
                     if (results.alerts.length > 0) {
@@ -416,7 +418,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     } else {
                         $scope.data.alertsHide = false;
                     }
-
                 });
                 $q.all([getBuses]).then(function () {
                     $scope.data.loaded = true;
@@ -426,15 +427,16 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             $scope.tick = function () {
                 $scope.currentTime = moment();
                 $scope.updateArrivalTimes($scope.data.results);
-                $timeout($scope.tick, 5000);
+                $timeout($scope.tick, 15000);
             }
 
             $scope.updateArrivalTimes = function (results) {
-                angular.forEach(results['arriving'], function (val, key) {
+                angular.forEach(results, function (val, key) {
                     angular.forEach(val['distances'], function (v, k) {
                         v.arrivingIn = datetimeService.getRemainingTime(v.expectedArrivalTime);
                     });
                 });
+
             };
 
             $scope.refresh = function () {
