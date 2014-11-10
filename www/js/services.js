@@ -18,6 +18,19 @@ angular.module('starter.services', ['ionic', 'configuration'])
         }
 }])
 
+/*.factory('cacheService', function (DSCacheFactory){
+        var appCache = DSCacheFactory('appCache');
+        appCache.setOptions({
+            capacity: 100,
+            maxAge: 60000000
+        });
+        deleteOnExpire: 'aggressive',
+            onExpire: function(key, value) {
+            $http.get(key).success(function (data) {
+                appCache.put(key, data);
+            });
+        }
+    })*/
 
 .factory('FavoritesService', function ($q, $window) {
     var add = function (stopId, stopName) {
@@ -94,7 +107,14 @@ angular.module('starter.services', ['ionic', 'configuration'])
     }
 })
 
-.factory('RouteService', function ($q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('RouteService', function ($q, $http, httpTimeout, API_END_POINT, API_KEY, DSCacheFactory) {
+
+        DSCacheFactory('dataCache', {
+            maxAge: 600000, // Items added to this cache expire after 15 minutes.
+            cacheFlushInterval: 600000, // This cache will clear itself every hour.
+            deleteOnExpire: 'aggressive' // Items will be deleted from this cache right when they expire.
+        });
+
 
     var getPolylines = function (route) {
         var deferred = $q.defer();
@@ -106,7 +126,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var url = API_END_POINT + "api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK";
 
         var responsePromise = $http.jsonp(url, {
-
+                cache: DSCacheFactory.get('dataCache'),
                 params: {
                     key: API_KEY,
                     version: 2,
@@ -139,6 +159,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var url = API_END_POINT + "api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK";
 
         var responsePromise = $http.jsonp(url, {
+            cache: DSCacheFactory.get('dataCache'),
                 params: {
                     key: API_KEY,
                     version: 2,
@@ -197,6 +218,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
         var url = API_END_POINT + "api/stops-on-route-for-direction?callback=JSON_CALLBACK";
         var responsePromise = $http.jsonp(url, {
+            cache: DSCacheFactory.get('dataCache'),
                 params: {
                     routeId: route,
                     directionId: direction,
