@@ -43,7 +43,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                             weight: 30,
                             radius: 8,
                             name: val.name,
-                            id: val.id,
+                            stopId: val.id,
                             routeIds: val.routeIds,
                             latlngs: {
                                 lat: val.lat,
@@ -63,7 +63,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                             weight: 1,
                             radius: 8,
                             name: val.name,
-                            id: val.id,
+                            stopId: val.id,
                             routeIds: val.routeIds,
                             latlngs: {
                                 lat: val.lat,
