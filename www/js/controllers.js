@@ -432,7 +432,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         $scope.tick = function () {
             $scope.currentTime = moment();
             $scope.getBuses();
-            $timeout($scope.tick, 75000);
         }
 
         $scope.updateArrivalTimes = function (results) {
@@ -449,6 +448,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             $scope.$broadcast('scroll.refreshComplete');
         };
 
+        $scope.$on('$destroy', function () {
+           $timeout.cancel($scope.reloadTimeout);
+        });
+
         $scope.init = (function () {
             if (FavoritesService.inFavorites($stateParams.stopId)) {
                 $scope.data.favClass = "button-energized";
@@ -456,7 +459,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 $scope.data.favClass = "";
             };
             $scope.getBuses();
-            $timeout($scope.tick, 5000);
+            $scope.reloadTimeout = $timeout($scope.tick, 75000);
         })();
         }])
 
