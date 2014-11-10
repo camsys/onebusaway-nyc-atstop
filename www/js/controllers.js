@@ -34,7 +34,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     var lclName = $filter('encodeStopName')(val.name);
                     if (val.id == $stateParams.stopId) {
                         stopsAndRoute[i] = {
-                            message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Go to Stop</a>',
+                            //message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Go to Stop</a>',
                             type: "circleMarker",
                             color: '#2166ac',
                             opacity: 0.75,
@@ -51,9 +51,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                             },
                             clickable: true
                         }
+                        i++;
                     } else {
                         stopsAndRoute[i] = {
-                            message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Go to Stop</a>',
+                            //message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Go to Stop</a>',
                             type: "circleMarker",
                             color: '#ffffff',
                             opacity: 1,
@@ -94,7 +95,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
             $scope.markers = {};
             VehicleMonitoringService.getLocations(route).then(function (results) {
-                var buses = {};
+                var buses = [];
+                var i = 0;
 
                 function round5(x) {
                     return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
@@ -105,16 +107,20 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     if (angle == 360) {
                         angle = 0;
                     };
-                    buses[val.vehicleId] = {
+                    buses[i] = {
                         lat: val.latitude,
                         lng: val.longitude,
-                        message: "Vehicle " + val.vehicleId + "<br> <h4>" + val.destination + "</h4>" + "<br> <h5>Next Stop: " + val.stopPointName + "</h5>",
+                        //message: "Vehicle " + val.vehicleId + "<br> <h4>" + val.destination + "</h4>" + "<br> <h5>Next Stop: " + val.stopPointName + "</h5>",
                         icon: {
                             iconUrl: 'img/bus_icons/vehicle-' + angle + '.png',
                             iconSize: [51, 51]
                         },
-                        focus: false
+                        focus: false,
+                        vehicleId: val.vehicleId,
+                        destination: val.destination,
+                        nextStop: val.stopPointName
                     }
+                    i++;
                 });
 
                 $scope.markers = buses;
@@ -133,10 +139,29 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             });
 
             $scope.$on('leafletDirectiveMarker.click', function (event, args) {
+                //message: "Vehicle " + val.vehicleId + "<br> <h4>" + val.destination + "</h4>" + "<br> <h5>Next Stop: " + val.stopPointName + "</h5>";
+                var object = $scope.markers[args.markerName],
+                    content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>",
+                    latLng = [object.lat, object.lng],
+                    popup = L.popup().setContent(content).setLatLng(latLng);
+
+                leafletData.getMap().then(function (map) {
+                    popup.openOn(map);
+                });
+
                 console.log('marker clicked: ' + args.markerName);
             });
 
             $scope.$on('leafletDirectivePath.click', function (event, args) {
+                var object = $scope.paths[args.pathName],
+                    content = object.name,
+                    latLng = [object.latlngs.lat, object.latlngs.lng],
+                    popup = L.popup().setContent(content).setLatLng(latLng);
+
+                leafletData.getMap().then(function (map) {
+                    popup.openOn(map);
+                });
+
                 console.log(args);
             });
 
@@ -172,11 +197,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.drawNearbyStopsAndRoutes = function (lclLat, lclLon) {
             GeolocationService.getStops(lclLat, lclLon).then(function (results) {
-                var stops = {};
+                var stops = [];
+                var i = 0;
 
                 angular.forEach(results, function (val, key) {
                     var lclName = $filter('encodeStopName')(val.name);
-                    stops[key] = {
+                    stops[i] = {
                         message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Visit</a>',
                         type: "circleMarker",
                         color: '#ffffff',
@@ -190,6 +216,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                             lng: val.lon
                         }
                     }
+                    i++;
                 });
 
                 $scope.paths = stops;
@@ -449,7 +476,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.$on('$destroy', function () {
-           $timeout.cancel($scope.reloadTimeout);
+            $timeout.cancel($scope.reloadTimeout);
         });
 
         $scope.init = (function () {

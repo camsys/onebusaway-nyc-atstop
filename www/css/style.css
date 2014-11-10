@@ -8,7 +8,7 @@ html {
 }
 body {
     background: #fff;
-    font: 14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 14px/21px"HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #444;
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
@@ -23,7 +23,6 @@ p {
 div.route {
     font-size: 1.4em;
     padding: 0px 14px;
-
 }
 .stopname {
     text-align: center;
@@ -75,7 +74,6 @@ p.highlight {
     margin: 0;
     padding: 15px;
 }
-
 .alerts {
     font-size: 12px;
     color: #B21212;
@@ -138,5 +136,5 @@ label.item.item-input {
     display: block !important;
 }
 .leaflet-popup-close-button {
-    display: none;
+    /* display: none; */
 }
