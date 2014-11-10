@@ -34,7 +34,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     var lclName = $filter('encodeStopName')(val.name);
                     if (val.id == $stateParams.stopId) {
                         stopsAndRoute[i] = {
-                            message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Visit</a>',
+                            message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Go to Stop</a>',
                             type: "circleMarker",
                             color: '#2166ac',
                             opacity: 0.75,
@@ -53,7 +53,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         }
                     } else {
                         stopsAndRoute[i] = {
-                            message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Visit</a>',
+                            message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Go to Stop</a>',
                             type: "circleMarker",
                             color: '#ffffff',
                             opacity: 1,
