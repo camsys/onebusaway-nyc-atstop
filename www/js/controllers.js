@@ -203,7 +203,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 angular.forEach(results, function (val, key) {
                     var lclName = $filter('encodeStopName')(val.name);
                     stops[i] = {
-                        message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Visit</a>',
+                        //message: '<p><strong>' + lclName + '</strong></p>' + '<a class="button button-small button-stable button-full" href="#/tab/atstop/' + val.id + '/' + lclName + '">Visit</a>',
+                        name: lclName,
                         type: "circleMarker",
                         color: '#ffffff',
                         opacity: 1,
