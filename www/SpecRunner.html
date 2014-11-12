@@ -23,15 +23,20 @@
     <!-- ngCordova -->
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
 
-    <!-- underscore/underscore-min.js -->
+    <!-- your app's js -->
+    <script src="js/config.js"></script>
+
     <script src="lib/underscore/underscore-min.js"></script>
+    <script src="lib/moment/moment.min.js"></script>
+    <script src="lib/bindonce/bindonce.min.js"></script>
+    <script src="lib/angular-cache/angular-cache.min.js"></script>
+
 
     <!-- leaflet/leflet.js -->
     <script src="lib/leaflet/leaflet.js"></script>
     <script src="lib/leaflet/plugins/Polyline.encoded.js"></script>
 
-    <!-- your app's js -->
-    <script src="js/config.js"></script>
+
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
@@ -81,26 +86,42 @@
             beforeEach(inject(function ($rootScope, $controller) {
                 scope = $rootScope;
                 ctrl = $controller('SearchCtrl', {
-                    $scope: scope}
-                );
+                    $scope: scope
+                });
             }));
 
-            it('should not return the nssm if only one direction', function(){
-                var matches = {"directions": [{"hasUpcomingScheduledService":true}]};
+            it('should not return the nssm if only one direction', function () {
+                var matches = {
+                    "directions": [{
+                        "hasUpcomingScheduledService": true
+                    }]
+                };
                 scope.handleRouteSearch(matches);
                 expect(scope.data.notifications).toEqual('');
             });
 
-            it('should display nssm if no service', function() {
-                var matches = {"directions": [{"hasUpcomingScheduledService":false}, {"hasUpcomingScheduledService":false}]};
+            it('should display nssm if no service', function () {
+                var matches = {
+                    "directions": [{
+                        "hasUpcomingScheduledService": false
+                    }, {
+                        "hasUpcomingScheduledService": false
+                    }]
+                };
                 scope.handleRouteSearch(matches);
                 expect(scope.data.notifications).not.toEqual('');
             });
 
-            it('should not display nssm if active service in one direction', function(){
-                var matches = {"directions": [{"hasUpcomingScheduledService":false}, {"hasUpcomingScheduledService":true}]};
+            it('should not display nssm if active service in one direction', function () {
+                var matches = {
+                    "directions": [{
+                        "hasUpcomingScheduledService": false
+                    }, {
+                        "hasUpcomingScheduledService": true
+                    }]
+                };
                 scope.handleRouteSearch(matches);
-				expect(scope.data.notifications).toEqual('');
+                expect(scope.data.notifications).toEqual('');
             });
         });
 
@@ -121,7 +142,6 @@
                 expect(scope.data.results).toEqual(results);
             });
         });
-
     </script>
 </head>
 
