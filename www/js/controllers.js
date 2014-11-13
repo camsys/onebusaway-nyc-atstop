@@ -7,6 +7,100 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.paths = {};
 		$scope.markers = {};
 
+		// Refresh Map
+		$scope.refresh = function() {
+			$scope.drawStopsAndBuses($stateParams.routeId);
+		};
+
+		// Draw nearby stops
+		$scope.drawNearbyStops = function(lclLat, lclLon) {
+			GeolocationService.getStops(lclLat, lclLon).then(function(results) {
+				var stops = [];
+				var i = 0;
+
+				angular.forEach(results, function(val, key) {
+					var lclName = $filter('encodeStopName')(val.name);
+					stops[i] = {
+						lat: val.lat,
+						lng: val.lon,
+						icon: {
+							iconUrl: 'img/stop_icons/bullet.png',
+							iconSize: [20, 20]
+						},
+						focus: false,
+						stopId: val.stopId,
+						stopName: lclName
+					}
+					i++;
+				});
+
+				$scope.markers = stops;
+
+				leafletData.getMap().then(function(map) {
+					map.setView([lclLat, lclLon], 15);
+				});
+			});
+		}
+
+		// Draw Stops and Buses
+		$scope.drawStopsAndBuses = function(route) {
+			$scope.val = true;
+			$timeout(function() {
+				$scope.val = false;
+			}, 5000);
+
+			$scope.markers = {};
+
+			var stopsAndBuses = [];
+			var i = 0;
+			var req = RouteService.getPolylines(route).then(function(results) {
+				angular.forEach(results.stops, function(val, key) {
+					var lclName = $filter('encodeStopName')(val.name);
+					stopsAndBuses[i] = {
+						lat: val.lat,
+						lng: val.lon,
+						icon: {
+							iconUrl: 'img/stop_icons/bullet.png',
+							iconSize: [20, 20]
+						},
+						focus: false,
+						stopId: val.stopId,
+						stopName: lclName
+					}
+					i++;
+				});
+			});
+
+			$q.all([req]).then(function() {
+				VehicleMonitoringService.getLocations(route).then(function(results) {
+					function round5(x) {
+						return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
+					}
+					angular.forEach(results, function(val, key) {
+						angle = round5(val.angle);
+						if (angle == 360) {
+							angle = 0;
+						};
+						stopsAndBuses[i] = {
+							lat: val.latitude,
+							lng: val.longitude,
+							icon: {
+								iconUrl: 'img/bus_icons/vehicle-' + angle + '.png',
+								iconSize: [51, 51]
+							},
+							focus: false,
+							vehicleId: val.vehicleId,
+							destination: val.destination,
+							nextStop: val.stopPointName
+						}
+						i++;
+					});
+					$scope.markers = stopsAndBuses;
+				});
+			});
+		};
+
+		// Draw Route Polylines
 		$scope.drawRoute = function(route) {
 			RouteService.getPolylines(route).then(function(results) {
 				var route = [];
@@ -42,199 +136,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		};
 
-		$scope.drawStops = function(route) {
-			var stops = [];
-			var i = 0;
-			var req = RouteService.getPolylines(route).then(function(results) {
 
-
-				angular.forEach(results.stops, function(val, key) {
-					var lclName = $filter('encodeStopName')(val.name);
-
-					stops[i] = {
-						lat: val.lat,
-						lng: val.lon,
-						icon: {
-							iconUrl: 'img/stop_icons/bullet.png',
-							iconSize: [20, 20]
-						},
-						focus: false,
-						stopId: val.stopId,
-						stopName: lclName
-					}
-
-					i++;
-				});
-
-				//$scope.markers = stops;
-			});
-
-			$q.all([req]).then(function() {
-				VehicleMonitoringService.getLocations(route).then(function(results) {
-					function round5(x) {
-						return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
-					}
-
-					angular.forEach(results, function(val, key) {
-						angle = round5(val.angle);
-						if (angle == 360) {
-							angle = 0;
-						};
-						stops[i] = {
-							lat: val.latitude,
-							lng: val.longitude,
-							icon: {
-								iconUrl: 'img/bus_icons/vehicle-' + angle + '.png',
-								iconSize: [51, 51]
-							},
-							focus: false,
-							vehicleId: val.vehicleId,
-							destination: val.destination,
-							nextStop: val.stopPointName
-						}
-						i++;
-					});
-
-					$scope.markers = stops;
-				});
-			});
-		};
-
-
-
-
-
-		$scope.drawPolylines = function(route) {
-			RouteService.getPolylines(route).then(function(results) {
-				var stopsAndRoute = [];
-				var i = 0;
-
-				angular.forEach(results.polylines, function(val, key) {
-
-					stopsAndRoute[i] = {
-						color: '#fb6a4a',
-						weight: 3,
-						latlngs: [],
-						clickable: false
-					};
-
-					angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function(v, k) {
-						stopsAndRoute[i].latlngs.push({
-							lat: v.lat,
-							lng: v.lng
-						});
-					});
-
-					i++;
-				});
-
-
-				angular.forEach(results.stops, function(val, key) {
-					var lclName = $filter('encodeStopName')(val.name);
-					if (val.id == $stateParams.stopId) {
-						stopsAndRoute[i] = {
-							type: "circleMarker",
-							color: '#2166ac',
-							opacity: 0.75,
-							fillColor: '#2166ac',
-							fillOpacity: 1,
-							weight: 30,
-							radius: 8,
-							name: val.name,
-							stopId: val.id,
-							routeIds: val.routeIds,
-							latlngs: {
-								lat: val.lat,
-								lng: val.lon
-							},
-							clickable: true
-						}
-						i++;
-					} else {
-						stopsAndRoute[i] = {
-							type: "circleMarker",
-							color: '#ffffff',
-							opacity: 1,
-							fillColor: '#cb181d',
-							fillOpacity: 1,
-							weight: 1,
-							radius: 8,
-							name: val.name,
-							stopId: val.id,
-							routeIds: val.routeIds,
-							latlngs: {
-								lat: val.lat,
-								lng: val.lon
-							},
-							clickable: true
-						}
-						i++;
-					}
-				});
-
-				$scope.paths = stopsAndRoute;
-
-				leafletData.getMap().then(function(map) {
-					map.fitBounds([
-						[$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lng']],
-						[$scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lat'], $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lng']]
-					]);
-				});
-			})
-		};
-
-		$scope.drawBuses = function(route) {
-			$scope.val = true;
-			$timeout(function() {
-				$scope.val = false;
-			}, 5000);
-
-			$scope.markers = {};
-			VehicleMonitoringService.getLocations(route).then(function(results) {
-				var buses = [];
-				var i = 0;
-
-				function round5(x) {
-					return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
-				}
-
-				angular.forEach(results, function(val, key) {
-					angle = round5(val.angle);
-					if (angle == 360) {
-						angle = 0;
-					};
-					buses[i] = {
-						lat: val.latitude,
-						lng: val.longitude,
-						icon: {
-							iconUrl: 'img/bus_icons/vehicle-' + angle + '.png',
-							iconSize: [51, 51]
-						},
-						focus: false,
-						vehicleId: val.vehicleId,
-						destination: val.destination,
-						nextStop: val.stopPointName
-					}
-					i++;
-				});
-
-				$scope.markers = buses;
-			});
-		};
-
-		$scope.refresh = function() {
-			$scope.drawBuses($stateParams.routeId);
-		};
-
+		// Map
 		$scope.map = function() {
-
-			$scope.$on('leafletDirectiveMap.click', function(event, args) {
-				var latlng = args.leafletEvent.latlng;
-				console.log('Lat: ' + latlng.lat + '<br>Lng: ' + latlng.lng);
-			});
-
+			// watch marker click events
 			$scope.$on('leafletDirectiveMarker.click', function(event, args) {
-
 				var object = $scope.markers[args.markerName];
 				console.log(object.stopName);
 				if ($filter('isUndefinedOrEmpty')(object.stopName)) {
@@ -250,21 +156,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				leafletData.getMap().then(function(map) {
 					popup.openOn(map);
 				});
-
-				console.log('marker clicked: ' + args.markerName);
-			});
-
-			$scope.$on('leafletDirectivePath.click', function(event, args) {
-				var object = $scope.paths[args.pathName],
-					content = object.name,
-					latLng = [object.latlngs.lat, object.latlngs.lng],
-					popup = L.popup().setContent(content).setLatLng(latLng);
-
-				leafletData.getMap().then(function(map) {
-					popup.openOn(map);
-				});
-
-				console.log(args);
 			});
 
 
@@ -275,41 +166,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 			angular.extend($scope, {
 				events: {
-					map: {
-						enable: ['click', 'drag', 'blur', 'touchstart'],
-						logic: 'emit'
-					},
 					markers: {
-						enable: ['click'],
-						logic: 'emit'
-					},
-					paths: {
 						enable: ['click'],
 						logic: 'emit'
 					}
 				},
 				center: {},
-				// layers: {
-				// 	baselayers: {
-				// 		openStreetMap: {
-				// 			name: 'Stamen',
-				// 			type: 'xyz',
-				// 			url: 'http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png'
-				// 		}
-				// 	},
-				// 	overlays: {
-				// 		stops: {
-				// 			type: 'group',
-				// 			name: 'stops',
-				// 			visible: true
-				// 		},
-				// 		buses: {
-				// 			type: 'group',
-				// 			name: 'buses',
-				// 			visible: true
-				// 		}
-				// 	}
-				// },
 				defaults: {
 					tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
 					tileLayerOptions: {
@@ -321,57 +183,22 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				markers: {},
 				paths: {}
 			});
-
 		};
-
-		$scope.drawNearbyStopsAndRoutes = function(lclLat, lclLon) {
-			GeolocationService.getStops(lclLat, lclLon).then(function(results) {
-				var stops = [];
-				var i = 0;
-
-				angular.forEach(results, function(val, key) {
-					var lclName = $filter('encodeStopName')(val.name);
-					stops[i] = {
-						name: lclName,
-						type: "circleMarker",
-						color: '#ffffff',
-						opacity: 1,
-						fillColor: '#cb181d',
-						fillOpacity: 1,
-						weight: 1,
-						radius: 8,
-						latlngs: {
-							lat: val.lat,
-							lng: val.lon
-						}
-					}
-					i++;
-				});
-
-				$scope.paths = stops;
-
-				leafletData.getMap().then(function(map) {
-					map.setView([lclLat, lclLon], 15);
-				});
-			});
-		}
 
 		$scope.init = (function() {
 			$scope.map();
 			if ($location.$$path.indexOf('/tab/map-nearby') >= 0) {
 				// Test
 				// $scope.drawNearbyStopsAndRoutes(40.635081, -73.967235);
-				//$scope.drawNearbyStopsAndRoutes($stateParams.lat, $stateParams.lon);
+				$scope.drawNearbyStops($stateParams.lat, $stateParams.lon);
 			} else {
-				//$scope.drawPolylines($stateParams.routeId);
-				//$scope.drawBuses($stateParams.routeId);
 				$scope.drawRoute($stateParams.routeId);
-				$scope.drawStops($stateParams.routeId);
+				$scope.drawStopsAndBuses($stateParams.routeId);
 			}
 		})();
+
 	}
 ])
-
 
 .controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'FavoritesService',
 
