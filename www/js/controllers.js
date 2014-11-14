@@ -246,7 +246,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		// set no sched svc message.
-		var handleRouteSearch = function(matches) {
+		$scope.handleRouteSearch = function(matches) {
 			if (matches.directions.length > 1) {
 				// if one direction with no service-- handle on route/stop page.
 				if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
@@ -275,7 +275,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				function(matches) {
 					switch (matches.type) {
 						case "RouteResult":
-							handleRouteSearch(matches);
+							$scope.handleRouteSearch(matches);
 							break;
 						case "StopResult":
 							$scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
