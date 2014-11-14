@@ -19,20 +19,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	}
 ])
 
-/*.factory('cacheService', function (DSCacheFactory){
-        var appCache = DSCacheFactory('appCache');
-        appCache.setOptions({
-            capacity: 100,
-            maxAge: 60000000
-        });
-        deleteOnExpire: 'aggressive',
-            onExpire: function(key, value) {
-            $http.get(key).success(function (data) {
-                appCache.put(key, data);
-            });
-        }
-    })*/
-
 .factory('FavoritesService', function($q, $window) {
 	var add = function(stopId, stopName) {
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
