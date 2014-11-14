@@ -698,7 +698,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         $scope.text = PRIV_POLICY_TEXT;
 
         $scope.toggleText = function(){
-            console.log("hide")
             $scope.hideText = !$scope.hideText;
         };
 

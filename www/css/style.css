@@ -91,7 +91,10 @@ p {
     color: #666;
 }
 .longtext {
-    font-weight: lighter;
+    text-align: justify;
+    text-justify: auto;
+    line-height: 1.5;
+    hyphens: auto;
 }
 a {
     text-decoration: none;
