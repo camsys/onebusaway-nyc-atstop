@@ -1,11 +1,16 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova', 'pasvaz.bindonce', 'angular-data.DSCacheFactory'])
 
-
 // global timeout variable
 .value('httpTimeout', 5000)
 
 .run(function($rootScope, $ionicPlatform, $ionicPopup, $cordovaNetwork) {
 	$ionicPlatform.ready(function() {
+		if (window.cordova && window.cordova.plugins.Keyboard) {
+			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+		}
+		if (window.StatusBar) {
+			StatusBar.styleDefault();
+		}
 		if ($cordovaNetwork.isOffline()) {
 			$ionicPopup.alert({
 				title: "Internet Disconnected",
@@ -85,17 +90,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		});
 	};
-})
-
-.run(function($ionicPlatform) {
-	$ionicPlatform.ready(function() {
-		if (window.cordova && window.cordova.plugins.Keyboard) {
-			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-		}
-		if (window.StatusBar) {
-			StatusBar.styleDefault();
-		}
-	});
 })
 
 .config(function($stateProvider, $urlRouterProvider) {

@@ -10,7 +10,6 @@ angular.module('filters', [])
 
 .filter('isUndefinedOrEmpty', function() {
 	return function(a) {
-		//console.log('Filter result: ' + a);
 		return angular.isUndefined(a) || null === a;
 	}
 })
@@ -54,6 +53,7 @@ angular.module('filters', [])
 			if (duration.minutes > 0) {
 				displayTime = duration.minutes + " min";
 			}
+
 			return displayTime;
 		};
 	}

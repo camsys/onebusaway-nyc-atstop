@@ -9,11 +9,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		// Refresh Map
 		$scope.refresh = function() {
-			$scope.drawStopsAndBuses($stateParams.routeId);
+			drawStopsAndBuses($stateParams.routeId);
 		};
 
 		// Draw nearby stops
-		$scope.drawNearbyStops = function(lclLat, lclLon) {
+		var drawNearbyStops = function(lclLat, lclLon) {
 			GeolocationService.getStops(lclLat, lclLon).then(function(results) {
 				var stops = [];
 				var i = 0;
@@ -43,7 +43,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		}
 
 		// Draw Stops and Buses
-		$scope.drawStopsAndBuses = function(route) {
+		var drawStopsAndBuses = function(route) {
 			$scope.val = true;
 			$timeout(function() {
 				$scope.val = false;
@@ -101,7 +101,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		// Draw Route Polylines
-		$scope.drawRoute = function(route) {
+		var drawRoute = function(route) {
 			RouteService.getPolylines(route).then(function(results) {
 				var route = [];
 				var i = 0;
@@ -138,7 +138,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 
 		// Map
-		$scope.map = function() {
+		var map = function() {
 			// watch marker click events
 			$scope.$on('leafletDirectiveMarker.click', function(event, args) {
 				var object = $scope.markers[args.markerName];
@@ -186,22 +186,22 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.init = (function() {
-			$scope.map();
+			map();
 			if ($location.$$path.indexOf('/tab/map-nearby') >= 0) {
 				// Test
 				// $scope.drawNearbyStopsAndRoutes(40.635081, -73.967235);
-				$scope.drawNearbyStops($stateParams.lat, $stateParams.lon);
+				drawNearbyStops($stateParams.lat, $stateParams.lon);
 			} else {
-				$scope.drawRoute($stateParams.routeId);
-				$scope.drawStopsAndBuses($stateParams.routeId);
+				drawRoute($stateParams.routeId);
+				drawStopsAndBuses($stateParams.routeId);
 			}
 		})();
 
 	}
 ])
 
+// Search
 .controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'FavoritesService',
-
 	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, FavoritesService) {
 
 
@@ -242,14 +242,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		// set no sched svc message.
-		$scope.handleRouteSearch = function(matches) {
+		var handleRouteSearch = function(matches) {
 			if (matches.directions.length > 1) {
 				// if one direction with no service-- handle on route/stop page.
 				if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
 					$scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
 					console.log($scope.data.notifications);
 				} else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService) {
-					$scope.noSchedService(matches.shortName);
+					noSchedService(matches.shortName);
 				} else {
 
 				}
@@ -257,12 +257,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				if (matches.directions[0].hasUpcomingScheduledService) {
 					$scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
 				} else {
-					$scope.noSchedService(matches.shortName);
+					noSchedService(matches.shortName);
 				}
 			}
 		}
 
-		$scope.noSchedService = function(routeDirection) {
+		var noSchedService = function(routeDirection) {
 			$scope.data.notifications = "There is no scheduled service on this route at this time.";
 		}
 
@@ -271,7 +271,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				function(matches) {
 					switch (matches.type) {
 						case "RouteResult":
-							$scope.handleRouteSearch(matches);
+							handleRouteSearch(matches);
 							break;
 						case "StopResult":
 							$scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
@@ -308,6 +308,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
+
+// Favorites
 .controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q',
 	function($scope, $ionicLoading, FavoritesService, $q) {
 		$scope.data = {
@@ -343,6 +345,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
+// At Stop
 .controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService',
 	function($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService) {
 		$scope.data = {
@@ -368,7 +371,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			}
 		}
 
-		$scope.handleLayovers = function(results) {
+		var handleLayovers = function(results) {
 			angular.forEach(results['arriving'], function(val, key) {
 				//updates distances to an array of strings so that multi-line entries come out cleaner.
 				angular.forEach(val['distances'], function(v, k) {
@@ -398,8 +401,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			var getBuses = AtStopService.getBuses($stateParams.stopId).then(function(results) {
 				if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
 					$scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
-					$scope.handleLayovers(results);
-					$scope.updateArrivalTimes(results.arriving);
+					handleLayovers(results);
+					updateArrivalTimes(results.arriving);
 					$scope.data.results = results.arriving;
 					$scope.data.notifications = "";
 				} else {
@@ -418,18 +421,16 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		};
 
-		$scope.tick = function() {
-			$scope.currentTime = moment();
+		var tick = function() {
 			$scope.getBuses();
 		}
 
-		$scope.updateArrivalTimes = function(results) {
+		var updateArrivalTimes = function(results) {
 			angular.forEach(results, function(val, key) {
 				angular.forEach(val['distances'], function(v, k) {
 					v.arrivingIn = datetimeService.getRemainingTime(v.expectedArrivalTime);
 				});
 			});
-
 		};
 
 		$scope.refresh = function() {
@@ -448,7 +449,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.favClass = "";
 			};
 			$scope.getBuses();
-			$scope.reloadTimeout = $timeout($scope.tick, 75000);
+			$scope.reloadTimeout = $timeout(tick, 75000);
 		})();
 	}
 ])
@@ -495,12 +496,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
+// Route Stops
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate',
 	function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate) {
 
-		$scope.routeId = $stateParams.routeId;
-
-		$scope.oneDirection = false;
+		var oneDirection = false;
 		$scope.groups = [];
 		$scope.groups[0] = {
 			name: "",
@@ -526,6 +526,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			$ionicScrollDelegate.resize();
 			$ionicScrollDelegate.scrollTop();
 		};
+
 		$scope.isGroupShown = function(group) {
 			return $scope.shownGroup === group;
 		};
@@ -541,10 +542,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.getDirectionsAndStops = function() {
 			var getDirections = RouteService.getDirections($stateParams.routeId).then(function(results) {
-				//console.log(Object.keys(results).length);
-				//console.log(Object.keys(results).length > 1);
 				if (Object.keys(results).length > 1) {
-					$scope.oneDirection = false;
+					oneDirection = false;
 					angular.forEach(results, function(val, key) {
 						if (val.directionId == 0) {
 							$scope.data.directionName = val.destination;
@@ -561,9 +560,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.directionName = results[0].destination;
 					$scope.groups[0].name = results[0].destination;
 					$scope.groups.splice(1);
-					$scope.oneDirection = true;
+					oneDirection = true;
 					$scope.toggleGroup($scope.groups[0]);
-					//console.log($scope.oneDirection);
 				}
 			});
 
@@ -573,8 +571,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				getStops = RouteService.getStops($stateParams.routeId, "0").then(function(results) {
 					$scope.data.direction = results;
 					$scope.groups[0].items = results;
-					//console.log($scope.oneDirection);
-					if ($scope.oneDirection === false) {
+					if (oneDirection === false) {
 						//console.log("1D 4eva!");
 						RouteService.getStops($stateParams.routeId, "1").then(function(results2) {
 							$scope.data.direction_ = results2;
@@ -596,6 +593,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
+// Nearby Stops and Routes
 .controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation',
 	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation) {
 		$scope.data = {
@@ -611,9 +609,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.refresh = function() {
 			$scope.getNearbyStopsAndRoutes();
 		};
-
-
-
 
 		// For testing only
 		$scope.getNearbyStopsAndRoutesTest = function() {
@@ -658,10 +653,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.lat = position.coords.latitude;
 					$scope.data.lon = position.coords.longitude;
 
-					var lat = position.coords.latitude;
-					var lon = position.coords.longitude;
-
-					var getStops = GeolocationService.getStops(lat, lon).then(function(results) {
+					var getStops = GeolocationService.getStops($scope.data.lat, $scope.data.lon).then(function(results) {
 						if (!angular.isUndefined(results) && results != null && results.length > 0) {
 							$scope.data.stops = results;
 							$scope.data.notifications = "";
@@ -670,7 +662,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						}
 					});
 
-					var getRoutes = GeolocationService.getRoutes(lat, lon).then(function(results) {
+					var getRoutes = GeolocationService.getRoutes($scope.data.lat, $scope.data.lon).then(function(results) {
 						if (!angular.isUndefined(results) && results != null && results.length > 0) {
 							$scope.data.routes = results;
 							$scope.data.notifications = "";
@@ -687,7 +679,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 					$ionicPopup.alert({
 						title: "Error",
-						content: "Cannot retrieve position information."
+						content: "Cannot retrieve position information. Check if the location service is enabled."
 					})
 						.then(function(result) {
 							if (result) {
@@ -700,8 +692,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.init = (function() {
 			$scope.getNearbyStopsAndRoutes();
-
-			// getNearbyStopsAndRoutesTest() should test the 'getNearbyStopsAndRoutes' function by substituting the location variables with the real ones
 			//$scope.getNearbyStopsAndRoutesTest();
 		})();
 	}
@@ -710,9 +700,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('AboutCtrl', ['$scope',
 	function($scope, PRIV_POLICY_TEXT) {
-
-		console.log(PRIV_POLICY_TEXT);
+		//console.log(PRIV_POLICY_TEXT);
 		$scope.text = PRIV_POLICY_TEXT;
-
 	}
 ]);
