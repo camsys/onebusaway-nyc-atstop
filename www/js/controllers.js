@@ -516,7 +516,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 // Route Stops
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate',
 	function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate) {
-
+		$scope.routeId = $stateParams.routeId;
 		var oneDirection = false;
 		$scope.groups = [];
 		$scope.groups[0] = {
