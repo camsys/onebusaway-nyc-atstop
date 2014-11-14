@@ -53,7 +53,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 			var stopsAndBuses = [];
 			var i = 0;
-			var req = RouteService.getPolylines(route).then(function(results) {
+
+			var stopsDefer = $q.defer();
+
+			RouteService.getPolylines(route).then(function(results) {
 				angular.forEach(results.stops, function(val, key) {
 					var lclName = $filter('encodeStopName')(val.name);
 					stopsAndBuses[i] = {
@@ -69,9 +72,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					}
 					i++;
 				});
+				stopsDefer.resolve();
 			});
 
-			$q.all([req]).then(function() {
+			stopsDefer.promise.then(function() {
 				VehicleMonitoringService.getLocations(route).then(function(results) {
 					function round5(x) {
 						return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
@@ -319,22 +323,25 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"alerts": []
 		};
 
+		var favoritesDefer = $q.defer();
+
 		$scope.remove = function(stopId) {
 			FavoritesService.remove(stopId);
 			$scope.get();
 		};
 
 		$scope.get = function() {
-			var getFavorites = FavoritesService.get().then(function(results) {
+			FavoritesService.get().then(function(results) {
 				if (!angular.isUndefined(results) && results != null) {
 					$scope.data.favorites = results;
 					$scope.data.notifications = "";
 				} else {
 					$scope.data.notifications = "You have no favorites";
 				}
+				favoritesDefer.resolve();
 			});
 
-			$q.all([getFavorites]).then(function() {
+			favoritesDefer.promise.then(function() {
 				$scope.data.loaded = true;
 			});
 		};
@@ -398,7 +405,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.val = false;
 			}, 5000);
 
-			var getBuses = AtStopService.getBuses($stateParams.stopId).then(function(results) {
+			var busesDefer = $q.defer();
+
+			AtStopService.getBuses($stateParams.stopId).then(function(results) {
 				if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
 					$scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
 					handleLayovers(results);
@@ -415,8 +424,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				} else {
 					$scope.data.alertsHide = false;
 				}
+
+				busesDefer.resolve();
 			});
-			$q.all([getBuses]).then(function() {
+
+			busesDefer.promise.then(function() {
 				$scope.data.loaded = true;
 			});
 		};
@@ -467,25 +479,30 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.getRoutesAndStops = function() {
-			var getRoutes = GeolocationService.getRoutes($stateParams.latitude, $stateParams.longitude).then(function(results) {
+			var routesDefer = $q.defer();
+			var stopsDefer = $q.defer();
+
+			GeolocationService.getRoutes($stateParams.latitude, $stateParams.longitude).then(function(results) {
 				if (!angular.isUndefined(results) && results != null && results.length > 0) {
 					$scope.data.routes = results;
 					$scope.data.notifications = "";
 				} else {
 					$scope.data.notifications = "No matches";
 				}
+				routesDefer.resolve();
 			});
 
-			var getStops = GeolocationService.getStops($stateParams.latitude, $stateParams.longitude).then(function(results) {
+			GeolocationService.getStops($stateParams.latitude, $stateParams.longitude).then(function(results) {
 				if (!angular.isUndefined(results) && results != null && results.length > 0) {
 					$scope.data.stops = results;
 					$scope.data.notifications = "";
 				} else {
 					$scope.data.notifications = "No matches";
 				}
+				stopsDefer.resolve();
 			});
 
-			$q.all([getRoutes, getStops]).then(function() {
+			$q.all([routesDefer, stopsDefer]).then(function() {
 				$scope.data.loaded = true;
 			});
 		};
@@ -541,7 +558,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.getDirectionsAndStops = function() {
-			var getDirections = RouteService.getDirections($stateParams.routeId).then(function(results) {
+			var directionsDefer = $q.defer();
+			var stopsDefer = $q.defer();
+
+			RouteService.getDirections($stateParams.routeId).then(function(results) {
 				if (Object.keys(results).length > 1) {
 					oneDirection = false;
 					angular.forEach(results, function(val, key) {
@@ -563,12 +583,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					oneDirection = true;
 					$scope.toggleGroup($scope.groups[0]);
 				}
+				directionsDefer.resolve();
 			});
 
-			var getStops;
-
-			$q.all([getDirections]).then(function() {
-				getStops = RouteService.getStops($stateParams.routeId, "0").then(function(results) {
+			directionsDefer.promise.then(function() {
+				RouteService.getStops($stateParams.routeId, "0").then(function(results) {
 					$scope.data.direction = results;
 					$scope.groups[0].items = results;
 					if (oneDirection === false) {
@@ -579,9 +598,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						});
 					}
 				});
+				stopsDefer.resolve();
 			});
 
-			$q.all([getDirections, getStops]).then(function() {
+			$q.all([directionsDefer, stopsDefer]).then(function() {
 				$scope.data.loaded = true;
 			});
 		};
@@ -610,37 +630,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			$scope.getNearbyStopsAndRoutes();
 		};
 
-		// For testing only
-		$scope.getNearbyStopsAndRoutesTest = function() {
-			$scope.data.val = false;
-			$scope.data.lat = 40.635081;
-			$scope.data.lon = -73.967235;
-
-			// To test only. lat: 40.635081, lon: -73.967235 (near Coney Island and 18th Ave, Brooklyn, NY)
-			var getStopsTest = GeolocationService.getStops(40.635081, -73.967235).then(function(results) {
-				if (!angular.isUndefined(results) && results != null && results.length > 0) {
-					$scope.data.stops = results;
-					$scope.data.notifications = "";
-				} else {
-					$scope.data.notifications = "No matches";
-				}
-			});
-
-
-			var getRoutesTest = GeolocationService.getRoutes(40.635081, -73.967235).then(function(results) {
-				if (!angular.isUndefined(results) && results != null && results.length > 0) {
-					$scope.data.routes = results;
-					$scope.data.notifications = "";
-				} else {
-					$scope.data.notifications = "No matches";
-				}
-			});
-
-			$q.all(getStopsTest, getRoutesTest).then(function() {
-				$scope.data.loaded = true;
-			});
-		}
-
 		$scope.getNearbyStopsAndRoutes = function() {
 			$ionicLoading.show();
 			$cordovaGeolocation.getCurrentPosition({
@@ -653,25 +642,30 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.lat = position.coords.latitude;
 					$scope.data.lon = position.coords.longitude;
 
-					var getStops = GeolocationService.getStops($scope.data.lat, $scope.data.lon).then(function(results) {
+					var stopsDefer = $q.defer();
+					var routesDefer = $q.defer();
+
+					GeolocationService.getStops($scope.data.lat, $scope.data.lon).then(function(results) {
 						if (!angular.isUndefined(results) && results != null && results.length > 0) {
 							$scope.data.stops = results;
 							$scope.data.notifications = "";
 						} else {
 							$scope.data.notifications = "No matches";
 						}
+						stopsDefer.resolve();
 					});
 
-					var getRoutes = GeolocationService.getRoutes($scope.data.lat, $scope.data.lon).then(function(results) {
+					GeolocationService.getRoutes($scope.data.lat, $scope.data.lon).then(function(results) {
 						if (!angular.isUndefined(results) && results != null && results.length > 0) {
 							$scope.data.routes = results;
 							$scope.data.notifications = "";
 						} else {
 							$scope.data.notifications = "No matches";
 						}
+						routesDefer.resolve();
 					});
 
-					$q.all(getStops, getRoutes).then(function() {
+					$q.all([stopsDefer, routesDefer]).then(function() {
 						$scope.data.loaded = true;
 					});
 				}, function(error) {
@@ -692,7 +686,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.init = (function() {
 			$scope.getNearbyStopsAndRoutes();
-			//$scope.getNearbyStopsAndRoutesTest();
 		})();
 	}
 ])
