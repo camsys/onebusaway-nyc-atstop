@@ -399,7 +399,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		};
 
-		$scope.getBuses = function() {
+		var getBuses = function() {
 			$scope.data.val = true;
 			$timeout(function() {
 				$scope.data.val = false;
@@ -434,7 +434,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		var tick = function() {
-			$scope.getBuses();
+			var getBuses();
 		}
 
 		var updateArrivalTimes = function(results) {
@@ -446,7 +446,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.refresh = function() {
-			$scope.getBuses();
+			var getBuses();
 			$scope.$broadcast('scroll.refreshComplete');
 		};
 
@@ -460,7 +460,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			} else {
 				$scope.data.favClass = "";
 			};
-			$scope.getBuses();
+			var getBuses();
 			$scope.reloadTimeout = $timeout(tick, 75000);
 		})();
 	}
