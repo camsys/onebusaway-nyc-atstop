@@ -81,7 +81,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
 					}
 					angular.forEach(results, function(val, key) {
-						angle = round5(val.angle);
+						var angle = round5(val.angle);
 						if (angle == 360) {
 							angle = 0;
 						};
@@ -399,7 +399,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		};
 
-		$scope.getBuses = function() {
+		 var getBuses = function() {
 			$scope.data.val = true;
 			$timeout(function() {
 				$scope.data.val = false;
@@ -434,7 +434,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		var tick = function() {
-			$scope.getBuses();
+			getBuses();
 		}
 
 		var updateArrivalTimes = function(results) {
@@ -446,7 +446,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.refresh = function() {
-			$scope.getBuses();
+			getBuses();
 			$scope.$broadcast('scroll.refreshComplete');
 		};
 
@@ -460,8 +460,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			} else {
 				$scope.data.favClass = "";
 			};
-			$scope.getBuses();
-			$scope.reloadTimeout = $timeout(tick, 75000);
+			getBuses();
+			$scope.reloadTimeout = $timeout(tick, 15000);
 		})();
 	}
 ])
@@ -691,9 +691,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 
-.controller('AboutCtrl', ['$scope',
+.controller('AboutCtrl', ['$scope','PRIV_POLICY_TEXT',
 	function($scope, PRIV_POLICY_TEXT) {
-		//console.log(PRIV_POLICY_TEXT);
+		console.log(PRIV_POLICY_TEXT);
 		$scope.text = PRIV_POLICY_TEXT;
 	}
 ]);
