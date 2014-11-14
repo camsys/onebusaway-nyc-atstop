@@ -415,6 +415,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.results = results.arriving;
 					$scope.data.notifications = "";
 				} else {
+					scope.data.results = "";
 					$scope.data.notifications = "We are not tracking any buses to this stop at this time. Check back later for an update.";
 				}
 
