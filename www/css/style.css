@@ -17,9 +17,6 @@ body {
 .angular-leaflet-map {
     height: 100%;
 }
-p {
-    margin: 15px;
-}
 div.route {
     font-size: 1.4em;
     padding: 0px 14px;
@@ -68,7 +65,10 @@ div.route {
     -ms-flex-align: center;
     align-items: center;
 }
-p.highlight {
+p {
+    margin: 15px;
+}
+.highlight {
     font-weight: bolder;
     background: #eeeeee;
     margin: 0;
@@ -89,6 +89,9 @@ p.highlight {
 }
 .greytext {
     color: #666;
+}
+.longtext {
+    font-weight: lighter;
 }
 a {
     text-decoration: none;
@@ -136,5 +139,5 @@ label.item.item-input {
     display: block !important;
 }
 .leaflet-popup-close-button {
-    /* display: none; */
+    display: none;
 }

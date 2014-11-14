@@ -693,7 +693,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('AboutCtrl', ['$scope','PRIV_POLICY_TEXT',
 	function($scope, PRIV_POLICY_TEXT) {
-		console.log(PRIV_POLICY_TEXT);
-		$scope.text = PRIV_POLICY_TEXT;
+
+        $scope.hideText = true;
+        $scope.text = PRIV_POLICY_TEXT;
+
+        $scope.toggleText = function(){
+            console.log("hide")
+            $scope.hideText = !$scope.hideText;
+        };
+
+
+
 	}
+
 ]);
