@@ -399,7 +399,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		};
 
-		 var getBuses = function() {
+		var getBuses = function() {
 			$scope.data.val = true;
 			$timeout(function() {
 				$scope.data.val = false;
@@ -503,7 +503,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				stopsDefer.resolve();
 			});
 
-			$q.all([routesDefer, stopsDefer]).then(function() {
+			$q.all([routesDefer.promise.then(function() {
+				console.log("resolved");
+			}), stopsDefer.promise.then(function() {
+				console.log("resolved");
+			})]).then(function() {
 				$scope.data.loaded = true;
 			});
 		};
@@ -598,11 +602,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 							$scope.groups[1].items = results2;
 						});
 					}
+					stopsDefer.resolve();
 				});
-				stopsDefer.resolve();
 			});
 
-			$q.all([directionsDefer, stopsDefer]).then(function() {
+			$q.all([directionsDefer.promise.then(function() {
+				console.log("resolved");
+			}), stopsDefer.promise.then(function() {
+				console.log("resolved");
+			})]).then(function() {
 				$scope.data.loaded = true;
 			});
 		};
@@ -666,7 +674,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						routesDefer.resolve();
 					});
 
-					$q.all([stopsDefer, routesDefer]).then(function() {
+					$q.all([stopsDefer.promise.then(function() {
+						console.log("resolved");
+					}), routesDefer.promise.then(function() {
+						console.log("resolved");
+					})]).then(function() {
 						$scope.data.loaded = true;
 					});
 				}, function(error) {
@@ -692,15 +704,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 
-.controller('AboutCtrl', ['$scope','PRIV_POLICY_TEXT',
+.controller('AboutCtrl', ['$scope', 'PRIV_POLICY_TEXT',
 	function($scope, PRIV_POLICY_TEXT) {
 
-        $scope.hideText = true;
-        $scope.text = PRIV_POLICY_TEXT;
+		$scope.hideText = true;
+		$scope.text = PRIV_POLICY_TEXT;
 
-        $scope.toggleText = function(){
-            $scope.hideText = !$scope.hideText;
-        };
+		$scope.toggleText = function() {
+			$scope.hideText = !$scope.hideText;
+		};
 
 
 
