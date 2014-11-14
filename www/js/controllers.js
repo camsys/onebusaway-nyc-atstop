@@ -462,7 +462,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.favClass = "";
 			};
 			getBuses();
-			$scope.reloadTimeout = $timeout(tick, 15000);
+			$scope.reloadTimeout = $timeout(tick, 35000);
 		})();
 	}
 ])
