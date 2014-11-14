@@ -1,14 +1,14 @@
 angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
-	'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService', 'GeolocationService', '$filter', '$q',
-	function($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, GeolocationService, $filter, $q, MAPBOX_KEY) {
-		$scope.val = true;
+	'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService', 'GeolocationService', '$filter', '$q', '$interval',
+	function($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, GeolocationService, $filter, $q, $interval, MAPBOX_KEY) {
 		$scope.paths = {};
 		$scope.markers = {};
 
 		// Refresh Map
-		$scope.refresh = function() {
+		var refresh = function() {
+			console.log("refresh");
 			drawStopsAndBuses($stateParams.routeId);
 		};
 
@@ -44,11 +44,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		// Draw Stops and Buses
 		var drawStopsAndBuses = function(route) {
-			$scope.val = true;
-			$timeout(function() {
-				$scope.val = false;
-			}, 5000);
-
 			$scope.markers = {};
 
 			var stopsAndBuses = [];
@@ -73,6 +68,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					i++;
 				});
 				stopsDefer.resolve();
+				//console.log(stopsAndBuses);
 			});
 
 			stopsDefer.promise.then(function() {
@@ -189,6 +185,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		};
 
+		$scope.$on('$destroy', function() {
+			$interval.cancel($scope.reloadTimeout);
+		});
+
 		$scope.init = (function() {
 			map();
 			if ($location.$$path.indexOf('/tab/map-nearby') >= 0) {
@@ -198,6 +198,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			} else {
 				drawRoute($stateParams.routeId);
 				drawStopsAndBuses($stateParams.routeId);
+				$scope.reloadTimeout = $interval(refresh, 35000
+);
 			}
 		})();
 
@@ -353,13 +355,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // At Stop
-.controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService',
-	function($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService) {
+.controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval',
+	function($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval) {
 		$scope.data = {
 			"alerts": "",
 			"responseTime": "",
 			"loaded": false,
-			"val": true,
 			"favClass": "",
 			"results": [],
 			"stopName": $stateParams.stopName,
@@ -400,10 +401,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		var getBuses = function() {
-			$scope.data.val = true;
-			$timeout(function() {
-				$scope.data.val = false;
-			}, 5000);
 
 			var busesDefer = $q.defer();
 
@@ -452,7 +449,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.$on('$destroy', function() {
-			$timeout.cancel($scope.reloadTimeout);
+			$interval.cancel($scope.reloadTimeout);
 		});
 
 		$scope.init = (function() {
@@ -462,7 +459,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.favClass = "";
 			};
 			getBuses();
-			$scope.reloadTimeout = $timeout(tick, 35000);
+			$scope.reloadTimeout = $interval(tick, 35000);
 		})();
 	}
 ])
