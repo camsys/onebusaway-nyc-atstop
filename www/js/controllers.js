@@ -1,7 +1,7 @@
 angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
-	'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService', 'GeolocationService', '$filter', '$q', 'MAPBOX_KEY',
+	'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService', 'GeolocationService', '$filter', '$q',
 	function($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, GeolocationService, $filter, $q, MAPBOX_KEY) {
 		$scope.val = true;
 		$scope.paths = {};
