@@ -1,7 +1,7 @@
 angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
-	'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService', 'GeolocationService', '$filter', '$q',
+	'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService', 'GeolocationService', '$filter', '$q', 'MAPBOX_KEY',
 	function($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, GeolocationService, $filter, $q, MAPBOX_KEY) {
 		$scope.val = true;
 		$scope.paths = {};
@@ -693,7 +693,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('AboutCtrl', ['$scope',
 	function($scope, PRIV_POLICY_TEXT) {
-		//console.log(PRIV_POLICY_TEXT);
+		console.log(PRIV_POLICY_TEXT);
 		$scope.text = PRIV_POLICY_TEXT;
 	}
 ]);

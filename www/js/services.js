@@ -626,7 +626,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			var now = moment().utc();
 			return moment(referenceTime) - now;
 		}
-		
+
 		return {
 			duration: duration,
 			getRemainingTime: getRemainingTime
