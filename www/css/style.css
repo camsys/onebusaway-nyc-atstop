@@ -1,26 +1,26 @@
-html {
-    font-family: sans-serif;
-    /* 1 */
-    -ms-text-size-adjust: 100%;
-    /* 2 */
-    -webkit-text-size-adjust: 100%;
-    /* 2 */
-}
 body {
     background: #fff;
-    font: 14px/21px"HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 14px/21px"HelveticaNeue", "Helvetica Neue", Roboto, Segoe UI, Segoe WP, Helvetica, Arial, sans-serif;
     color: #444;
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
 }
 .scroll,
 .angular-leaflet-map {
     height: 100%;
 }
+p.routesAtStop {
+    display: block;
+    font-size: smaller;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
 div.route {
     font-size: 1.4em;
     padding: 0px 14px;
 }
+
 .stopname {
     text-align: center;
 }

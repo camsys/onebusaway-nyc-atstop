@@ -633,6 +633,21 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"lon": ''
 		};
 
+         var getDistanceInM = function(lat1,lon1,lat2,lon2) {
+            var R = 6371;
+            var dLat = deg2rad(lat2-lat1);
+            var dLon = deg2rad(lon2-lon1);
+            var a =
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            var d = R * c *1000;
+            return parseInt(d);
+        };
+
+         var deg2rad = function(deg) {            return deg * (Math.PI/180)        };
+
 		$scope.refresh = function() {
 			$scope.getNearbyStopsAndRoutes();
 		};
@@ -654,13 +669,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 					GeolocationService.getStops($scope.data.lat, $scope.data.lon).then(function(results) {
 						if (!angular.isUndefined(results) && results != null && results.length > 0) {
-							$scope.data.stops = results;
+							angular.forEach(results, function(stop){
+                              stop['dist'] = getDistanceInM($scope.data.lat, $scope.data.lon, stop['lat'], stop['lon']);
+                            });
+                            $scope.data.stops = results;
 							$scope.data.notifications = "";
 						} else {
 							$scope.data.notifications = "No matches";
 						}
 						stopsDefer.resolve();
 					});
+
 
 					GeolocationService.getRoutes($scope.data.lat, $scope.data.lon).then(function(results) {
 						if (!angular.isUndefined(results) && results != null && results.length > 0) {

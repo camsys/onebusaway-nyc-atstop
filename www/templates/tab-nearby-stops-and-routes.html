@@ -13,9 +13,10 @@
         <p class="highlight">Nearby Stops:</p>
 
         <ion-list>
-            <ion-item bindonce ng-repeat="item in data.stops | limitTo:10" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+            <ion-item ng-repeat="item in data.stops | orderBy:'dist'" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
                 {{item.name}}
-                <p>Routes:<span bindonce ng-repeat="r in item.routes"> {{r.shortName}} </span>
+                <p class="routesAtStop">
+                    Routes:<span ng-repeat="r in item.routes"> {{r.shortName}} </span>
                 </p>
             </ion-item>
         </ion-list>
