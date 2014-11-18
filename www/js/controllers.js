@@ -92,7 +92,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 							vehicleId: val.vehicleId,
 							destination: val.destination,
 							nextStop: val.stopPointName,
-                            zIndexOffset: 800
+							zIndexOffset: 800
 						}
 						i++;
 					});
@@ -199,8 +199,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			} else {
 				drawRoute($stateParams.routeId);
 				drawStopsAndBuses($stateParams.routeId);
-				$scope.reloadTimeout = $interval(refresh, 35000
-);
+				$scope.reloadTimeout = $interval(refresh, 35000);
 			}
 		})();
 
