@@ -95,7 +95,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 							focus: false,
 							vehicleId: val.vehicleId,
 							destination: val.destination,
-							nextStop: val.stopPointName
+							nextStop: val.stopPointName,
+                            zIndexOffset: 800
 						}
 						i++;
 					});
