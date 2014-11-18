@@ -28,7 +28,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 							iconSize: [20, 20]
 						},
 						focus: false,
-						stopId: val.stopId,
+						stopId: val.id,
 						stopName: lclName
 					}
 					i++;
@@ -62,7 +62,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 							iconSize: [20, 20]
 						},
 						focus: false,
-						stopId: val.stopId,
+						stopId: val.id,
 						stopName: lclName
 					}
 					i++;
@@ -149,7 +149,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						latLng = [object.lat, object.lng],
 						popup = L.popup().setContent(content).setLatLng(latLng);
 				} else {
-					var content = object.stopName,
+					console.log(object);
+					var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/atstop/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
 						latLng = [object.lat, object.lng],
 						popup = L.popup().setContent(content).setLatLng(latLng);
 				}
