@@ -21,40 +21,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			}
 		}
 
-		// // Draw nearby stops
-		var drawNearbyStops = function(lclLat, lclLon) {
-			GeolocationService.getStops(lclLat, lclLon).then(function(results) {
-				var stops = [];
-				var i = 0;
 
-				angular.forEach(results, function(val, key) {
-					var lclName = $filter('encodeStopName')(val.name);
-					stops[i] = {
-						lat: val.lat,
-						lng: val.lon,
-						/*
-						icon: {
-							iconUrl: 'img/stop_icons/bullet.png',
-							iconSize: [20, 20]
-						},
-						*/
-						icon: icons.stop,
-						focus: false,
-						stopId: val.id,
-						stopName: lclName
-					}
-					i++;
-				});
-
-				$scope.markers = stops;
-
-				leafletData.getMap().then(function(map) {
-					map.setView([lclLat, lclLon], 15);
-				});
-			});
-		}
-
-		// Draw Stops and Buses
 		var drawStopsAndBuses = function(route) {
 			$scope.markers = {};
 
@@ -207,16 +174,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		});
 
 		$scope.init = (function() {
-			map();
-			if ($location.$$path.indexOf('/tab/map-nearby') >= 0) {
-				// Test
-				// $scope.drawNearbyStopsAndRoutes(40.635081, -73.967235);
-				drawNearbyStops($stateParams.lat, $stateParams.lon);
-			} else {
+			    map();
 				drawRoute($stateParams.routeId);
 				drawStopsAndBuses($stateParams.routeId);
 				$scope.reloadTimeout = $interval(refresh, 35000);
-			}
+
 		})();
 
 	}
@@ -757,7 +719,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		}
 
 		var map = function() {
-			console.log(MAPBOX_KEY);
 			leafletData.getMap().then(function(map) {
 				map.attributionControl.setPrefix($filter('hrefToJS')('<a title="A JS library for interactive maps" href="http://leafletjs.com">Leaflet</a>'));
 			});
@@ -778,7 +739,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		};
 
-		$scope.showOnMap = function(type, ID, lat = "", lon = "", name = "") {
+		$scope.showOnMap = function(type, ID, lat, lon, name) {
+
+            lat = typeof lat !== 'undefined' ? lat : "";
+            lon = typeof lon !== 'undefined' ? lon : "";
+            name = typeof name !== 'undefined' ? name : "";
 
 			// icons
 			var icons = {

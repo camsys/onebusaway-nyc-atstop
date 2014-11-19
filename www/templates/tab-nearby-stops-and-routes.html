@@ -4,9 +4,6 @@
             <i class="icon ion-refresh"></i>
         </button>
 
-        <a class="button button-clear" href="#/tab/map-nearby/{{data.lat}}/{{data.lon}}" ng-disabled="data.val">
-            <i class="icon ion-earth"></i>
-        </a>
     </ion-nav-buttons>
 
     <ion-content ng-show="data.loaded" has-bouncing="true">
@@ -15,11 +12,10 @@
     	<leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="200px"></leaflet>
 		</div>
 		
-		        <p class="highlight">Nearby Routes:</p>
-						
+
 						<div class="button-bar">
-						  <button class="button" ng-disabled="data.showRoutes" ng-click="toggle()">Routes</button>
-						  <button class="button" ng-disabled="data.showStops" ng-click="toggle()">Stops</button>
+						  <button class="button" ng-disabled="data.showRoutes" ng-click="toggle()">Nearby Routes</button>
+						  <button class="button" ng-disabled="data.showStops" ng-click="toggle()">Nearby Stops</button>
 						</div>
  
   
@@ -40,7 +36,7 @@
 		                <button class="button button-positive button-small button-clear" ng-click="showOnMap('stop', item.id, item.lat, item.lon, item.name)">
 		                    Map
 		                </button>
-		                <a class="button button-positive button-small button-clear" href="#/tab/route/{{item.id}}/{{item.shortName}}">Stops</a>
+		                <a class="button button-positive button-small button-clear" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">Stops</a>
 		            </ion-item>
 		        </ion-list>
 

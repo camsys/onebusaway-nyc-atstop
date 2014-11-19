@@ -181,16 +181,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	.state('tab.map-nearby', {
-		url: '/map-nearby/:lat/:lon',
-		views: {
-			'tab-home': {
-				templateUrl: 'templates/map.html',
-				controller: 'MapCtrl'
-			}
-		}
-	})
-
 	.state('tab.about', {
 		url: '/about',
 		views: {
