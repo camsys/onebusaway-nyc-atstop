@@ -828,8 +828,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.init = (function() {
 			map();
-			test(40.678178, -73.944158);
-			//$scope.getNearbyStopsAndRoutes();
+			//test(40.678178, -73.944158);
+			$scope.getNearbyStopsAndRoutes();
 		})();
 	}
 ])
