@@ -266,7 +266,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				key: API_KEY,
 				lat: lat,
 				lon: lon,
-				radius: 300,
+				radius: 200,
 				includeReferences: false
 			},
 			timeout: httpTimeout
@@ -295,7 +295,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				key: API_KEY,
 				lat: lat,
 				lon: lon,
-				radius: 300
+				radius: 200
 			},
 			timeout: httpTimeout
 		})
