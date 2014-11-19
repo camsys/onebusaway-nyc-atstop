@@ -645,8 +645,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"notifications": "",
 			"val": true,
 			"lat": '',
-			"lon": ''
+			"lon": '',
+			"showRoutes": true,
+			"showStops": false
 		};
+
+		$scope.toggle = function() {
+			$scope.data.showRoutes = !$scope.data.showRoutes;
+			$scope.data.showStops = !$scope.data.showStops;
+		}
 
 		var getDistanceInM = function(lat1, lon1, lat2, lon2) {
 			var R = 6371;
@@ -765,45 +772,81 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					scrollWheelZoom: false,
 					key: MAPBOX_KEY
 				},
+				markers: {},
 				paths: {}
 			});
 
 		};
 
-		$scope.showOnMap = function(route) {
+		$scope.showOnMap = function(type, ID, lat = "", lon = "", name = "") {
+
+			// icons
+			var icons = {
+				stop: {
+					type: 'div',
+					iconSize: [13, 13],
+					className: 'stop',
+				}
+			}
+
+			$scope.markers = {};
 			$scope.paths = {};
 
-			RouteService.getPolylines(route).then(function(results) {
-				var route = [];
-				var i = 0;
+			if (type == "route") {
+				RouteService.getPolylines(ID).then(function(results) {
+					var route = [];
+					var i = 0;
 
-				angular.forEach(results.polylines, function(val, key) {
-					route[i] = {
-						color: '#' + results.color,
-						weight: 3,
-						latlngs: [],
-						clickable: false
-					};
+					angular.forEach(results.polylines, function(val, key) {
+						route[i] = {
+							color: '#' + results.color,
+							weight: 3,
+							latlngs: [],
+							clickable: false
+						};
 
-					angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function(v, k) {
-						route[i].latlngs.push({
-							lat: v.lat,
-							lng: v.lng
+						angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function(v, k) {
+							route[i].latlngs.push({
+								lat: v.lat,
+								lng: v.lng
+							});
 						});
+
+						i++;
 					});
 
-					i++;
-				});
+					$scope.paths = route;
 
-				$scope.paths = route;
+					leafletData.getMap().then(function(map) {
+						map.fitBounds([
+							[$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lng']],
+							[$scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lat'], $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lng']]
+						]);
+					});
+				});
+			} else {
+				var stops = [];
+				console.log(lat, lon);
+				stops[0] = {
+					lat: lat,
+					lng: lon,
+					/*
+					icon: {
+						iconUrl: 'img/stop_icons/bullet.png',
+						iconSize: [20, 20]
+					},
+					*/
+					icon: icons.stop,
+					focus: false,
+					stopId: ID,
+					stopName: $filter('encodeStopName')(name)
+				}
+				$scope.markers = stops;
 
 				leafletData.getMap().then(function(map) {
-					map.fitBounds([
-						[$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lng']],
-						[$scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lat'], $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lng']]
-					]);
+					map.setView([lat, lon], 15);
 				});
-			});
+			}
 		};
 
 		$scope.init = (function() {
