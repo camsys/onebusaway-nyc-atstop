@@ -10,10 +10,10 @@
     </ion-nav-buttons>
 
     <ion-content ng-show="data.loaded" has-bouncing="true" data-tap-disabled="true">
-				<leaflet center="center" defaults="defaults" paths="paths" height="200px"></leaflet>
-		
-		
-				<!--
+        <leaflet center="center" defaults="defaults" paths="paths" height="200px"></leaflet>
+
+
+        <!--
         <p class="highlight">Nearby Stops:</p>
 
         <ion-list>
@@ -28,17 +28,14 @@
 
         <!-- Optional / Since every stop display routes passing it-->
         <p class="highlight">Nearby Routes:</p>
-
         <ion-list>
             <!--<ion-item ng-repeat="item in data.routes |limitTo:10" href="#/tab/route/{{item.id}}/{{item.shortName}}">-->
-						<ion-item ng-repeat="item in data.routes |limitTo:10">
+            <ion-item ng-repeat="item in data.routes |limitTo:10">
                 {{item.shortName}}
-						    <button class="button button-positive button-small button-clear" ng-click="showOnMap(item.id)">
-									Map
-						    </button>
-						    <a class="button button-positive button-small button-clear" href="#/tab/route/{{item.id}}/{{item.shortName}}">
-									Stops
-						    </a>
+                <button class="button button-positive button-small button-clear" ng-click="showOnMap(item.id)">
+                    Map
+                </button>
+                <a class="button button-positive button-small button-clear" href="#/tab/route/{{item.id}}/{{item.shortName}}">Stops</a>
             </ion-item>
         </ion-list>
 
