@@ -639,7 +639,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 .controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'MAPBOX_KEY',
 	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, MAPBOX_KEY) {
 		$scope.data = {
-			"loaded": false,
+			"loaded": true,
 			"stops": [],
 			"routes": [],
 			"notifications": "",
@@ -648,20 +648,22 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"lon": ''
 		};
 
-         var getDistanceInM = function(lat1,lon1,lat2,lon2) {
-            var R = 6371;
-            var dLat = deg2rad(lat2-lat1);
-            var dLon = deg2rad(lon2-lon1);
-            var a =
-                    Math.sin(dLat/2) * Math.sin(dLat/2) +
-                    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                    Math.sin(dLon/2) * Math.sin(dLon/2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            var d = R * c *1000;
-            return parseInt(d);
-        };
+		var getDistanceInM = function(lat1, lon1, lat2, lon2) {
+			var R = 6371;
+			var dLat = deg2rad(lat2 - lat1);
+			var dLon = deg2rad(lon2 - lon1);
+			var a =
+				Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+				Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+				Math.sin(dLon / 2) * Math.sin(dLon / 2);
+			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+			var d = R * c * 1000;
+			return parseInt(d);
+		};
 
-         var deg2rad = function(deg) {            return deg * (Math.PI/180)        };
+		var deg2rad = function(deg) {
+			return deg * (Math.PI / 180)
+		};
 
 		$scope.refresh = function() {
 			$scope.getNearbyStopsAndRoutes();
@@ -693,15 +695,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				routesDefer.resolve();
 			});
 
-			/*
-			$q.all([stopsDefer.promise.then(function() {
-				console.log("resolved");
-			}), routesDefer.promise.then(function() {
-				console.log("resolved");
-			})]).then(function() {
-				$scope.data.loaded = true;
-			});
-			*/
 
 			$scope.data.loaded = true;
 		}
@@ -718,20 +711,16 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.lat = position.coords.latitude;
 					$scope.data.lon = position.coords.longitude;
 
-					var stopsDefer = $q.defer();
-					var routesDefer = $q.defer();
-
 					GeolocationService.getStops($scope.data.lat, $scope.data.lon).then(function(results) {
 						if (!angular.isUndefined(results) && results != null && results.length > 0) {
-							angular.forEach(results, function(stop){
-                              stop['dist'] = getDistanceInM($scope.data.lat, $scope.data.lon, stop['lat'], stop['lon']);
-                            });
-                            $scope.data.stops = results;
+							angular.forEach(results, function(stop) {
+								stop['dist'] = getDistanceInM($scope.data.lat, $scope.data.lon, stop['lat'], stop['lon']);
+							});
+							$scope.data.stops = results;
 							$scope.data.notifications = "";
 						} else {
 							$scope.data.notifications = "No matches";
 						}
-						stopsDefer.resolve();
 					});
 
 
@@ -742,16 +731,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						} else {
 							$scope.data.notifications = "No matches";
 						}
-						routesDefer.resolve();
 					});
 
-					$q.all([stopsDefer.promise.then(function() {
-						console.log("resolved");
-					}), routesDefer.promise.then(function() {
-						console.log("resolved");
-					})]).then(function() {
-						$scope.data.loaded = true;
-					});
 				}, function(error) {
 					$ionicLoading.hide();
 
@@ -784,7 +765,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					scrollWheelZoom: false,
 					key: MAPBOX_KEY
 				},
-				markers: {},
 				paths: {}
 			});
 
