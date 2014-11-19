@@ -106,7 +106,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var results = {
 			stops: {},
-			polylines: []
+			polylines: [],
+			color: ""
 		};
 
 		var url = API_END_POINT + "api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK";
@@ -121,7 +122,12 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			timeout: httpTimeout
 		})
 			.success(function(data, status, header, config) {
-				console.log(data);
+				angular.forEach(data.data.references.routes, function(val, key) {
+					if (val.id == route) {
+						results.color = val.color;
+					}
+				});
+
 				results.stops = data.data.references.stops;
 
 				angular.forEach(data.data.entry.stopGroupings[0].stopGroups, function(val, key) {

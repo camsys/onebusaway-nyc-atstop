@@ -12,7 +12,16 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			drawStopsAndBuses($stateParams.routeId);
 		};
 
-		// Draw nearby stops
+		// icons
+		var icons = {
+			stop: {
+				type: 'div',
+				iconSize: [13, 13],
+				className: 'stop',
+			}
+		}
+
+		// // Draw nearby stops
 		var drawNearbyStops = function(lclLat, lclLon) {
 			GeolocationService.getStops(lclLat, lclLon).then(function(results) {
 				var stops = [];
@@ -23,10 +32,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					stops[i] = {
 						lat: val.lat,
 						lng: val.lon,
+						/*
 						icon: {
 							iconUrl: 'img/stop_icons/bullet.png',
 							iconSize: [20, 20]
 						},
+						*/
+						icon: icons.stop,
 						focus: false,
 						stopId: val.id,
 						stopName: lclName
@@ -57,10 +69,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					stopsAndBuses[i] = {
 						lat: val.lat,
 						lng: val.lon,
+						/*
 						icon: {
 							iconUrl: 'img/stop_icons/bullet.png',
 							iconSize: [20, 20]
 						},
+						*/
+						icon: icons.stop,
 						focus: false,
 						stopId: val.id,
 						stopName: lclName
@@ -109,8 +124,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 				angular.forEach(results.polylines, function(val, key) {
 					route[i] = {
-						color: '#fb6a4a',
-						weight: 3,
+						color: '#' + results.color,
+						weight: 4,
 						latlngs: [],
 						clickable: false
 					};
@@ -621,8 +636,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation',
-	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation) {
+.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'MAPBOX_KEY',
+	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, MAPBOX_KEY) {
 		$scope.data = {
 			"loaded": false,
 			"stops": [],
@@ -636,6 +651,45 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.refresh = function() {
 			$scope.getNearbyStopsAndRoutes();
 		};
+
+		// test function
+		var test = function(lat, lon) {
+
+			var stopsDefer = $q.defer();
+			var routesDefer = $q.defer();
+
+			GeolocationService.getStops(lat, lon).then(function(results) {
+				if (!angular.isUndefined(results) && results != null && results.length > 0) {
+					$scope.data.stops = results;
+					$scope.data.notifications = "";
+				} else {
+					$scope.data.notifications = "No matches";
+				}
+				stopsDefer.resolve();
+			});
+
+			GeolocationService.getRoutes(lat, lon).then(function(results) {
+				if (!angular.isUndefined(results) && results != null && results.length > 0) {
+					$scope.data.routes = results;
+					$scope.data.notifications = "";
+				} else {
+					$scope.data.notifications = "No matches";
+				}
+				routesDefer.resolve();
+			});
+
+			/*
+			$q.all([stopsDefer.promise.then(function() {
+				console.log("resolved");
+			}), routesDefer.promise.then(function() {
+				console.log("resolved");
+			})]).then(function() {
+				$scope.data.loaded = true;
+			});
+			*/
+
+			$scope.data.loaded = true;
+		}
 
 		$scope.getNearbyStopsAndRoutes = function() {
 			$ionicLoading.show();
@@ -695,25 +749,79 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			);
 		}
 
+		var map = function() {
+			console.log(MAPBOX_KEY);
+			leafletData.getMap().then(function(map) {
+				map.attributionControl.setPrefix($filter('hrefToJS')('<a title="A JS library for interactive maps" href="http://leafletjs.com">Leaflet</a>'));
+			});
+
+			angular.extend($scope, {
+				center: {},
+				defaults: {
+					tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
+					tileLayerOptions: {
+						attribution: $filter('hrefToJS')('Map:<a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data:<a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.')
+					},
+					scrollWheelZoom: false,
+					key: MAPBOX_KEY
+				},
+				markers: {},
+				paths: {}
+			});
+
+		};
+
+		$scope.showOnMap = function(route) {
+			$scope.paths = {};
+
+			RouteService.getPolylines(route).then(function(results) {
+				var route = [];
+				var i = 0;
+
+				angular.forEach(results.polylines, function(val, key) {
+					route[i] = {
+						color: '#' + results.color,
+						weight: 3,
+						latlngs: [],
+						clickable: false
+					};
+
+					angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function(v, k) {
+						route[i].latlngs.push({
+							lat: v.lat,
+							lng: v.lng
+						});
+					});
+
+					i++;
+				});
+
+				$scope.paths = route;
+
+				leafletData.getMap().then(function(map) {
+					map.fitBounds([
+						[$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lng']],
+						[$scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lat'], $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lng']]
+					]);
+				});
+			});
+		};
+
 		$scope.init = (function() {
-			$scope.getNearbyStopsAndRoutes();
+			map();
+			test(40.678178, -73.944158);
+			//$scope.getNearbyStopsAndRoutes();
 		})();
 	}
 ])
 
-
 .controller('AboutCtrl', ['$scope', 'PRIV_POLICY_TEXT',
 	function($scope, PRIV_POLICY_TEXT) {
-
 		$scope.hideText = true;
 		$scope.text = PRIV_POLICY_TEXT;
 
 		$scope.toggleText = function() {
 			$scope.hideText = !$scope.hideText;
 		};
-
-
-
 	}
-
 ]);

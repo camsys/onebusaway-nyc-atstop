@@ -144,3 +144,9 @@ label.item.item-input {
 .leaflet-popup-close-button {
     display: none;
 }
+
+.stop {
+    border-radius: 120px;
+    background-color: #888888;
+		border: 2px solid #ffffff;
+}
