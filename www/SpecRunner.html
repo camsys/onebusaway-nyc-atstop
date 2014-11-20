@@ -8,35 +8,19 @@
 
     <link rel="stylesheet" href="http://cdn.jsdelivr.net/jasmine/2.0.0/jasmine.css" />
 
-    <!-- Jasmine -->
     <script src="http://cdn.jsdelivr.net/jasmine/2.0.0/jasmine.js"></script>
     <script src="http://cdn.jsdelivr.net/jasmine/2.0.0/jasmine-html.js"></script>
     <script src="http://cdn.jsdelivr.net/jasmine/2.0.0/boot.js"></script>
-
-
-    <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
-
-    <!-- angular mocks -->
     <script src="https://code.angularjs.org/1.2.16/angular-mocks.js"></script>
-
-    <!-- ngCordova -->
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
-
-    <!-- your app's js -->
     <script src="js/config.js"></script>
-
     <script src="lib/underscore/underscore-min.js"></script>
     <script src="lib/moment/moment.min.js"></script>
     <script src="lib/bindonce/bindonce.min.js"></script>
     <script src="lib/angular-cache/angular-cache.min.js"></script>
-
-
-    <!-- leaflet/leflet.js -->
     <script src="lib/leaflet/leaflet.js"></script>
     <script src="lib/leaflet/plugins/Polyline.encoded.js"></script>
-
-
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
@@ -75,6 +59,23 @@
                 expect(isEmpty(bar)).toBe(true);
                 expect(isEmpty(foo)).toBe(false);
             });
+
+        });
+
+        describe('Geolocation Tests', function (){
+           var ctrl, scope;
+            beforeEach(module('starter'));
+
+
+            it('should return nearby stops', function () {
+                var lat= 40.748433;
+                var lon=-73.985656;
+                inject(function (GeolocationService) {
+                GeolocationService.getStops(lat, lon).then(function(results) {
+                    expect(results.length).to.BeGreaterThan(0);
+                });
+                });
+            })
 
         });
 
