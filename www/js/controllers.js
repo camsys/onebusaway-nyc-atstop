@@ -293,7 +293,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 
-// Favorites
 .controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q',
 	function($scope, $ionicLoading, FavoritesService, $q) {
 		$scope.data = {
@@ -316,7 +315,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.favorites = results;
 					$scope.data.notifications = "";
 				} else {
-					$scope.data.notifications = "You have no favorites";
+					$scope.data.notifications = "You have not added any favorites.";
 				}
 				favoritesDefer.resolve();
 			});
@@ -332,7 +331,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
-// At Stop
 .controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval',
 	function($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval) {
 		$scope.data = {
