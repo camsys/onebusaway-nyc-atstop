@@ -608,15 +608,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"val": true,
 			"lat": '',
 			"lon": '',
-			"showRoutes": true,
-			"showStops": false,
-			"results": [],
+			"showRoutes": false,
+			"showStops": true,
+			"results": []
 		};
-
-		$scope.toggle = function() {
-			$scope.data.showRoutes = !$scope.data.showRoutes;
-			$scope.data.showStops = !$scope.data.showStops;
-		}
 
 		var getDistanceInM = function(lat1, lon1, lat2, lon2) {
 			var R = 6371;
@@ -653,20 +648,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.notifications = "No matches";
 				}
 				stopsDefer.resolve();
+                routesDefer.resolve();
 			});
-
-			/*
-			GeolocationService.getRoutes(lat, lon).then(function(results) {
-				if (!angular.isUndefined(results) && results != null && results.length > 0) {
-					$scope.data.routes = results;
-					$scope.data.notifications = "";
-				} else {
-					$scope.data.notifications = "No matches";
-				}
-				routesDefer.resolve();
-			});
-			*/
-
 
 			$scope.data.loaded = true;
 		}
@@ -691,27 +674,16 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 							$scope.data.stops = results;
 							$scope.data.notifications = "";
 						} else {
-							$scope.data.notifications = "No matches";
+							$scope.data.notifications = "No nearby stops found.";
 						}
 					});
-
-					/*
-					GeolocationService.getRoutes($scope.data.lat, $scope.data.lon).then(function(results) {
-						if (!angular.isUndefined(results) && results != null && results.length > 0) {
-							$scope.data.routes = results;
-							$scope.data.notifications = "";
-						} else {
-							$scope.data.notifications = "No matches";
-						}
-					});
-					*/
 
 				}, function(error) {
 					$ionicLoading.hide();
 
 					$ionicPopup.alert({
 						title: "Error",
-						content: "Cannot retrieve position information. Check if the location service is enabled."
+						content: "Cannot access your position. Check if location is enabled."
 					})
 						.then(function(result) {
 							if (result) {
@@ -724,7 +696,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		var map = function() {
 			leafletData.getMap().then(function(map) {
-				map.attributionControl.setPrefix($filter('hrefToJS')('<a title="A JS library for interactive maps" href="http://leafletjs.com">Leaflet</a>'));
+                //leaflet attribution is not required
+				map.attributionControl.setPrefix('');
 			});
 
 			angular.extend($scope, {
@@ -732,7 +705,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				defaults: {
 					tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
 					tileLayerOptions: {
-						attribution: $filter('hrefToJS')('Map:<a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data:<a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.')
+						attribution: $filter('hrefToJS')('Map:<a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC-BY-3</a>. Data:<a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://www.openstreetmap.org/copyright">ODbL</a>.')
 					},
 					scrollWheelZoom: false,
 					key: MAPBOX_KEY
@@ -744,7 +717,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.showOnMap = function(type, ID, lat, lon, name) {
-
+            console.log("hi");
 			lat = typeof lat !== 'undefined' ? lat : "";
 			lon = typeof lon !== 'undefined' ? lon : "";
 			name = typeof name !== 'undefined' ? name : "";
@@ -754,12 +727,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				stop: {
 					type: 'div',
 					iconSize: [13, 13],
-					className: 'stop',
+					className: 'stop'
 				},
 				currentStop: {
 					type: 'div',
 					iconSize: [13, 13],
-					className: 'stop-current',
+					className: 'stop-current'
 				}
 			}
 

@@ -10,7 +10,7 @@ body {
 .angular-leaflet-map {
     height: 100%;
 }
-p.routesAtStop {
+.routesAtStop {
     display: block;
     font-size: smaller;
     -webkit-flex-wrap: wrap;

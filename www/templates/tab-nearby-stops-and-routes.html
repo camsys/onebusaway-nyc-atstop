@@ -1,4 +1,4 @@
-<ion-view title="Nearby Stops & Routes">
+<ion-view title="Nearby Stops">
     <ion-nav-buttons side="right">
         <button class="button button-clear" ng-click="refresh()">
             <i class="icon ion-refresh"></i>
@@ -11,46 +11,19 @@
 		<div data-tap-disabled="true">
     	<leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="200px"></leaflet>
 		</div>
-		
 
-  
- 					 <!--
-        <ion-list>
-            <ion-item ng-repeat="item in data.stops | orderBy:'dist'" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
-                {{item.name}}
-                <p class="routesAtStop">
-                    Routes:<span ng-repeat="r in item.routes"> {{r.shortName}} </span>
-                </p>
-            </ion-item>
-        </ion-list>
-						 -->
-						
 		        <ion-list>
-		            <ion-item ng-repeat="item in data.stops | orderBy:'dist'">
+		            <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15">
 		                {{item.name}}
-		                <p class="routesAtStop">
-		                   Routes: <span ng-repeat="r in item.routes"> <a href="" ng-click="showOnMap('route', r.id);showOnMap('stop', item.id, item.lat, item.lon, item.name);">{{r.shortName}}</a></span>
-		                </p>
+		                <div class="row">
+		                   <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showOnMap('route', r.id); showOnMap('stop', item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
+		                </div>
 										
 		                <button class="button button-positive button-small button-clear" ng-click="modal.show();getBuses(item.id);">
 		                    See more
 		                </button>
 		            </ion-item>
 		        </ion-list>
-
-        <!-- Optional / Since every stop display routes passing it-->
-        <!--
-				<ion-list>
-            <ion-item ng-repeat="item in data.routes |limitTo:10">
-                {{item.shortName}}
-                <button class="button button-positive button-small button-clear" ng-click="showOnMap('route', item.id)">
-                    Map
-                </button>
-                <a class="button button-positive button-small button-clear" href="#/tab/route/{{item.id}}/{{item.shortName}}">Stops</a>
-            </ion-item>
-        </ion-list>
-				-->
-				
 
         <p>{{data.notifications}}</p>
     </ion-content>
