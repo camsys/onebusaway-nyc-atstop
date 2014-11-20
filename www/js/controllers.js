@@ -174,10 +174,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		});
 
 		$scope.init = (function() {
-			    map();
-				drawRoute($stateParams.routeId);
-				drawStopsAndBuses($stateParams.routeId);
-				$scope.reloadTimeout = $interval(refresh, 35000);
+			map();
+			drawRoute($stateParams.routeId);
+			drawStopsAndBuses($stateParams.routeId);
+			$scope.reloadTimeout = $interval(refresh, 35000);
 
 		})();
 
@@ -598,8 +598,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'MAPBOX_KEY',
-	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, MAPBOX_KEY) {
+.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicModal', 'AtStopService', 'MAPBOX_KEY',
+	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicModal, AtStopService, MAPBOX_KEY) {
 		$scope.data = {
 			"loaded": true,
 			"stops": [],
@@ -609,7 +609,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"lat": '',
 			"lon": '',
 			"showRoutes": true,
-			"showStops": false
+			"showStops": false,
+			"results": [],
 		};
 
 		$scope.toggle = function() {
@@ -654,6 +655,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				stopsDefer.resolve();
 			});
 
+			/*
 			GeolocationService.getRoutes(lat, lon).then(function(results) {
 				if (!angular.isUndefined(results) && results != null && results.length > 0) {
 					$scope.data.routes = results;
@@ -663,6 +665,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				}
 				routesDefer.resolve();
 			});
+			*/
 
 
 			$scope.data.loaded = true;
@@ -692,7 +695,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						}
 					});
 
-
+					/*
 					GeolocationService.getRoutes($scope.data.lat, $scope.data.lon).then(function(results) {
 						if (!angular.isUndefined(results) && results != null && results.length > 0) {
 							$scope.data.routes = results;
@@ -701,6 +704,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 							$scope.data.notifications = "No matches";
 						}
 					});
+					*/
 
 				}, function(error) {
 					$ionicLoading.hide();
@@ -741,9 +745,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.showOnMap = function(type, ID, lat, lon, name) {
 
-            lat = typeof lat !== 'undefined' ? lat : "";
-            lon = typeof lon !== 'undefined' ? lon : "";
-            name = typeof name !== 'undefined' ? name : "";
+			lat = typeof lat !== 'undefined' ? lat : "";
+			lon = typeof lon !== 'undefined' ? lon : "";
+			name = typeof name !== 'undefined' ? name : "";
 
 			// icons
 			var icons = {
@@ -751,6 +755,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					type: 'div',
 					iconSize: [13, 13],
 					className: 'stop',
+				},
+				currentStop: {
+					type: 'div',
+					iconSize: [13, 13],
+					className: 'stop-current',
 				}
 			}
 
@@ -801,16 +810,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						iconSize: [20, 20]
 					},
 					*/
-					icon: icons.stop,
+					icon: icons.currentStop,
 					focus: false,
 					stopId: ID,
 					stopName: $filter('encodeStopName')(name)
 				}
 				$scope.markers = stops;
-
-				leafletData.getMap().then(function(map) {
-					map.setView([lat, lon], 15);
-				});
 			}
 		};
 
@@ -819,6 +824,40 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			//test(40.678178, -73.944158);
 			$scope.getNearbyStopsAndRoutes();
 		})();
+
+		$ionicModal.fromTemplateUrl('templates/modal.html', {
+			scope: $scope
+		}).then(function(modal) {
+			$scope.modal = modal;
+		});
+
+		//Cleanup the modal when we're done with it!
+		$scope.$on('$destroy', function() {
+			$scope.modal.remove();
+		});
+
+		// Execute action on hide modal
+		$scope.$on('modal.hidden', function() {
+			// Execute action
+		});
+
+		// Execute action on remove modal
+		$scope.$on('modal.removed', function() {
+			// Execute action
+		});
+
+		$scope.getBuses = function(ID) {
+			console.log("test");
+			AtStopService.getBuses(ID).then(function(results) {
+				if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
+					$scope.data.results = results.arriving;
+					$scope.data.notifications = "";
+				} else {
+					$scope.data.results = "";
+					$scope.data.notifications = "We are not tracking any buses to this stop at this time. Check back later for an update.";
+				}
+			});
+		};
 	}
 ])
 

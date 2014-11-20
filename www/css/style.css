@@ -151,3 +151,9 @@ label.item.item-input {
 		border: 2px solid #ffffff;
 
 }
+.stop-current {
+    border-radius: 120px;
+    background-color: #f03b20;
+		border: 2px solid #ffffff;
+
+}

@@ -13,11 +13,6 @@
 		</div>
 		
 
-						<div class="button-bar">
-						  <button class="button" ng-disabled="data.showRoutes" ng-click="toggle()">Nearby Routes</button>
-						  <button class="button" ng-disabled="data.showStops" ng-click="toggle()">Nearby Stops</button>
-						</div>
- 
   
  					 <!--
         <ion-list>
@@ -30,19 +25,22 @@
         </ion-list>
 						 -->
 						
-		        <ion-list ng-show="data.showStops">
+		        <ion-list>
 		            <ion-item ng-repeat="item in data.stops | orderBy:'dist'">
 		                {{item.name}}
-		                <button class="button button-positive button-small button-clear" ng-click="showOnMap('stop', item.id, item.lat, item.lon, item.name)">
-		                    Map
+		                <p class="routesAtStop">
+		                   Routes: <span ng-repeat="r in item.routes"> <a href="" ng-click="showOnMap('route', r.id);showOnMap('stop', item.id, item.lat, item.lon, item.name);">{{r.shortName}}</a></span>
+		                </p>
+										
+		                <button class="button button-positive button-small button-clear" ng-click="modal.show();getBuses(item.id);">
+		                    See more
 		                </button>
-		                <a class="button button-positive button-small button-clear" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">Stops</a>
 		            </ion-item>
 		        </ion-list>
 
         <!-- Optional / Since every stop display routes passing it-->
-        <ion-list ng-show="data.showRoutes">
-            <!--<ion-item ng-repeat="item in data.routes |limitTo:10" href="#/tab/route/{{item.id}}/{{item.shortName}}">-->
+        <!--
+				<ion-list>
             <ion-item ng-repeat="item in data.routes |limitTo:10">
                 {{item.shortName}}
                 <button class="button button-positive button-small button-clear" ng-click="showOnMap('route', item.id)">
@@ -51,7 +49,31 @@
                 <a class="button button-positive button-small button-clear" href="#/tab/route/{{item.id}}/{{item.shortName}}">Stops</a>
             </ion-item>
         </ion-list>
+				-->
+				
 
         <p>{{data.notifications}}</p>
     </ion-content>
+		
+    <script id="templates/modal.html" type="text/ng-template">
+      <ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+          <h1 class="title">Upcoming Buses</h1>
+          <button class="button button-clear button-primary" ng-click="modal.hide()">Close</button>
+        </ion-header-bar>
+        <ion-content class="padding">
+        <div bindonce ng-repeat="(routeId, info) in data.results" class=" ">
+            <div class="row item item-divider">
+                <div class="route col vcenter"><a href="#/tab/route/{{routeId}}/{{info.name}}">{{info.name}}</a></div>
+            </div>
+            <ion-list>
+                <ion-item bindonce ng-repeat="item in info.distances">
+                    <h2>{{item.destination}}</h2>
+										{{item.distance}}
+                </ion-item>
+            </ion-list>
+        </div>
+        </ion-content>
+      </ion-modal-view>
+    </script>
 </ion-view>
