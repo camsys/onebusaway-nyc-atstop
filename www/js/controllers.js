@@ -440,57 +440,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
-.controller('GeolocationCtrl', ['$scope', 'GeolocationService', '$stateParams', '$ionicLoading', '$q',
-	function($scope, GeolocationService, $stateParams, $ionicLoading, $q) {
-		$scope.data = {
-			"lat": $stateParams.latitude,
-			"lon": $stateParams.longitude,
-			"loaded": false,
-			"routes": [],
-			"stops": [],
-			"address": $stateParams.address,
-			"notifications": ''
-		};
-
-		$scope.getRoutesAndStops = function() {
-			var routesDefer = $q.defer();
-			var stopsDefer = $q.defer();
-
-			GeolocationService.getRoutes($stateParams.latitude, $stateParams.longitude).then(function(results) {
-				if (!angular.isUndefined(results) && results != null && results.length > 0) {
-					$scope.data.routes = results;
-					$scope.data.notifications = "";
-				} else {
-					$scope.data.notifications = "No matches";
-				}
-				routesDefer.resolve();
-			});
-
-			GeolocationService.getStops($stateParams.latitude, $stateParams.longitude).then(function(results) {
-				if (!angular.isUndefined(results) && results != null && results.length > 0) {
-					$scope.data.stops = results;
-					$scope.data.notifications = "";
-				} else {
-					$scope.data.notifications = "No matches";
-				}
-				stopsDefer.resolve();
-			});
-
-			$q.all([routesDefer.promise.then(function() {
-				console.log("resolved");
-			}), stopsDefer.promise.then(function() {
-				console.log("resolved");
-			})]).then(function() {
-				$scope.data.loaded = true;
-			});
-		};
-
-		$scope.init = (function() {
-			$scope.getRoutesAndStops();
-		})();
-	}
-])
-
 // Route Stops
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate',
 	function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate) {
