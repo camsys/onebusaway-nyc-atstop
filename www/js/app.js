@@ -144,8 +144,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		url: '/geolocation/:latitude/:longitude/:address',
 		views: {
 			'tab-home': {
-				templateUrl: 'templates/geolocation.html',
-				controller: 'GeolocationCtrl'
+				templateUrl: 'templates/tab-nearby-stops-and-routes.html',
+				controller: 'NearbyStopsAndRoutesCtrl'
 			}
 		}
 	})
@@ -164,6 +164,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		url: '/atstop/:stopId/:stopName',
 		views: {
 			'tab-home': {
+				templateUrl: 'templates/atstop.html',
+				controller: 'AtStopCtrl'
+			}
+		}
+	})
+	
+	.state('tab.atstop-favorites', {
+		url: '/atstop-favorites/:stopId/:stopName',
+		views: {
+			'tab-favorites': {
 				templateUrl: 'templates/atstop.html',
 				controller: 'AtStopCtrl'
 			}

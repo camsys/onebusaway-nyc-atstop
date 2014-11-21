@@ -596,14 +596,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'MAPBOX_KEY',
-	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicModal, AtStopService, $ionicScrollDelegate, MAPBOX_KEY) {
+.controller('NearbyStopsAndRoutesCtrl', ['$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'MAPBOX_KEY',
+	function($stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicModal, AtStopService, $ionicScrollDelegate, MAPBOX_KEY) {
 		$scope.data = {
 			"loaded": true,
 			"stops": [],
 			"routes": [],
 			"notifications": "",
-			"val": true,
+			"val": false,
 			"lat": '',
 			"lon": '',
 			"showRoutes": false,
@@ -652,30 +652,30 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			$scope.data.loaded = true;
 		}
 
-		$scope.getNearbyStopsAndRoutes = function() {
+		$scope.getNearbyStopsAndRoutes = function(lat, lon) {
+			GeolocationService.getStops(lat, lon).then(function(results) {
+				$ionicLoading.hide();
+				if (!angular.isUndefined(results) && results != null && results.length > 0) {
+					angular.forEach(results, function(stop) {
+						stop['dist'] = getDistanceInM(lat, lon, stop['lat'], stop['lon']);
+					});
+					$scope.data.stops = results;
+					$scope.data.notifications = "";
+				} else {
+					$scope.data.notifications = "No nearby stops found.";
+				}
+			});
+		};
+
+		$scope.getNearbyStopsAndRoutesGPS = function() {
 			$ionicLoading.show();
 			$cordovaGeolocation.getCurrentPosition({
 				enableHighAccuracy: false,
 				timeout: 5000
 			}).then(
 				function(position) {
-					$ionicLoading.hide();
-					$scope.data.val = false;
-					$scope.data.lat = position.coords.latitude;
-					$scope.data.lon = position.coords.longitude;
-
-					GeolocationService.getStops($scope.data.lat, $scope.data.lon).then(function(results) {
-						if (!angular.isUndefined(results) && results != null && results.length > 0) {
-							angular.forEach(results, function(stop) {
-								stop['dist'] = getDistanceInM($scope.data.lat, $scope.data.lon, stop['lat'], stop['lon']);
-							});
-							$scope.data.stops = results;
-							$scope.data.notifications = "";
-						} else {
-							$scope.data.notifications = "No nearby stops found.";
-						}
-					});
-
+					$scope.data.val = true;
+					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude)
 				}, function(error) {
 					$ionicLoading.hide();
 
@@ -793,7 +793,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.init = (function() {
 			map();
 			//test(40.678178, -73.944158);
-			$scope.getNearbyStopsAndRoutes();
+			if ($location.$$path == "/tab/nearby-stops-and-routes") {
+				$scope.getNearbyStopsAndRoutesGPS();
+			} else {
+				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
+			}
 		})();
 
 		$ionicModal.fromTemplateUrl('templates/modal.html', {
