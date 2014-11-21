@@ -1,17 +1,10 @@
 angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
-	'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService', 'GeolocationService', '$filter', '$q', '$interval', 'History',
-	function($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, GeolocationService, $filter, $q, $interval, History, MAPBOX_KEY) {
+	'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService', 'GeolocationService', '$filter', '$q', '$interval',
+	function($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, GeolocationService, $filter, $q, $interval, MAPBOX_KEY) {
 		$scope.paths = {};
 		$scope.markers = {};
-
-		$scope.$on('$locationChangeStart', function(evt, absNewUrl, absOldUrl) {
-			var hashIndex = absOldUrl.indexOf('#');
-			var oldRoute = absOldUrl.substr(hashIndex + 2);
-			History.lastRoute = oldRoute;
-			console.log(History.lastRoute);
-		});
 
 		// Refresh Map
 		var refresh = function() {
@@ -192,15 +185,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Search
-.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'FavoritesService', 'History',
-	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, FavoritesService, History) {
-
-		$scope.$on('$locationChangeStart', function(evt, absNewUrl, absOldUrl) {
-			var hashIndex = absOldUrl.indexOf('#');
-			var oldRoute = absOldUrl.substr(hashIndex + 2);
-			History.lastRoute = oldRoute;
-			console.log(History.lastRoute);
-		});
+.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'FavoritesService',
+	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, FavoritesService) {
 
 
 		$scope.go = function(path) {
@@ -307,21 +293,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 
-.controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q', 'History',
-	function($scope, $ionicLoading, FavoritesService, $q, History) {
+.controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q',
+	function($scope, $ionicLoading, FavoritesService, $q) {
 		$scope.data = {
 			"loaded": false,
 			"favorites": [],
 			"notifications": '',
 			"alerts": []
 		};
-
-		$scope.$on('$locationChangeStart', function(evt, absNewUrl, absOldUrl) {
-			var hashIndex = absOldUrl.indexOf('#');
-			var oldRoute = absOldUrl.substr(hashIndex + 2);
-			History.lastRoute = oldRoute;
-			console.log(History.lastRoute);
-		});
 
 		var favoritesDefer = $q.defer();
 
@@ -352,8 +331,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
-.controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location', 'History',
-	function($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval, $location, History) {
+.controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
+	function($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval, $location) {
 		$scope.data = {
 			"alerts": "",
 			"responseTime": "",
@@ -365,13 +344,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"alertsHide": false,
 			"stopId": $stateParams.stopId
 		};
-
-		$scope.$on('$locationChangeStart', function(evt, absNewUrl, absOldUrl) {
-			var hashIndex = absOldUrl.indexOf('#');
-			var oldRoute = absOldUrl.substr(hashIndex + 2);
-			History.lastRoute = oldRoute;
-			console.log(History.lastRoute);
-		});
 
 		$scope.toggleFavorites = function() {
 			if (FavoritesService.inFavorites($stateParams.stopId)) {
@@ -468,8 +440,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
-.controller('GeolocationCtrl', ['$scope', 'GeolocationService', '$stateParams', '$ionicLoading', '$q', 'History',
-	function($scope, GeolocationService, $stateParams, $ionicLoading, $q, History) {
+.controller('GeolocationCtrl', ['$scope', 'GeolocationService', '$stateParams', '$ionicLoading', '$q',
+	function($scope, GeolocationService, $stateParams, $ionicLoading, $q) {
 		$scope.data = {
 			"lat": $stateParams.latitude,
 			"lon": $stateParams.longitude,
@@ -479,13 +451,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"address": $stateParams.address,
 			"notifications": ''
 		};
-
-		$scope.$on('$locationChangeStart', function(evt, absNewUrl, absOldUrl) {
-			var hashIndex = absOldUrl.indexOf('#');
-			var oldRoute = absOldUrl.substr(hashIndex + 2);
-			History.lastRoute = oldRoute;
-			console.log(History.lastRoute);
-		});
 
 		$scope.getRoutesAndStops = function() {
 			var routesDefer = $q.defer();
@@ -527,8 +492,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Route Stops
-.controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'History',
-	function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate, History) {
+.controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate',
+	function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate) {
 		$scope.routeId = $stateParams.routeId;
 		var oneDirection = false;
 		$scope.groups = [];
@@ -543,13 +508,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			items: [],
 			shown: false
 		};
-
-		$scope.$on('$locationChangeStart', function(evt, absNewUrl, absOldUrl) {
-			var hashIndex = absOldUrl.indexOf('#');
-			var oldRoute = absOldUrl.substr(hashIndex + 2);
-			History.lastRoute = oldRoute;
-			console.log(History.lastRoute);
-		});
 
 		/* if given group is the selected group, deselect it
 		 * else, select the given group
@@ -638,8 +596,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'History', 'MAPBOX_KEY',
-	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicModal, AtStopService, $ionicScrollDelegate, History, MAPBOX_KEY) {
+.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'MAPBOX_KEY',
+	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicModal, AtStopService, $ionicScrollDelegate, MAPBOX_KEY) {
 		$scope.data = {
 			"loaded": true,
 			"stops": [],
@@ -652,13 +610,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showStops": true,
 			"results": []
 		};
-
-		$scope.$on('$locationChangeStart', function(evt, absNewUrl, absOldUrl) {
-			var hashIndex = absOldUrl.indexOf('#');
-			var oldRoute = absOldUrl.substr(hashIndex + 2);
-			History.lastRoute = oldRoute;
-			console.log(History.lastRoute);
-		});
 
 		var getDistanceInM = function(lat1, lon1, lat2, lon2) {
 			var R = 6371;
@@ -881,15 +832,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
-.controller('AboutCtrl', ['$scope', 'PRIV_POLICY_TEXT', 'History',
-	function($scope, PRIV_POLICY_TEXT, History) {
-
-		$scope.$on('$locationChangeStart', function(evt, absNewUrl, absOldUrl) {
-			var hashIndex = absOldUrl.indexOf('#');
-			var oldRoute = absOldUrl.substr(hashIndex + 2);
-			History.lastRoute = oldRoute;
-			console.log(History.lastRoute);
-		});
+.controller('AboutCtrl', ['$scope', 'PRIV_POLICY_TEXT',
+	function($scope, PRIV_POLICY_TEXT) {
 
 		$scope.hideText = true;
 		$scope.text = PRIV_POLICY_TEXT;

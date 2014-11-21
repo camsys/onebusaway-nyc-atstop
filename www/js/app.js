@@ -25,7 +25,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	});
 })
 
-
 .config(function($httpProvider) {
 	$httpProvider.interceptors.push(function($rootScope) {
 		return {

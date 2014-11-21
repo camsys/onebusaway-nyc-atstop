@@ -1,11 +1,5 @@
 angular.module('starter.services', ['ionic', 'configuration'])
 
-.factory('History',function(){
-  return{
-    lastRoute: ''
-  }
-})
-
 .factory('$localstorage', ['$window',
 	function($window) {
 		return {
