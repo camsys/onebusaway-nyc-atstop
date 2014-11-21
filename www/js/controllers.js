@@ -762,12 +762,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 					$scope.paths = route;
 
-					leafletData.getMap().then(function(map) {
-						map.fitBounds([
-							[$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lng']],
-							[$scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lat'], $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lng']]
-						]);
-					});
 				});
 			} else {
 				var stops = [];
@@ -785,7 +779,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					focus: false,
 					stopId: ID,
 					stopName: $filter('encodeStopName')(name)
-				}
+				};
+
+                leafletData.getMap().then(function(map) {
+                    map.setView(stops[0], 15);
+                });
 				$scope.markers = stops;
 			}
 		};
@@ -822,7 +820,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		});
 
 		$scope.getBuses = function(ID) {
-			console.log("test");
 			AtStopService.getBuses(ID).then(function(results) {
 				if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
 					$scope.data.results = results.arriving;

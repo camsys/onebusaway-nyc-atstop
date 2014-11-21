@@ -10,6 +10,9 @@ body {
 .angular-leaflet-map {
     height: 100%;
 }
+h1.title{
+    font-size:3vmax !important;
+}
 .routesAtStop {
     display: block;
     font-size: smaller;
