@@ -596,8 +596,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicModal', 'AtStopService', 'MAPBOX_KEY',
-	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicModal, AtStopService, MAPBOX_KEY) {
+.controller('NearbyStopsAndRoutesCtrl', ['$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'MAPBOX_KEY',
+	function($scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicModal, AtStopService, $ionicScrollDelegate, MAPBOX_KEY) {
 		$scope.data = {
 			"loaded": true,
 			"stops": [],
@@ -646,7 +646,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.notifications = "No matches";
 				}
 				stopsDefer.resolve();
-                routesDefer.resolve();
+				routesDefer.resolve();
 			});
 
 			$scope.data.loaded = true;
@@ -694,7 +694,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		var map = function() {
 			leafletData.getMap().then(function(map) {
-                //leaflet attribution is not required
+				//leaflet attribution is not required
 				map.attributionControl.setPrefix('');
 			});
 
@@ -715,7 +715,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.showOnMap = function(type, ID, lat, lon, name) {
-            console.log("hi");
+			$ionicScrollDelegate.scrollTop();
 			lat = typeof lat !== 'undefined' ? lat : "";
 			lon = typeof lon !== 'undefined' ? lon : "";
 			name = typeof name !== 'undefined' ? name : "";
