@@ -347,11 +347,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.toggleFavorites = function() {
-			if (FavoritesService.inFavorites($stateParams.stopId)) {
-				FavoritesService.remove($stateParams.stopId);
+			if (FavoritesService.inFavorites($scope.data.stopId)) {
+				FavoritesService.remove($scope.data.stopId);
 				$scope.data.favClass = "";
 			} else {
-				FavoritesService.add($stateParams.stopId, $stateParams.stopName);
+				FavoritesService.add($scope.data.stopId, $scope.data.stopName);
 				$scope.data.favClass = "button-energized";
 			}
 		}
@@ -381,7 +381,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 			var busesDefer = $q.defer();
 
-			AtStopService.getBuses($stateParams.stopId).then(function(results) {
+			AtStopService.getBuses($scope.data.stopId).then(function(results) {
 				if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
 					$scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
 					handleLayovers(results);
@@ -434,7 +434,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.link = "map-favorites";
 			}
 
-			if (FavoritesService.inFavorites($stateParams.stopId)) {
+			if (FavoritesService.inFavorites($scope.data.stopId)) {
 				$scope.data.favClass = "button-energized";
 			} else {
 				$scope.data.favClass = "";
@@ -743,6 +743,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.init = (function() {
+			$scope.data.results = "";
 			map();
 			//test(40.678178, -73.944158);
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
