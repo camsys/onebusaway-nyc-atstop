@@ -334,6 +334,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 .controller('AtStopCtrl', ['$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
 	function($scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval, $location) {
 		$scope.data = {
+			"link": "map",
 			"alerts": "",
 			"responseTime": "",
 			"loaded": false,
@@ -429,6 +430,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		});
 
 		$scope.init = (function() {
+			if ($location.$$path.indexOf("atstop-favorites") > -1) {
+				$scope.data.link = "map-favorites";
+			}
+
 			if (FavoritesService.inFavorites($stateParams.stopId)) {
 				$scope.data.favClass = "button-energized";
 			} else {
@@ -730,9 +735,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					stopName: $filter('encodeStopName')(name)
 				};
 
-                leafletData.getMap().then(function(map) {
-                    map.setView(stops[0], 15);
-                });
+				leafletData.getMap().then(function(map) {
+					map.setView(stops[0], 15);
+				});
 				$scope.markers = stops;
 			}
 		};
