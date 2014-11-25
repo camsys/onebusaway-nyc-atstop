@@ -624,7 +624,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			}).then(
 				function(position) {
 					$scope.data.val = true;
-					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude)
+					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
 				}, function(error) {
 					$ionicLoading.hide();
 
@@ -648,7 +648,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 
 			angular.extend($scope, {
-				center: {},
+				center: { autoDiscover: true },
 				defaults: {
 					tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
 					tileLayerOptions: {

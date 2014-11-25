@@ -11,7 +11,7 @@ body {
     height: 100%;
 }
 h1.title{
-    font-size:3vmax !important;
+    font-size:2vmax !important;
 }
 .routesAtStop {
     display: block;
