@@ -189,6 +189,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
+	
+	.state('tab.map-favorites', {
+		url: '/map-favorites/:routeId/:stopId',
+		views: {
+			'tab-favorites': {
+				templateUrl: 'templates/map.html',
+				controller: 'MapCtrl'
+			}
+		}
+	})
 
 	.state('tab.about', {
 		url: '/about',
