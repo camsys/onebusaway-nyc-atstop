@@ -33,7 +33,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				return config;
 			},
 			requestError: function(rejection) {
-				console.log(rejection);
 				$rootScope.$broadcast('requestRejection');
 				return rejection;
 			},
@@ -42,8 +41,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				return response;
 			},
 			responseError: function(rejection) {
-				console.log(rejection);
-				$rootScope.$broadcast('responseRejection');
+				$rootScope.$broadcast('requestRejection');
 				return rejection;
 			}
 		}
@@ -60,10 +58,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	});
 
 	$rootScope.$on('loading:hide', function() {
-		$ionicLoading.hide()
-	});
-
-	$rootScope.$on('responseRejection', function() {
 		$ionicLoading.hide()
 	});
 
@@ -175,7 +169,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-
+	
 	.state('tab.atstop-favorites', {
 		url: '/atstop-favorites/:stopId/:stopName',
 		views: {
@@ -195,7 +189,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-
+	
 	.state('tab.map-favorites', {
 		url: '/map-favorites/:routeId/:stopId',
 		views: {

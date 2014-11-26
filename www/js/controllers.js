@@ -211,21 +211,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showTips": true
 		};
 
-		$scope.requests = [];
-
-		var clearRequest = function(request) {
-			$scope.requests.splice($scope.requests.indexOf(request), 1);
-		};
-
 		$scope.autocomplete = function() {
-			console.log($scope.requests.length);
-			angular.forEach($scope.requests, function(val, key) {
-				val.cancel("User cancelled");
-				clearRequest(request);
-			});
-
-			/*
-			var request = SearchService.autocomplete($scope.data.searchKey).then(
+			SearchService.autocomplete($scope.data.searchKey).then(
 				function(matches) {
 					if (!angular.isUndefined(matches) && matches != null && matches.length > 0) {
 						$scope.data.results = matches;
@@ -236,25 +223,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					}
 				}
 			);
-			*/
-            if ($scope.data.searchKey.length > 0){
-                var request = SearchService.autocomplete($scope.data.searchKey);
-                $scope.requests.push(request);
-                request.promise.then(function(matches) {
-                    clearRequest(request);
-                    if (!angular.isUndefined(matches) && matches != null && matches.length > 0) {
-                        $scope.data.results = matches;
-                        $scope.data.notifications = "";
-
-                    } else {
-                        $scope.data.results = [];
-                        $scope.data.notifications = "No matches";
-                    }
-                }, function(reason) {
-                    console.log(reason);
-                });
-            }
-
 		};
 
 		// set no sched svc message.
@@ -685,9 +653,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 
 			angular.extend($scope, {
-				center: {
-					autoDiscover: true
-				},
+				center: { autoDiscover: true },
 				defaults: {
 					tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
 					tileLayerOptions: {
