@@ -470,22 +470,35 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	}
 })
 
-.factory('SearchService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('SearchService', function($q, $http, httpTimeout, $timeout, API_END_POINT, API_KEY) {
 	var autocomplete = function(searchKey) {
 		var deferred = $q.defer();
+		var canceller = $q.defer();
+
 		var matches = [];
+
+		var cancel = function(reason) {
+			console.log(reason);
+			canceller.resolve(reason);
+		};
+
+		var cancelTimer = $timeout(function() {
+			cancel();
+		}, httpTimeout);
 
 		var url = API_END_POINT + "api/autocomplete?callback=JSON_CALLBACK";
 		var responsePromise = $http.jsonp(url, {
 			params: {
 				term: searchKey
 			},
-			timeout: httpTimeout
+			timeout: canceller.promise
 		})
 			.success(function(data, status, header, config) {
+				$timeout.cancel(cancelTimer);
 				matches = data;
 			})
 			.error(function(data, status, header, config) {
+				$timeout.cancel(cancelTimer);
 				console.log('error');
 			});
 
@@ -493,7 +506,10 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			deferred.resolve(matches);
 		});
 
-		return deferred.promise;
+		return {
+			promise: deferred.promise,
+			cancel: cancel
+		};
 	};
 
 	var search = function(term) {
