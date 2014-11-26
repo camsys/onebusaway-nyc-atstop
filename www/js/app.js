@@ -33,7 +33,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				return config;
 			},
 			requestError: function(rejection) {
-				$rootScope.$broadcast('requestRejection');
+				$rootScope.$broadcast('requestRejection', rejection);
 				return rejection;
 			},
 			response: function(response) {
@@ -41,7 +41,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				return response;
 			},
 			responseError: function(rejection) {
-				$rootScope.$broadcast('requestRejection');
+				$rootScope.$broadcast('requestRejection', rejection);
 				return rejection;
 			}
 		}
@@ -61,18 +61,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		$ionicLoading.hide()
 	});
 
-	$rootScope.$on('requestRejection', function() {
+	$rootScope.$on('requestRejection', function(obj, data) {
 		$ionicLoading.hide();
 
-		$ionicPopup.alert({
-			title: "Error",
-			content: "Something went wrong. Please check your internet connection."
-		})
-			.then(function(result) {
-				if (result) {
-					// ionic.Platform.exitApp();
-				}
-			});
+		if (data.config.url.indexOf("autocomplete") == -1) {
+			$ionicPopup.alert({
+				title: "Error",
+				content: "Something went wrong. Please check your internet connection."
+			})
+				.then(function(result) {
+					if (result) {
+						// ionic.Platform.exitApp();
+					}
+				});
+		}
 	});
 })
 
@@ -169,7 +171,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-	
+
 	.state('tab.atstop-favorites', {
 		url: '/atstop-favorites/:stopId/:stopName',
 		views: {
@@ -189,7 +191,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-	
+
 	.state('tab.map-favorites', {
 		url: '/map-favorites/:routeId/:stopId',
 		views: {
