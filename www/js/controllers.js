@@ -237,21 +237,24 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				}
 			);
 			*/
+            if ($scope.data.searchKey.length > 0){
+                var request = SearchService.autocomplete($scope.data.searchKey);
+                $scope.requests.push(request);
+                request.promise.then(function(matches) {
+                    clearRequest(request);
+                    if (!angular.isUndefined(matches) && matches != null && matches.length > 0) {
+                        $scope.data.results = matches;
+                        $scope.data.notifications = "";
 
-			var request = SearchService.autocomplete($scope.data.searchKey);
-			$scope.requests.push(request);
-			request.promise.then(function(matches) {
-				if (!angular.isUndefined(matches) && matches != null && matches.length > 0) {
-					$scope.data.results = matches;
-					$scope.data.notifications = "";
-					clearRequest(request);
-				} else {
-					$scope.data.results = [];
-					$scope.data.notifications = "No matches";
-				}
-			}, function(reason) {
-				console.log(reason);
-			});
+                    } else {
+                        $scope.data.results = [];
+                        $scope.data.notifications = "No matches";
+                    }
+                }, function(reason) {
+                    console.log(reason);
+                });
+            }
+
 		};
 
 		// set no sched svc message.
