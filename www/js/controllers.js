@@ -212,6 +212,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.autocomplete = function() {
+		if ($scope.data.searchKey.length > 0) {
 			SearchService.autocomplete($scope.data.searchKey).then(
 				function(matches) {
 					if (!angular.isUndefined(matches) && matches != null && matches.length > 0) {
@@ -222,7 +223,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						$scope.data.notifications = "No matches";
 					}
 				}
-			);
+			);}
 		};
 
 		// set no sched svc message.
