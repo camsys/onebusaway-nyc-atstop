@@ -9,7 +9,7 @@
 		</div>
 
 		        <ion-list>
-		            <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15">
+		            <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15"><ion-scroll direction="x">
 		                {{item.name}} ({{item.direction}}-bound)
 		                <div class="row">
 		                   <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showOnMap('route', r.id); showOnMap('stop', item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
@@ -17,7 +17,7 @@
 										
 		                <button class="button button-positive button-small button-clear" ng-click="modal.show();getBuses(item.id);">
 		                    See more
-		                </button>
+		                </button></ion-scroll>
 		            </ion-item>
 		        </ion-list>
 

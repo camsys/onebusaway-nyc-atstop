@@ -144,7 +144,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 
 			leafletData.getMap().then(function(map) {
-				map.attributionControl.setPrefix($filter('hrefToJS')('<a title="A JS library for interactive maps" href="http://leafletjs.com">Leaflet</a>'));
+				map.attributionControl.setPrefix('');
 			});
 
 
@@ -551,8 +551,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'MAPBOX_KEY',
-	function($stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicModal, AtStopService, $ionicScrollDelegate, MAPBOX_KEY) {
+.controller('NearbyStopsAndRoutesCtrl', ['$stateParams',  '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'leafletBoundsHelpers', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'MAPBOX_KEY',
+	function($stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, leafletBoundsHelpers, $ionicModal, AtStopService, $ionicScrollDelegate, MAPBOX_KEY) {
 		$scope.data = {
 			"loaded": true,
 			"stops": [],
@@ -565,7 +565,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showStops": true,
 			"results": []
 		};
-
+		
 		var getDistanceInM = function(lat1, lon1, lat2, lon2) {
 			var R = 6371;
 			var dLat = deg2rad(lat2 - lat1);
@@ -598,7 +598,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.stops = results;
 					$scope.data.notifications = "";
 				} else {
-					$scope.data.notifications = "No matches";
+					$scope.data.notifications = "We could not find any stops near your location";
 				}
 				stopsDefer.resolve();
 				routesDefer.resolve();
@@ -652,9 +652,18 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				//leaflet attribution is not required
 				map.attributionControl.setPrefix('');
 			});
-
+			
+			var mapCenter;
+			
+			//if we received lat/long from the state, then use that center, otherwise use location
+			if (!angular.isUndefined($stateParams.latitude)){
+				mapCenter = { lat: Number($stateParams.latitude), lng: Number($stateParams.longitude), zoom: 15};
+			}	else {
+				mapCenter ={ autoDiscover: true };
+			}
+			
 			angular.extend($scope, {
-				center: { autoDiscover: true },
+				center: mapCenter,
 				defaults: {
 					tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
 					tileLayerOptions: {
