@@ -557,10 +557,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"loaded": true,
 			"stops": [],
 			"routes": [],
+			"lat": "",
+			"lon": "",
 			"notifications": "",
 			"val": false,
-			"lat": '',
-			"lon": '',
 			"showRoutes": false,
 			"showStops": true,
 			"results": []
@@ -586,8 +586,33 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.refresh = function() {
 			$scope.getNearbyStopsAndRoutes();
 		};
+		
+		var directionToDegrees = function(direction) {
+			var directions = {	"N": 0,
+								"NE":45,
+								"E":90,
+								"SE":135,
+								"S":180,
+								"SW":225,
+								"W":270,
+								"NW":315};
+			return directions[direction];
+		};
+		
+		var icons = {
+				stop: {
+					type: 'div',
+					
+					iconSize: [13, 13],
+					className: 'stop'
+				},
+				currentStop: {
+					type: 'div',
+					iconSize: [10, 10],
+					className: 'stop-current'
+				}
+			};
 
-		// test function
 		var test = function(lat, lon) {
 
 			var stopsDefer = $q.defer();
@@ -615,6 +640,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						stop['dist'] = getDistanceInM(lat, lon, stop['lat'], stop['lon']);
 					});
 					$scope.data.stops = results;
+					plotNearbyStops();
 					$scope.data.notifications = "";
 				} else {
 					$scope.data.notifications = "No nearby stops found.";
@@ -659,7 +685,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			if (!angular.isUndefined($stateParams.latitude)){
 				mapCenter = { lat: Number($stateParams.latitude), lng: Number($stateParams.longitude), zoom: 15};
 			}	else {
-				mapCenter ={ autoDiscover: true };
+				mapCenter ={ autoDiscover: true, zoom: 15};
 			}
 			
 			angular.extend($scope, {
@@ -677,26 +703,29 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 
 		};
+		
+		plotNearbyStops = function() {
+			var stops = [];
+			var i = 0;
+			angular.forEach($scope.data.stops, function (s){
+					console.log(directionToDegrees(s["direction"]));
+					stops[i] = {
+						lat: s["lat"],
+						lng: s["lon"],
+
+						iconAngle: directionToDegrees(s["direction"]),
+						focus: false,
+				};
+				i++;
+			});
+			$scope.markers = stops;
+		};
 
 		$scope.showOnMap = function(type, ID, lat, lon, name) {
 			$ionicScrollDelegate.scrollTop();
 			lat = typeof lat !== 'undefined' ? lat : "";
 			lon = typeof lon !== 'undefined' ? lon : "";
 			name = typeof name !== 'undefined' ? name : "";
-
-			// icons
-			var icons = {
-				stop: {
-					type: 'div',
-					iconSize: [13, 13],
-					className: 'stop'
-				},
-				currentStop: {
-					type: 'div',
-					iconSize: [13, 13],
-					className: 'stop-current'
-				}
-			}
 
 			$scope.markers = {};
 			$scope.paths = {};
@@ -733,13 +762,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				stops[0] = {
 					lat: lat,
 					lng: lon,
-					/*
-					icon: {
-						iconUrl: 'img/stop_icons/bullet.png',
-						iconSize: [20, 20]
-					},
-					*/
-					icon: icons.currentStop,
+					icon: icons.currentStop,	
 					focus: false,
 					stopId: ID,
 					stopName: $filter('encodeStopName')(name)
