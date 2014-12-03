@@ -1,11 +1,3 @@
-body {
-    background: #fff;
-    font: 14px/21px"HelveticaNeue", "Helvetica Neue", Roboto, Segoe UI, Segoe WP, Helvetica, Arial, sans-serif;
-    color: #444;
-    -webkit-font-smoothing: antialiased;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-}
 .scroll,
 .angular-leaflet-map {
     height: 100%;

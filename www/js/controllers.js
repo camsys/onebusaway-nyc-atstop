@@ -573,6 +573,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.refresh = function() {
 			$scope.getNearbyStopsAndRoutesGPS();
+			$scope.$broadcast('scroll.refreshComplete');
 		};
 		
 		var directionToDegrees = function(direction) {
@@ -660,11 +661,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		var map = function() {
 				$scope.$on('leafletDirectiveMarker.click', function(event, args) {
 				console.log(event);
+				console.log(args);
 				var object = $scope.markers[args.markerName];
-					console.log(object);
 				leafletData.getMap().then(function(map) {
 					console.log('hi!');
-					//need to do something interesting here... scroll?
+					//need to do something interesting here... show stop information below map and hide others?
 				});
 			});
 			leafletData.getMap().then(function(map) {
