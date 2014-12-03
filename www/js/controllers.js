@@ -177,8 +177,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Search
-.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'FavoritesService',
-	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, FavoritesService) {
+.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService',
+	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService) {
 
 
 		$scope.go = function(path) {
@@ -198,8 +198,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			exampleIntersections: [
 				"Main Street & Kissena Bl"
 			],
-			"favorites": [],
-			"showFavs": false,
+			"searches": [],
+			"showSearches": false,
 			"showTips": true
 		};
 
@@ -219,6 +219,25 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			} else {
 				$scope.data.results = [];
 				$scope.data.notifications = "";
+			}
+		};
+
+		$scope.searchesGo = function(matches) {
+			switch (matches.type) {
+				case "RouteResult":
+					$scope.handleRouteSearch(matches);
+					break;
+				case "StopResult":
+					$scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
+					break;
+				case "GeocodeResult":
+					$scope.go("/tab/geolocation/" + matches.latitude + '/' + matches.longitude + '/' + matches.formattedAddress);
+					break;
+				default:
+					$scope.data.results = [];
+					$scope.data.notifications = "No matches";
+					console.log("undefined type");
+					break;
 			}
 		};
 
@@ -250,6 +269,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.searchAndGo = function(term) {
 			SearchService.search(term).then(
 				function(matches) {
+					SearchesService.add(matches);
 					switch (matches.type) {
 						case "RouteResult":
 							$scope.handleRouteSearch(matches);
@@ -270,21 +290,18 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			);
 		};
 
-		$scope.get = function() {
-			FavoritesService.get().then(function(results) {
-				if (!angular.isUndefined(results) && results != null && !$filter('isEmptyObject')(results)) {
-					$scope.data.favorites = results;
-					$scope.data.showFavs = true;
+		$scope.init = (function() {
+			SearchesService.fetchAll().then(function(results) {
+				if (results.length > 0) {
+					$scope.data.searches = results;
+					$scope.data.showSearches = true;
 					$scope.data.showTips = false;
 				} else {
-					$scope.data.showFavs = false;
+					$scope.data.searches = [];
+					$scope.data.showSearches = false;
 					$scope.data.showTips = true;
 				}
 			});
-		};
-
-		$scope.init = (function() {
-			$scope.get();
 		})();
 	}
 ])
