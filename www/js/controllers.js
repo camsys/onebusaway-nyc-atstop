@@ -177,8 +177,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Search
-.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'FavoritesService',
-	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, FavoritesService) {
+.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService',
+	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService) {
 
 
 		$scope.go = function(path) {
@@ -198,24 +198,47 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			exampleIntersections: [
 				"Main Street & Kissena Bl"
 			],
-			"favorites": [],
-			"showFavs": false,
+			"searches": [],
+			"showSearches": false,
 			"showTips": true
 		};
 
 		$scope.autocomplete = function() {
-		if ($scope.data.searchKey.length > 0) {
-			SearchService.autocomplete($scope.data.searchKey).then(
-				function(matches) {
-					if (!angular.isUndefined(matches) && matches != null && matches.length > 0) {
-						$scope.data.results = matches;
-						$scope.data.notifications = "";
-					} else {
-						$scope.data.results = [];
-						$scope.data.notifications = "No matches";
+			if ($scope.data.searchKey.length > 0) {
+				SearchService.autocomplete($scope.data.searchKey).then(
+					function(matches) {
+						if (!angular.isUndefined(matches) && matches != null && matches.length > 0) {
+							$scope.data.results = matches;
+							$scope.data.notifications = "";
+						} else {
+							$scope.data.results = [];
+							$scope.data.notifications = "No matches";
+						}
 					}
-				}
-			);}
+				);
+			} else {
+				$scope.data.results = [];
+				$scope.data.notifications = "";
+			}
+		};
+
+		$scope.searchesGo = function(matches) {
+			switch (matches.type) {
+				case "RouteResult":
+					$scope.handleRouteSearch(matches);
+					break;
+				case "StopResult":
+					$scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
+					break;
+				case "GeocodeResult":
+					$scope.go("/tab/geolocation/" + matches.latitude + '/' + matches.longitude + '/' + matches.formattedAddress);
+					break;
+				default:
+					$scope.data.results = [];
+					$scope.data.notifications = "No matches";
+					console.log("undefined type");
+					break;
+			}
 		};
 
 		// set no sched svc message.
@@ -246,6 +269,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.searchAndGo = function(term) {
 			SearchService.search(term).then(
 				function(matches) {
+					SearchesService.add(matches);
 					switch (matches.type) {
 						case "RouteResult":
 							$scope.handleRouteSearch(matches);
@@ -266,21 +290,18 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			);
 		};
 
-		$scope.get = function() {
-			FavoritesService.get().then(function(results) {
-				if (!angular.isUndefined(results) && results != null && !$filter('isEmptyObject')(results)) {
-					$scope.data.favorites = results;
-					$scope.data.showFavs = true;
+		$scope.init = (function() {
+			SearchesService.fetchAll().then(function(results) {
+				if (results.length > 0) {
+					$scope.data.searches = results;
+					$scope.data.showSearches = true;
 					$scope.data.showTips = false;
 				} else {
-					$scope.data.showFavs = false;
+					$scope.data.searches = [];
+					$scope.data.showSearches = false;
 					$scope.data.showTips = true;
 				}
 			});
-		};
-
-		$scope.init = (function() {
-			$scope.get();
 		})();
 	}
 ])
@@ -542,7 +563,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$stateParams',  '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'leafletBoundsHelpers', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'MAPBOX_KEY',
+.controller('NearbyStopsAndRoutesCtrl', ['$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'leafletBoundsHelpers', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'MAPBOX_KEY',
 	function($stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, leafletBoundsHelpers, $ionicModal, AtStopService, $ionicScrollDelegate, MAPBOX_KEY) {
 		$scope.data = {
 			"loaded": true,
@@ -556,12 +577,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showStops": true,
 			"results": []
 		};
-		
+
 		var getDistanceInM = function(lat1, lon1, lat2, lon2) {
 			var R = 6371;
 			var dLat = deg2rad(lat2 - lat1);
 			var dLon = deg2rad(lon2 - lon1);
-			var a =	Math.sin(dLat / 2) * Math.sin(dLat / 2) +Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *Math.sin(dLon / 2) * Math.sin(dLon / 2);
+			var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 			var d = R * c * 1000;
 			return parseInt(d);
@@ -575,32 +596,34 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			$scope.getNearbyStopsAndRoutesGPS();
 			$scope.$broadcast('scroll.refreshComplete');
 		};
-		
+
 		var directionToDegrees = function(direction) {
-			var directions = {	"N": 0,
-								"NE":45,
-								"E":90,
-								"SE":135,
-								"S":180,
-								"SW":225,
-								"W":270,
-								"NW":315};
+			var directions = {
+				"N": 0,
+				"NE": 45,
+				"E": 90,
+				"SE": 135,
+				"S": 180,
+				"SW": 225,
+				"W": 270,
+				"NW": 315
+			};
 			return directions[direction];
 		};
-		
+
 		var icons = {
-				stop: {
-					type: 'div',
-					
-					iconSize: [13, 13],
-					className: 'stop'
-				},
-				currentStop: {
-					type: 'div',
-					iconSize: [14, 14],
-					className: 'stop-current'
-				}
-			};
+			stop: {
+				type: 'div',
+
+				iconSize: [13, 13],
+				className: 'stop'
+			},
+			currentStop: {
+				type: 'div',
+				iconSize: [14, 14],
+				className: 'stop-current'
+			}
+		};
 
 		var test = function(lat, lon) {
 
@@ -653,13 +676,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					});
 					$timeout(function() {
 						popup.close();
-						}, 3000);
+					}, 3000);
 				}
 			);
 		}
 
 		var map = function() {
-				$scope.$on('leafletDirectiveMarker.click', function(event, args) {
+			$scope.$on('leafletDirectiveMarker.click', function(event, args) {
 				console.log(event);
 				console.log(args);
 				var object = $scope.markers[args.markerName];
@@ -672,16 +695,23 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				//leaflet attribution is not required
 				map.attributionControl.setPrefix('');
 			});
-			
+
 			var mapCenter;
-			
+
 			//if we received lat/long from the state, then use that center, otherwise use location
-			if (!angular.isUndefined($stateParams.latitude)){
-				mapCenter = { lat: Number($stateParams.latitude), lng: Number($stateParams.longitude), zoom: 15};
-			}	else {
-				mapCenter ={ autoDiscover: true, zoom: 15};
+			if (!angular.isUndefined($stateParams.latitude)) {
+				mapCenter = {
+					lat: Number($stateParams.latitude),
+					lng: Number($stateParams.longitude),
+					zoom: 15
+				};
+			} else {
+				mapCenter = {
+					autoDiscover: true,
+					zoom: 15
+				};
 			}
-			
+
 			angular.extend($scope, {
 				center: mapCenter,
 				defaults: {
@@ -697,17 +727,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 
 		};
-		
+
 		plotNearbyStops = function() {
 			var stops = [];
 			var i = 0;
-			angular.forEach($scope.data.stops, function (s){
-					stops[i] = {
-						lat: s["lat"],
-						lng: s["lon"],
-						icon: icons.stop,
-						//iconAngle: directionToDegrees(s["direction"]),
-						focus: false
+			angular.forEach($scope.data.stops, function(s) {
+				stops[i] = {
+					lat: s["lat"],
+					lng: s["lon"],
+					icon: icons.stop,
+					//iconAngle: directionToDegrees(s["direction"]),
+					focus: false
 				};
 				i++;
 			});
@@ -752,7 +782,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				stops[0] = {
 					lat: lat,
 					lng: lon,
-					icon: icons.currentStop,	
+					icon: icons.currentStop,
 					focus: false,
 					stopId: ID,
 					stopName: $filter('encodeStopName')(name)

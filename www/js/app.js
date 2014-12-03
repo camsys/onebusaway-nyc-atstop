@@ -69,13 +69,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				title: "Error",
 				content: "Something went wrong. Please check your internet connection."
 			});
-					$timeout(function() {
-						popup.close(); //close the popup after 3 seconds
-						}, 3000);
+			$timeout(function() {
+				popup.close(); //close the popup after 3 seconds
+			}, 3000);
 		}
 
-		}
-	);
+	});
 })
 
 
@@ -104,6 +103,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	.state('tab.home', {
 		url: '/home',
+		cache: false,
 		views: {
 			'tab-home': {
 				templateUrl: 'templates/tab-home.html',

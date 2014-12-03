@@ -1,5 +1,70 @@
 angular.module('starter.services', ['ionic', 'configuration'])
 
+.factory('SearchesService', function($q, $window) {
+	var searches = JSON.parse($window.localStorage['searches'] || '[]');
+
+	var insert = function(term, title, data) {
+		if (searches.length > 0) {
+			var i = 0;
+			angular.forEach(searches, function(val, key) {
+				if (val.term == term) {
+					searches.splice(i, 1);
+				}
+				i++;
+			});
+		}
+
+		if (searches.length >= 5) {
+			searches.splice(0, 1);
+		}
+
+		searches.push({
+			term: term,
+			title: title,
+			data: data
+		});
+
+		window.localStorage.setItem("searches", JSON.stringify(searches));
+	};
+
+	var add = function(matches) {
+		switch (matches.type) {
+			case "RouteResult":
+				insert(matches.id, matches.shortName, matches);
+				break;
+			case "StopResult":
+				insert(matches.id, matches.name, matches);
+				break;
+			case "GeocodeResult":
+				insert(matches.formattedAddress, matches.formattedAddress, matches);
+				break;
+			default:
+				console.log("undefined type");
+				break;
+		}
+		console.log(searches);
+	};
+
+	var fetchAll = function() {
+		var deferred = $q.defer();
+		var lclData = [];
+
+		var i;
+		for (i = searches.length - 1; i > -1; i--) {
+			console.log(searches[i].title);
+			lclData.push(searches[i]);
+		}
+
+		deferred.resolve(lclData);
+		return deferred.promise;
+	};
+
+	return {
+		add: add,
+		fetchAll: fetchAll
+	}
+})
+
 .factory('$localstorage', ['$window',
 	function($window) {
 		return {

@@ -39,11 +39,11 @@
             </p>
         </div>
 
-        <div class="list" ng-show="data.showFavs">
-            <p>Your Favorite Stops:</p>
+        <div class="list" ng-show="data.showSearches">
+            <p>Recent Searches:</p>
             <ion-list>
-                <ion-item bindonce ng-repeat="item in data.favorites " href="#/tab/atstop/{{item.stopId}}/{{item.stopName}}">
-                    {{item.stopName}}
+                <ion-item bindonce ng-repeat="item in data.searches" ng-click="searchesGo(item.data)">
+                    {{item.title}}
                 </ion-item>
             </ion-list>
         </div>
