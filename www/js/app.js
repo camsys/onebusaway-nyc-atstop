@@ -49,7 +49,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 
-.run(function($rootScope, $ionicLoading, $ionicPopup, $cordovaNetwork) {
+.run(function($rootScope, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout) {
 	$rootScope.$on('loading:show', function() {
 		$ionicLoading.show({
 			template: 'Loading',
@@ -65,17 +65,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		$ionicLoading.hide();
 
 		if (data.config.url.indexOf("autocomplete") == -1) {
-			$ionicPopup.alert({
+			var popup = $ionicPopup.alert({
 				title: "Error",
 				content: "Something went wrong. Please check your internet connection."
-			})
-				.then(function(result) {
-					if (result) {
-						// ionic.Platform.exitApp();
-					}
-				});
+			});
+					$timeout(function() {
+						popup.close(); //close the popup after 3 seconds
+						}, 3000);
 		}
-	});
+
+		}
+	);
 })
 
 

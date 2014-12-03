@@ -36,12 +36,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					stopsAndBuses[i] = {
 						lat: val.lat,
 						lng: val.lon,
-						/*
-						icon: {
-							iconUrl: 'img/stop_icons/bullet.png',
-							iconSize: [20, 20]
-						},
-						*/
 						icon: icons.stop,
 						focus: false,
 						stopId: val.id,
@@ -50,7 +44,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					i++;
 				});
 				stopsDefer.resolve();
-				//console.log(stopsAndBuses);
 			});
 
 			stopsDefer.promise.then(function() {
@@ -83,7 +76,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		};
 
-		// Draw Route Polylines
 		var drawRoute = function(route) {
 			RouteService.getPolylines(route).then(function(results) {
 				var route = [];
@@ -365,7 +357,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
 					} else if (v['progress'] == 'layover,prevTrip') {
 						v['distance'] = [v['distance'], "At terminal. "];
-
 						if (!$filter('isUndefinedOrEmpty')(v['departsTerminal'])) {
 							v['distance'].push("Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime'));
 						}
@@ -570,10 +561,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			var R = 6371;
 			var dLat = deg2rad(lat2 - lat1);
 			var dLon = deg2rad(lon2 - lon1);
-			var a =
-				Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-				Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-				Math.sin(dLon / 2) * Math.sin(dLon / 2);
+			var a =	Math.sin(dLat / 2) * Math.sin(dLat / 2) +Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *Math.sin(dLon / 2) * Math.sin(dLon / 2);
 			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 			var d = R * c * 1000;
 			return parseInt(d);
@@ -584,7 +572,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.refresh = function() {
-			$scope.getNearbyStopsAndRoutes();
+			$scope.getNearbyStopsAndRoutesGPS();
 		};
 		
 		var directionToDegrees = function(direction) {
@@ -608,7 +596,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				},
 				currentStop: {
 					type: 'div',
-					iconSize: [10, 10],
+					iconSize: [14, 14],
 					className: 'stop-current'
 				}
 			};
@@ -659,21 +647,26 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
 				}, function(error) {
 					$ionicLoading.hide();
-
-					$ionicPopup.alert({
-						title: "Error",
-						content: "Cannot access your position. Check if location is enabled."
-					})
-						.then(function(result) {
-							if (result) {
-								// ionic.Platform.exitApp();
-							}
-						});
+					var popup = $ionicPopup.alert({
+						content: "Cannot access your position. Check if location services are enabled."
+					});
+					$timeout(function() {
+						popup.close();
+						}, 3000);
 				}
 			);
 		}
 
 		var map = function() {
+				$scope.$on('leafletDirectiveMarker.click', function(event, args) {
+				console.log(event);
+				var object = $scope.markers[args.markerName];
+					console.log(object);
+				leafletData.getMap().then(function(map) {
+					console.log('hi!');
+					//need to do something interesting here... scroll?
+				});
+			});
 			leafletData.getMap().then(function(map) {
 				//leaflet attribution is not required
 				map.attributionControl.setPrefix('');
@@ -708,13 +701,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			var stops = [];
 			var i = 0;
 			angular.forEach($scope.data.stops, function (s){
-					console.log(directionToDegrees(s["direction"]));
 					stops[i] = {
 						lat: s["lat"],
 						lng: s["lon"],
-
-						iconAngle: directionToDegrees(s["direction"]),
-						focus: false,
+						icon: icons.stop,
+						//iconAngle: directionToDegrees(s["direction"]),
+						focus: false
 				};
 				i++;
 			});
@@ -749,16 +741,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 								lng: v.lng
 							});
 						});
-
 						i++;
 					});
-
 					$scope.paths = route;
 
 				});
 			} else {
 				var stops = [];
-				console.log(lat, lon);
 				stops[0] = {
 					lat: lat,
 					lng: lon,
