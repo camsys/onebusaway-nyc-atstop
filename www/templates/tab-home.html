@@ -12,7 +12,7 @@
                     Search
                 </button>
             </div>
-            <p class="highlight" ng-hide="data.notifications">{{data.notifications}}</p>
+            <p class="highlight">{{data.notifications}}</p>
             <ion-list>
                 <ion-item bindonce ng-repeat="item in data.results" ng-click="searchAndGo(item)">
                     <strong>{{item}}</strong>
