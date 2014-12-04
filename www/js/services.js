@@ -18,11 +18,11 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			searches.splice(0, 1);
 		}
 
-		searches.push({
+		Array.prototype.push.apply(searches, [{
 			term: term,
 			title: title,
 			data: data
-		});
+		}]);
 
 		window.localStorage.setItem("searches", JSON.stringify(searches));
 	};
