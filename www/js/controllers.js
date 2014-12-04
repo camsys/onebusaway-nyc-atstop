@@ -82,7 +82,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				var i = 0;
 
 				angular.forEach(results.polylines, function(val, key) {
-					route[i] = {
+					route['p' + i] = {
 						color: '#' + results.color,
 						weight: 4,
 						latlngs: [],
@@ -90,7 +90,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					};
 
 					angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function(v, k) {
-						route[i].latlngs.push({
+						route['p' + i].latlngs.push({
 							lat: v.lat,
 							lng: v.lng
 						});
@@ -103,8 +103,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 				leafletData.getMap().then(function(map) {
 					map.fitBounds([
-						[$scope.paths['0']['latlngs'][0]['lat'], $scope.paths['0']['latlngs'][0]['lng']],
-						[$scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lat'], $scope.paths['0']['latlngs'][$scope.paths['0']['latlngs'].length - 1]['lng']]
+						[$scope.paths['p0']['latlngs'][0]['lat'], $scope.paths['p0']['latlngs'][0]['lng']],
+						[$scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lat'], $scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lng']]
 					]);
 				});
 
@@ -759,7 +759,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					var i = 0;
 
 					angular.forEach(results.polylines, function(val, key) {
-						route[i] = {
+						route['p' + i] = {
 							color: '#' + results.color,
 							weight: 3,
 							latlngs: [],
@@ -767,7 +767,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						};
 
 						angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function(v, k) {
-							route[i].latlngs.push({
+							route['p' + i].latlngs.push({
 								lat: v.lat,
 								lng: v.lng
 							});
