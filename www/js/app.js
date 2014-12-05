@@ -114,6 +114,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	.state('tab.favorites', {
 		url: '/favorites',
+		cache: false,
 		views: {
 			'tab-favorites': {
 				templateUrl: 'templates/tab-favorites.html',
@@ -164,6 +165,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	.state('tab.atstop', {
 		url: '/atstop/:stopId/:stopName',
+		cache: false,
 		views: {
 			'tab-home': {
 				templateUrl: 'templates/atstop.html',
@@ -174,6 +176,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	.state('tab.atstop-favorites', {
 		url: '/atstop-favorites/:stopId/:stopName',
+		cache: false,
 		views: {
 			'tab-favorites': {
 				templateUrl: 'templates/atstop.html',

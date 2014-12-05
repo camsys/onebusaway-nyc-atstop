@@ -86,6 +86,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
 .factory('FavoritesService', function($q, $window) {
 	var add = function(stopId, stopName) {
+		console.log('added');
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
 		data[stopId] = {
 			"stopId": stopId,
