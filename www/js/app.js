@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova', 'pasvaz.bindonce', 'angular-data.DSCacheFactory'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova', 'angular-data.DSCacheFactory'])
 
 // global timeout variable
 .value('httpTimeout', 5000)

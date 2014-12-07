@@ -2,7 +2,7 @@
     <ion-content ng-show="data.loaded" has-bouncing="true">
 
         <ion-list>
-            <ion-item bindonce ng-repeat="item in data.favorites " href="#/tab/atstop-favorites/{{item.stopId}}/{{item.stopName}}">
+            <ion-item ng-repeat="item in ::data.favorites " href="#/tab/atstop-favorites/{{item.stopId}}/{{item.stopName}}">
                 {{item.stopName}}
                 <ion-option-button class="button-positive" ng-click="remove(item.stopId)">
                     <i class="icon ion-trash-b"></i>
