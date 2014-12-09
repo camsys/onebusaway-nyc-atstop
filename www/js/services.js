@@ -43,16 +43,14 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				console.log("undefined type");
 				break;
 		}
-		console.log(searches);
 	};
 
 	var fetchAll = function() {
 		var deferred = $q.defer();
 		var lclData = [];
-
 		var i;
+		
 		for (i = searches.length - 1; i > -1; i--) {
-			console.log(searches[i].title);
 			lclData.push(searches[i]);
 		}
 

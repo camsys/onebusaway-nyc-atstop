@@ -267,6 +267,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		}
 
 		$scope.searchAndGo = function(term) {
+			// for search page, enter searches if only one autocomplete result is returned.
+			if ($scope.data.results.length == 1){
+				term = $scope.data.results[0];
+			}
+
 			SearchService.search(term).then(
 				function(matches) {
 					SearchesService.add(matches);
