@@ -85,7 +85,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				scope.$apply(function() {
 					scope.$eval(attrs.ngEnter);
 				});
-
 				event.preventDefault();
 			}
 		});
