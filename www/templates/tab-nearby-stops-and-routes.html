@@ -3,13 +3,13 @@
     </ion-nav-buttons>
 
     <ion-content ng-show="data.loaded" has-bouncing="true">
-		<ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
+
 		<div data-tap-disabled="true">
     	<leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="200px"></leaflet>
 		</div>
-
+                <ion-scroll style="height: 100%">
 		        <ion-list>
-		            <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15"><ion-scroll direction="x" has-bouncing=false>
+		            <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15">
 		                {{item.name}} ({{item.direction}}-bound)
 		                <div class="row">
 		                   <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showOnMap('route', r.id); showOnMap('stop', item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
@@ -23,10 +23,10 @@
 			                <a class="button button-positive button-small button-clear" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
 			                    See more
 			                </a>
-							</ion-scroll>
+
 		            </ion-item>
 		        </ion-list>
-
+                </ion-scroll>
         <p>{{data.notifications}}</p>
     </ion-content>
 		
