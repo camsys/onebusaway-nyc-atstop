@@ -14,7 +14,7 @@
             </div>
             <p class="highlight">{{data.notifications}}</p>
             <ion-list>
-                <ion-item ng-repeat="item in data.results" ng-click="searchAndGo(item)">
+                <ion-item ng-repeat="item in data.results  track by $index" ng-click="searchAndGo(item)">
                     <strong>{{::item}}</strong>
                 </ion-item>
             </ion-list>
