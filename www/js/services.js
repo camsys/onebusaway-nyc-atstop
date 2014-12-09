@@ -2,7 +2,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
 .factory('SearchesService', function($q, $window) {
 	var searches = [];
-	searches = Array.from(JSON.parse($window.localStorage['searches'] || '[]'));
+	searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
 
 	var insert = function(term, title, data) {
 		if (searches.length > 0) {
