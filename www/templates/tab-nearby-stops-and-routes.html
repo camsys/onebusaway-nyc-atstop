@@ -14,10 +14,16 @@
 		                <div class="row">
 		                   <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showOnMap('route', r.id); showOnMap('stop', item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
 		                </div>
-										
+						
+						<!--				
 		                <button class="button button-positive button-small button-clear" ng-click="modal.show();getBuses(item.id);">
 		                    See more
-		                </button></ion-scroll>
+		                </button>
+						-->
+			                <a class="button button-positive button-small button-clear" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+			                    See more
+			                </a>
+							</ion-scroll>
 		            </ion-item>
 		        </ion-list>
 

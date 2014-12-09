@@ -1,7 +1,8 @@
 angular.module('starter.services', ['ionic', 'configuration'])
 
 .factory('SearchesService', function($q, $window) {
-	var searches = JSON.parse($window.localStorage['searches'] || '[]');
+	var searches = [];
+	searches = Array.from(JSON.parse($window.localStorage['searches'] || '[]'));
 
 	var insert = function(term, title, data) {
 		if (searches.length > 0) {
@@ -18,11 +19,11 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			searches.splice(0, 1);
 		}
 
-		Array.prototype.push.apply(searches, [{
+		searches.push({
 			term: term,
 			title: title,
 			data: data
-		}]);
+		});
 
 		window.localStorage.setItem("searches", JSON.stringify(searches));
 	};
