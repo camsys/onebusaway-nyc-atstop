@@ -593,7 +593,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.refresh = function() {
-			$scope.getNearbyStopsAndRoutesGPS();
+			if ($location.$$path == "/tab/nearby-stops-and-routes") {
+				$scope.getNearbyStopsAndRoutesGPS();
+			} else {
+				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
+			}
 			$scope.$broadcast('scroll.refreshComplete');
 		};
 
@@ -686,7 +690,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				console.log(event);
 				console.log(args);
 				var object = $scope.markers[args.markerName];
+				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/atstop/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
+					latLng = [object.lat, object.lng],
+					popup = L.popup().setContent(content).setLatLng(latLng);
 				leafletData.getMap().then(function(map) {
+					popup.openOn(map);
 					console.log('hi!');
 					//need to do something interesting here... show stop information below map and hide others?
 				});
@@ -732,9 +740,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			var stops = [];
 			var i = 0;
 			angular.forEach($scope.data.stops, function(s) {
+				console.log(s);
 				stops[i] = {
 					lat: s["lat"],
 					lng: s["lon"],
+					stopId: s["id"],
+					stopName: s["name"],
 					icon: icons.stop,
 					//iconAngle: directionToDegrees(s["direction"]),
 					focus: false
@@ -789,7 +800,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				};
 
 				leafletData.getMap().then(function(map) {
-					map.setView(stops[0], 15);
+					map.setView(stops[0], 13);
 				});
 				$scope.markers = stops;
 			}

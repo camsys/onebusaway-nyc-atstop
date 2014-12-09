@@ -25,7 +25,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	});
 })
 
-.config(function($httpProvider) {
+.config(function($httpProvider, $ionicConfigProvider) {
+	$ionicConfigProvider.tabs.position('bottom');
+
 	$httpProvider.interceptors.push(function($rootScope) {
 		return {
 			request: function(config) {
