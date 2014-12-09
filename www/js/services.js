@@ -48,7 +48,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var lclData = [];
 		var i;
-		
+
 		for (i = searches.length - 1; i > -1; i--) {
 			lclData.push(searches[i]);
 		}
