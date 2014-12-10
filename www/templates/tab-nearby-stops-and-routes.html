@@ -10,8 +10,6 @@
     	<leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="{{data.mapHeight}}px"></leaflet>
 		</div>
                 <ion-scroll style="height: {{data.listHeight}}px">
-						
-				        <p>{{data.notifications}}</p>
 		        <ion-list>
 		            <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15">
 		                {{item.name}} ({{item.direction}}-bound)
@@ -30,6 +28,7 @@
 
 		            </ion-item>
 		        </ion-list>
+								        <p>{{data.notifications}}</p>
                 </ion-scroll>
     </ion-content>
 		
