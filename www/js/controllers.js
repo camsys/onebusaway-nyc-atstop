@@ -582,7 +582,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showRoutes": false,
 			"showStops": true,
 			"results": [],
-			"mapHeight": Math.floor(document.getElementsByTagName('ion-content')[0].clientHeight / 2)-90,
+			"mapHeight": Math.floor(document.getElementsByTagName('ion-content')[0].clientHeight / 2),
 			"listHeight": Math.floor(document.getElementsByTagName('ion-content')[0].clientHeight / 2)
 		};
 
@@ -764,7 +764,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.showOnMap = function(type, ID, lat, lon, name) {
-			$ionicScrollDelegate.scrollTop();
 			lat = typeof lat !== 'undefined' ? lat : "";
 			lon = typeof lon !== 'undefined' ? lon : "";
 			name = typeof name !== 'undefined' ? name : "";
