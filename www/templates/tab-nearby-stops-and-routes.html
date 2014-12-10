@@ -1,13 +1,16 @@
 <ion-view view-title="Nearby">
     <ion-nav-buttons side="secondary">
     </ion-nav-buttons>
+	
 
-    <ion-content ng-show="data.loaded" has-bouncing="true">
 
+    <ion-content ng-show="data.loaded" has-bouncing="true" scroll="false">
+	
 		<div data-tap-disabled="true">
-    	<leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="200px"></leaflet>
+    	<leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="{{data.mapHeight}}px"></leaflet>
 		</div>
-                <ion-scroll style="height: 50%">
+                <ion-scroll style="height: {{data.listHeight}}px">
+						
 				        <p>{{data.notifications}}</p>
 		        <ion-list>
 		            <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15">

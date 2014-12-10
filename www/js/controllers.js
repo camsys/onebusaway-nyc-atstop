@@ -570,6 +570,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 // Nearby Stops and Routes
 .controller('NearbyStopsAndRoutesCtrl', ['$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'leafletBoundsHelpers', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'MAPBOX_KEY',
 	function($stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, leafletBoundsHelpers, $ionicModal, AtStopService, $ionicScrollDelegate, MAPBOX_KEY) {
+		
 		$scope.data = {
 			"loaded": true,
 			"stops": [],
@@ -580,7 +581,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"val": false,
 			"showRoutes": false,
 			"showStops": true,
-			"results": []
+			"results": [],
+			"mapHeight": Math.floor(document.getElementsByTagName('ion-content')[0].clientHeight / 2)-90,
+			"listHeight": Math.floor(document.getElementsByTagName('ion-content')[0].clientHeight / 2)
 		};
 
 		var getDistanceInM = function(lat1, lon1, lat2, lon2) {
