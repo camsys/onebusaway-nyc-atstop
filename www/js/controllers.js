@@ -17,7 +17,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			stop: {
 				type: 'div',
 				iconSize: [13, 13],
-				className: 'stop',
+				className: 'stop'
 			}
 		}
 
