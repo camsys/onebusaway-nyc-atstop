@@ -268,7 +268,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.searchAndGo = function(term) {
 			// for search page, enter searches if only one autocomplete result is returned.
-			if ($scope.data.results.length == 1){
+			if ($scope.data.results.length == 1) {
 				term = $scope.data.results[0];
 			}
 
@@ -570,7 +570,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 // Nearby Stops and Routes
 .controller('NearbyStopsAndRoutesCtrl', ['$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'leafletBoundsHelpers', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', 'MAPBOX_KEY',
 	function($stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, leafletBoundsHelpers, $ionicModal, AtStopService, $ionicScrollDelegate, MAPBOX_KEY) {
-		
+
 		$scope.data = {
 			"loaded": true,
 			"stops": [],
@@ -583,7 +583,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showStops": true,
 			"results": [],
 			"mapHeight": Math.floor(document.getElementsByTagName('ion-content')[0].clientHeight / 2),
-			"listHeight": Math.floor(document.getElementsByTagName('ion-content')[0].clientHeight / 2)
+			"listHeight": Math.floor(document.getElementsByTagName('ion-content')[0].clientHeight / 2),
+			"url": "/tab/atstop"
 		};
 
 		var getDistanceInM = function(lat1, lon1, lat2, lon2) {
@@ -676,7 +677,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			$ionicLoading.show();
 			$cordovaGeolocation.getCurrentPosition({
 				enableHighAccuracy: false,
-				timeout: 5000
+				timeout: 10000
 			}).then(
 				function(position) {
 					$scope.data.val = true;
@@ -698,7 +699,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				console.log(event);
 				console.log(args);
 				var object = $scope.markers[args.markerName];
-				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/atstop/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
+				var content = '<p>' + object.stopName + '</p>' + '<a href="#' + $scope.data.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
 					latLng = [object.lat, object.lng],
 					popup = L.popup().setContent(content).setLatLng(latLng);
 				leafletData.getMap().then(function(map) {
@@ -745,15 +746,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		plotNearbyStops = function() {
+			$scope.markers = {};
+			$scope.paths = {};
 			var stops = [];
 			var i = 0;
+
 			angular.forEach($scope.data.stops, function(s) {
-				console.log(s);
 				stops[i] = {
 					lat: s["lat"],
 					lng: s["lon"],
 					stopId: s["id"],
-					stopName: s["name"],
+					stopName: $filter('encodeStopName')(s["name"]),
 					icon: icons.stop,
 					//iconAngle: directionToDegrees(s["direction"]),
 					focus: false
@@ -818,6 +821,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			map();
 			//test(40.678178, -73.944158);
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
+				$scope.data.url = "/tab/atstop-gps";
 				$scope.getNearbyStopsAndRoutesGPS();
 			} else {
 				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);

@@ -134,6 +134,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
+	.state('tab.atstop-gps', {
+		url: '/atstop-gps/:stopId/:stopName',
+		cache: false,
+		views: {
+			'tab-nearby-stops-and-routes': {
+				templateUrl: 'templates/atstop.html',
+				controller: 'AtStopCtrl'
+			}
+		}
+	})
+
 	.state('tab.route', {
 		url: '/route/:routeId/:routeName',
 		views: {
