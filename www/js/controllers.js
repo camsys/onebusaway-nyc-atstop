@@ -727,8 +727,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				};
 			} else {
 				mapCenter = {
-					lat: 40.7127837,
-					lng: -74.0059413,
+					autoDiscover: true,
 					zoom: 15
 				};
 			}
@@ -818,6 +817,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 				leafletData.getMap().then(function(map) {
 					map.setView(stops[0], 13);
+
 				});
 				$scope.markers = stops;
 			}
