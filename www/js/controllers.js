@@ -36,7 +36,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					stopsAndBuses[i] = {
 						lat: val.lat,
 						lng: val.lon,
-						icon: icons.stop,
+						icon: {
+							iconUrl: 'img/stop_icons/stop.svg',
+							iconSize: [20, 20]
+						},
 						focus: false,
 						stopId: val.id,
 						stopName: lclName
@@ -757,7 +760,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					lng: s["lon"],
 					stopId: s["id"],
 					stopName: $filter('encodeStopName')(s["name"]),
-					icon: icons.stop,
+					icon: {
+						iconUrl: 'img/stop_icons/stop.svg',
+						iconSize: [20, 20]
+					},
 					//iconAngle: directionToDegrees(s["direction"]),
 					focus: false
 				};
