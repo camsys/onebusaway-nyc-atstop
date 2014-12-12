@@ -199,6 +199,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	.state('tab.map', {
 		url: '/map/:routeId/:stopId',
+		cache: false,
 		views: {
 			'tab-home': {
 				templateUrl: 'templates/map.html',
