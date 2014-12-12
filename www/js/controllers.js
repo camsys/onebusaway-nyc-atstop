@@ -105,6 +105,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.paths = route;
 
 				leafletData.getMap().then(function(map) {
+					console.log('route');
 					map.fitBounds([
 						[$scope.paths['p0']['latlngs'][0]['lat'], $scope.paths['p0']['latlngs'][0]['lng']],
 						[$scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lat'], $scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lng']]
@@ -120,7 +121,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			// watch marker click events
 			$scope.$on('leafletDirectiveMarker.click', function(event, args) {
 				var object = $scope.markers[args.markerName];
-				console.log(object.stopName);
 				if ($filter('isUndefinedOrEmpty')(object.stopName)) {
 					var content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>",
 						latLng = [object.lat, object.lng],
@@ -578,6 +578,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"loaded": true,
 			"stops": [],
 			"routes": [],
+			markers: {},
 			"lat": "",
 			"lon": "",
 			"notifications": "",

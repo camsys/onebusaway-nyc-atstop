@@ -126,6 +126,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	.state('tab.nearby-stops-and-routes', {
 		url: '/nearby-stops-and-routes',
+		cache: false,
 		views: {
 			'tab-nearby-stops-and-routes': {
 				templateUrl: 'templates/tab-nearby-stops-and-routes.html',
@@ -157,6 +158,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	.state('tab.geolocation', {
 		url: '/geolocation/:latitude/:longitude/:address',
+		cache: false,
 		views: {
 			'tab-home': {
 				templateUrl: 'templates/tab-nearby-stops-and-routes.html',
