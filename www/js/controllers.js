@@ -816,6 +816,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				};
 
 				leafletData.getMap().then(function(map) {
+					map.closePopup();
 					map.setView(stops[0], 13);
 
 				});
