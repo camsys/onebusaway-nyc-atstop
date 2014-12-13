@@ -1,6 +1,6 @@
 # At Stop #
 
-A hybrid mobile app that provides information about when the next bus will arrive at your stop. The app uses free [MTA Bus Time Developer API](http://bustime.mta.info/wiki/Developers/Index)'s to get the real-time location of the buses serving a particular stop. The app is built on top of [Ionic Framework Mobile](http://ionicframework.com/), [AngularJS](https://angularjs.org/) and [PhoneGap](http://phonegap.com/).
+A hybrid mobile app that provides information about when the next bus will arrive at your stop. The app uses free [MTA Bus Time Developer API](http://bustime.mta.info/wiki/Developers/Index)'s to get the real-time location of the buses serving a particular stop. The app is built on top of [Ionic Framework](http://ionicframework.com/), [AngularJS](https://angularjs.org/) and [PhoneGap](http://phonegap.com/).
 
 ### Setting up the project ###
 
@@ -9,7 +9,7 @@ A hybrid mobile app that provides information about when the next bus will arriv
 
 ### Running and testing ###
 
-To run and test the app, use [The PhoneGap Developer App](http://app.phonegap.com/). In order to build the native mobile app, use [Adobe PhoneGap Build](https://build.phonegap.com/). Rename the **config.tmpl.xml** to **config.xml**. You can also use the [PhoneGap Emulatation extension](http://emulate.phonegap.com/) for Google Chrome. *NOTE:* The app uses several objects, like the connection object from the Apache Cordova framework, which may not be available locally (in a Web browser).
+To run and test the app, use [PhoneGap Developer App](http://app.phonegap.com/). In order to build the native mobile app, use [Adobe PhoneGap Build](https://build.phonegap.com/). Rename the **config.tmpl.xml** to **config.xml**. You can also use [PhoneGap Emulatation extension](http://emulate.phonegap.com/) for Google Chrome. *NOTE:* The app uses several objects, like the connection object from the Apache Cordova framework, which may not be available locally (in a Web browser).
 
 ### Project License ###
 
