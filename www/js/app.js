@@ -236,6 +236,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	.state('tab.map-favorites', {
 		url: '/map-favorites/:routeId/:stopId',
+		cache: false,
 		views: {
 			'tab-favorites': {
 				templateUrl: 'templates/map.html',

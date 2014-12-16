@@ -586,8 +586,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showRoutes": false,
 			"showStops": true,
 			"results": [],
-			"mapHeight": Math.floor(document.getElementsByTagName('ion-view')[0].clientHeight / 2) - 90,
-			"listHeight": Math.floor(document.getElementsByTagName('ion-view')[0].clientHeight / 2),
+			"mapHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2) - 90,
+			"listHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2),
 			"url": "/tab/atstop"
 		};
 
@@ -831,7 +831,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.init = (function() {
 			$scope.data.results = "";
 			map();
-			//test(40.678178, -73.944158);
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
 				console.log("GPS Mode");
 				$scope.data.url = "/tab/atstop-gps";
