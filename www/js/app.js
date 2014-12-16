@@ -27,8 +27,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .config(function($httpProvider, $ionicConfigProvider) {
 	$ionicConfigProvider.tabs.position('bottom');
+	$ionicConfigProvider.views.maxCache(2);
 
-	$httpProvider.interceptors.push(function($rootScope) {
+
+		$httpProvider.interceptors.push(function($rootScope) {
 		return {
 			request: function(config) {
 				$rootScope.$broadcast('loading:show');

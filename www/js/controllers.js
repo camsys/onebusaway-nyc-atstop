@@ -836,27 +836,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			}
 		})();
 
-		$ionicModal.fromTemplateUrl('templates/modal.html', {
-			scope: $scope
-		}).then(function(modal) {
-			$scope.modal = modal;
-		});
-
-		//Cleanup the modal when we're done with it!
-		$scope.$on('$destroy', function() {
-			$scope.modal.remove();
-		});
-
-		// Execute action on hide modal
-		$scope.$on('modal.hidden', function() {
-			// Execute action
-		});
-
-		// Execute action on remove modal
-		$scope.$on('modal.removed', function() {
-			// Execute action
-		});
-
 		$scope.getBuses = function(ID) {
 			AtStopService.getBuses(ID).then(function(results) {
 				if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
