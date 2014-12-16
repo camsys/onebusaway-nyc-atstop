@@ -62,6 +62,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	// State Change Event
 	$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+		console.log(fromState);
 		$timeout(function() {
 			$ionicLoading.hide()
 		}, 2000);
@@ -116,7 +117,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		abstract: true,
 		templateUrl: "templates/tabs.html"
 	})
-
+	
+	
+	// HOME
+	
 	.state('tab.home', {
 		url: '/home',
 		cache: false,
@@ -127,40 +131,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-
-	.state('tab.favorites', {
-		url: '/favorites',
-		cache: false,
-		views: {
-			'tab-favorites': {
-				templateUrl: 'templates/tab-favorites.html',
-				controller: 'FavoritesCtrl'
-			}
-		}
-	})
-
-	.state('tab.nearby-stops-and-routes', {
-		url: '/nearby-stops-and-routes',
-		cache: false,
-		views: {
-			'tab-nearby-stops-and-routes': {
-				templateUrl: 'templates/tab-nearby-stops-and-routes.html',
-				controller: 'NearbyStopsAndRoutesCtrl'
-			}
-		}
-	})
-
-	.state('tab.atstop-gps', {
-		url: '/atstop-gps/:stopId/:stopName',
-		cache: false,
-		views: {
-			'tab-nearby-stops-and-routes': {
-				templateUrl: 'templates/atstop.html',
-				controller: 'AtStopCtrl'
-			}
-		}
-	})
-
+	
 	.state('tab.route', {
 		url: '/route/:routeId/:routeName',
 		views: {
@@ -170,7 +141,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-
+	
 	.state('tab.geolocation', {
 		url: '/geolocation/:latitude/:longitude/:address',
 		cache: false,
@@ -181,17 +152,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-
-	.state('tab.stopcode', {
-		url: '/stopcode/:stopId',
-		views: {
-			'tab-home': {
-				templateUrl: 'templates/stopcode.html',
-				controller: 'StopcodeCtrl'
-			}
-		}
-	})
-
+	
 	.state('tab.atstop', {
 		url: '/atstop/:stopId/:stopName',
 		cache: false,
@@ -199,6 +160,42 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			'tab-home': {
 				templateUrl: 'templates/atstop.html',
 				controller: 'AtStopCtrl'
+			}
+		}
+	})	
+	
+	.state('tab.map', {
+		url: '/map/:routeId/:stopId',
+		cache: false,
+		views: {
+			'tab-home': {
+				templateUrl: 'templates/map.html',
+				controller: 'MapCtrl'
+			}
+		}
+	})
+
+	.state('tab.about', {
+		url: '/about',
+		views: {
+			'tab-home': {
+				templateUrl: 'templates/about.html',
+				controller: 'AboutCtrl'
+			}
+		}
+	})	
+	
+	
+	
+	// FAVS
+
+	.state('tab.favorites', {
+		url: '/favorites',
+		cache: false,
+		views: {
+			'tab-favorites': {
+				templateUrl: 'templates/tab-favorites.html',
+				controller: 'FavoritesCtrl'
 			}
 		}
 	})
@@ -213,18 +210,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-
-	.state('tab.map', {
-		url: '/map/:routeId/:stopId',
-		cache: false,
-		views: {
-			'tab-home': {
-				templateUrl: 'templates/map.html',
-				controller: 'MapCtrl'
-			}
-		}
-	})
-
+	
 	.state('tab.map-favorites', {
 		url: '/map-favorites/:routeId/:stopId',
 		cache: false,
@@ -232,6 +218,33 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			'tab-favorites': {
 				templateUrl: 'templates/map.html',
 				controller: 'MapCtrl'
+			}
+		}
+	})
+	
+	
+	
+	// NEARBY
+	
+	.state('tab.nearby-stops-and-routes', {
+		url: '/nearby-stops-and-routes',
+		cache: false,
+		views: {
+			'tab-nearby-stops-and-routes': {
+				templateUrl: 'templates/tab-nearby-stops-and-routes.html',
+				controller: 'NearbyStopsAndRoutesCtrl'
+			}
+		}
+	})
+
+
+	.state('tab.atstop-gps', {
+		url: '/atstop-gps/:stopId/:stopName',
+		cache: false,
+		views: {
+			'tab-nearby-stops-and-routes': {
+				templateUrl: 'templates/atstop.html',
+				controller: 'AtStopCtrl'
 			}
 		}
 	})
@@ -243,16 +256,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			'tab-nearby-stops-and-routes': {
 				templateUrl: 'templates/map.html',
 				controller: 'MapCtrl'
-			}
-		}
-	})
-	
-	.state('tab.about', {
-		url: '/about',
-		views: {
-			'tab-home': {
-				templateUrl: 'templates/about.html',
-				controller: 'AboutCtrl'
 			}
 		}
 	})
