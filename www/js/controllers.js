@@ -5,6 +5,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	function($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, GeolocationService, $filter, $q, $interval, MAPBOX_KEY) {
 		$scope.paths = {};
 		$scope.markers = {};
+		$scope.url = "atstop"
 
 		// Refresh Map
 		var refresh = function() {
@@ -127,7 +128,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						popup = L.popup().setContent(content).setLatLng(latLng);
 				} else {
 					console.log(object);
-					var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/atstop/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
+					var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
 						latLng = [object.lat, object.lng],
 						popup = L.popup().setContent(content).setLatLng(latLng);
 				}
@@ -169,6 +170,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		});
 
 		$scope.init = (function() {
+			if ($location.$$path.indexOf("map-favorites") > -1) {
+				$scope.url = "atstop-favorites";
+			} else if ($location.$$path.indexOf("map-gps")) {
+				$scope.url = "atstop-gps";
+			}
+
 			map();
 			drawRoute($stateParams.routeId);
 			drawStopsAndBuses($stateParams.routeId);
@@ -453,6 +460,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.init = (function() {
 			if ($location.$$path.indexOf("atstop-favorites") > -1) {
 				$scope.data.link = "map-favorites";
+			} else if ($location.$$path.indexOf("atstop-gps") > -1) {
+				$scope.data.link = "map-gps";
 			}
 
 			if (FavoritesService.inFavorites($scope.data.stopId)) {
@@ -679,6 +688,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.getNearbyStopsAndRoutesGPS = function() {
 			console.log("getNearbyStopsAndRoutesGPS called");
+
+			$scope.data.val = true;
+			$scope.getNearbyStopsAndRoutes(40.678178, -73.944158);
+			/*
 			$ionicLoading.show();
 			$cordovaGeolocation.getCurrentPosition({
 				enableHighAccuracy: false,
@@ -700,6 +713,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					}, 3000);
 				}
 			);
+			*/
 		}
 
 		var map = function() {
