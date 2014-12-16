@@ -580,8 +580,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'leafletBoundsHelpers', '$ionicModal', 'AtStopService', '$ionicScrollDelegate', '$timeout', 'MAPBOX_KEY',
-	function($stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, leafletBoundsHelpers, $ionicModal, AtStopService, $ionicScrollDelegate, $timeout, MAPBOX_KEY) {
+.controller('NearbyStopsAndRoutesCtrl', ['$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'leafletBoundsHelpers', 'AtStopService', '$ionicScrollDelegate', '$timeout', 'MAPBOX_KEY',
+	function($stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, leafletBoundsHelpers, AtStopService, $ionicScrollDelegate, $timeout, MAPBOX_KEY) {
 
 		$scope.data = {
 			"loaded": true,

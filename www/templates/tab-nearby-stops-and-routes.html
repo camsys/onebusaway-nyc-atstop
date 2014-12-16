@@ -33,26 +33,4 @@
 								        <p>{{data.notifications}}</p>
                 </ion-scroll>
     </ion-content>
-		
-    <script id="templates/modal.html" type="text/ng-template">
-      <ion-modal-view>
-        <ion-header-bar class="bar bar-header bar-positive">
-          <h1 class="title">Upcoming</h1>
-          <button class="button button-clear button-primary" ng-click="modal.hide()">Close</button>
-        </ion-header-bar>
-        <ion-content class="padding">
-        <div ng-repeat="(routeId, info) in ::data.results" class=" ">
-            <div class="row item item-divider">
-                <div class="route col vcenter"><a href="#/tab/route/{{routeId}}/{{info.name}}">{{info.name}}</a></div>
-            </div>
-            <ion-list>
-                <ion-item ng-repeat="item in ::info.distances">
-                    <h2>{{item.destination}}</h2>
-										{{item.distance}}
-                </ion-item>
-            </ion-list>
-        </div>
-        </ion-content>
-      </ion-modal-view>
-    </script>
 </ion-view>
