@@ -27,6 +27,41 @@
     <script src="js/angular-leaflet-directive.min.js"></script>
 
     <script>
+
+        describe('AtStopService Tests', function(){
+            var ctrl, scope;
+            beforeEach(module('starter'));
+
+            it('should return results for a stop', function () {
+                var stop = 'MTA_400861';
+                inject(function(AtStopService){
+                    AtStopService.getBuses(stop).then(function(results){
+                        expect(results.length).to.BeGreaterThan(0);
+                    })
+                })
+            });
+            // need to add tests for stop, (stop,route)
+
+
+        });
+
+
+        describe('Geolocation Tests', function (){
+            var ctrl, scope;
+            beforeEach(module('starter'));
+
+
+            it('should return nearby stops', function () {
+                var lat= 40.748433;
+                var lon=-73.985656;
+                inject(function (GeolocationService) {
+                    GeolocationService.getStops(lat, lon).then(function(results) {
+                        expect(results.length).to.BeGreaterThan(0);
+                    });
+                });
+            })
+
+        });
         describe('Filter: encodeStopName', function () {
             var encodeStopName;
 
@@ -61,22 +96,6 @@
 
         });
 
-        describe('Geolocation Tests', function (){
-           var ctrl, scope;
-            beforeEach(module('starter'));
-
-
-            it('should return nearby stops', function () {
-                var lat= 40.748433;
-                var lon=-73.985656;
-                inject(function (GeolocationService) {
-                GeolocationService.getStops(lat, lon).then(function(results) {
-                    expect(results.length).to.BeGreaterThan(0);
-                });
-                });
-            })
-
-        });
 
 
         describe('No Scheduled Service Tests', function () {
@@ -145,6 +164,6 @@
     </script>
 </head>
 
-<body></body>
+<body>(note: tests depend on MTA Bus Time configured in config.js)</body>
 
 </html>

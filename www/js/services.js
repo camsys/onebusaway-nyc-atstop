@@ -161,8 +161,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
 .factory('RouteService', function($q, $http, httpTimeout, API_END_POINT, API_KEY, DSCacheFactory) {
 	DSCacheFactory('dataCache', {
-		maxAge: 600000, // Items added to this cache expire after 15 minutes.
-		cacheFlushInterval: 600000, // This cache will clear itself every hour.
+		maxAge: 600000,
+		cacheFlushInterval: 600000,
 		deleteOnExpire: 'aggressive' // Items will be deleted from this cache right when they expire.
 	});
 
