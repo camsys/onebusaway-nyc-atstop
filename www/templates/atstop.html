@@ -17,7 +17,8 @@
             <div ng-repeat="(routeId, info) in data.results" class=" ">
                 <div class="row item item-divider">
                     <div class="route col vcenter"><a href="#/tab/route/{{routeId}}/{{info.name}}">{{::info.name}}</a></div>
-                    <a class="button button-full button-clear button-positive ion-earth rightAlign largeIcon vcenter" href="#/tab/{{data.link}}/{{routeId}}/{{data.stopId}}">
+                    <a class="button button-light rightAlign vcenter" href="#/tab/{{data.link}}/{{routeId}}/{{data.stopId}}">
+			Map
                     </a>
                 </div>
                 <ion-list>
@@ -30,8 +31,6 @@
                 </ion-list>
             </div>
          </ion-list>
-
         <p>{{data.notifications}}</p>
-
     </ion-content>
 </ion-view>
