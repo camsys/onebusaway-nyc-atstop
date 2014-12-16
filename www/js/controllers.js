@@ -172,7 +172,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.init = (function() {
 			if ($location.$$path.indexOf("map-favorites") > -1) {
 				$scope.url = "atstop-favorites";
-			} else if ($location.$$path.indexOf("map-gps")) {
+			} else if ($location.$$path.indexOf("map-gps") > -1) {
 				$scope.url = "atstop-gps";
 			}
 
