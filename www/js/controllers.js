@@ -678,15 +678,19 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.getNearbyStopsAndRoutesGPS = function() {
+			console.log("getNearbyStopsAndRoutesGPS called");
 			$ionicLoading.show();
 			$cordovaGeolocation.getCurrentPosition({
 				enableHighAccuracy: false,
 				timeout: 10000
 			}).then(
 				function(position) {
+					$ionicLoading.hide();
+					console.log("GPS succeeded");
 					$scope.data.val = true;
 					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
 				}, function(error) {
+					console.log("GPS failed", error);
 					$ionicLoading.hide();
 					var popup = $ionicPopup.alert({
 						content: "Cannot access your position. Check if location services are enabled."
@@ -829,6 +833,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			map();
 			//test(40.678178, -73.944158);
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
+				console.log("GPS Mode");
 				$scope.data.url = "/tab/atstop-gps";
 				$scope.getNearbyStopsAndRoutesGPS();
 			} else {

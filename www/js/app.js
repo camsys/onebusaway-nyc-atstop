@@ -53,7 +53,31 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 
-.run(function($rootScope, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout) {
+.run(function($rootScope, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout, $ionicTabsDelegate) {
+	//Erase Ionic History for Tab Change
+	$rootScope.$on('$stateChangeStart',
+		function(event, toState, toParams, fromState, fromParams) {
+			console.log(toState.url);
+
+			if (toState.url == "/home" || toState.url == "/favorites" || toState.url == "/nearby-stops-and-routes") {
+				$ionicHistory.clearHistory();
+			}
+		}
+	);
+
+	// State Change Event
+	$rootScope.$on('$stateChangeStart',
+		function(event, toState, toParams, fromState, fromParams) {
+			$ionicLoading.show();
+		});
+
+	// State Change Event
+	$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+		$timeout(function() {
+			$ionicLoading.hide()
+		}, 2000);
+	});
+
 	$rootScope.$on('loading:show', function() {
 		$ionicLoading.show({
 			template: 'Loading',
