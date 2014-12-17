@@ -688,10 +688,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.getNearbyStopsAndRoutesGPS = function() {
 			console.log("getNearbyStopsAndRoutesGPS called");
-
-			$scope.data.val = true;
-			$scope.getNearbyStopsAndRoutes(40.678178, -73.944158);
-			/*
 			$ionicLoading.show();
 			$cordovaGeolocation.getCurrentPosition({
 				enableHighAccuracy: false,
@@ -713,7 +709,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					}, 3000);
 				}
 			);
-			*/
 		}
 
 		var map = function() {
