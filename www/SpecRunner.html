@@ -86,7 +86,7 @@
             it('should not show  times <1 min', function () {
                 expect(durationView(0)).toBe('');
             });
-            it('should show a time of 5 min', function () {
+            it('should show a time of 10 min', function () {
                 expect(durationView(633375)).toBe('10 min');
             });
             it('should properly show times of > 60 min', function () {
@@ -184,6 +184,6 @@
     </script>
 </head>
 
-<body>(note: tests depend on MTA Bus Time configured in config.js)</body>
+<body>(note: tests depend on MTA Bus Time url configured in config.js)</body>
 
 </html>
