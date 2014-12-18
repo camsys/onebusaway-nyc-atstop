@@ -77,6 +77,24 @@
 
         });
 
+        describe('Countdown filter tests', function () {
+            beforeEach(module('starter'));
+            beforeEach(inject(function ($filter) {
+                durationView = $filter('durationView');
+            }));
+
+            it('should not show  times <1 min', function () {
+                expect(durationView(0)).toBe('');
+            });
+            it('should show a time of 5 min', function () {
+                expect(durationView(633375)).toBe('10 min');
+            });
+            it('should properly show times of > 60 min', function () {
+                expect(durationView(4200922)).toBe('70 min');
+            });
+        });
+
+
         describe('Function: Is Empty Object?', function () {
             var isEmpty;
 
@@ -95,6 +113,8 @@
             });
 
         });
+
+
 
 
 
