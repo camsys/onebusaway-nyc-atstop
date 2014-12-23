@@ -233,6 +233,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.searchesGo = function(matches) {
+			SearchesService.add(matches);
 			switch (matches.type) {
 				case "RouteResult":
 					$scope.handleRouteSearch(matches);
@@ -863,13 +864,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
-.controller('AboutCtrl', ['$scope', 'PRIV_POLICY_TEXT',
-	function($scope, PRIV_POLICY_TEXT) {
+.controller('AboutCtrl', ['$scope', '$ionicScrollDelegate', 'PRIV_POLICY_TEXT',
+	function($scope, $ionicScrollDelegate, PRIV_POLICY_TEXT) {
 
 		$scope.hideText = true;
 		$scope.text = PRIV_POLICY_TEXT;
 
 		$scope.toggleText = function() {
+			// resize the content since the Privacy Policy text is to big 
+			$ionicScrollDelegate.resize();
 			$scope.hideText = !$scope.hideText;
 		};
 	}

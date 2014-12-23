@@ -1,9 +1,15 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova', 'angular-data.DSCacheFactory'])
 
-// global timeout variable
+// global timeout variable for HTTP requests
 .value('httpTimeout', 5000)
 
-.run(function($rootScope, $ionicPlatform, $ionicPopup, $cordovaNetwork) {
+// the default options for the $ionicLoading
+.constant('$ionicLoadingConfig', {
+	template: 'Loading',
+	showBackdrop: false
+})
+
+.run(function($ionicPlatform, $ionicPopup, $cordovaNetwork) {
 	$ionicPlatform.ready(function() {
 		if (window.cordova && window.cordova.plugins.Keyboard) {
 			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -27,10 +33,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .config(function($httpProvider, $ionicConfigProvider) {
 	$ionicConfigProvider.tabs.position('bottom');
-	$ionicConfigProvider.views.maxCache(2);
 
+	// Should be removed if it is not used
+	// $ionicConfigProvider.views.maxCache(2);
 
-		$httpProvider.interceptors.push(function($rootScope) {
+	$httpProvider.interceptors.push(function($rootScope) {
 		return {
 			request: function(config) {
 				$rootScope.$broadcast('loading:show');
@@ -54,31 +61,29 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 
 .run(function($rootScope, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout, $ionicTabsDelegate) {
-	// State Change Event
-	$rootScope.$on('$stateChangeStart',
-		function(event, toState, toParams, fromState, fromParams) {
-			$ionicLoading.show();
-		});
+	// State change events
+	/*
+	$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+		$ionicLoading.show();
+	});
 
-	// State Change Event
 	$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-		console.log(fromState);
 		$timeout(function() {
 			$ionicLoading.hide()
 		}, 2000);
 	});
+	*/
 
+	// if 'loading:show' is broadcasted then show the loading indicator or hide if 'loading:hide' is broadcasted
 	$rootScope.$on('loading:show', function() {
-		$ionicLoading.show({
-			template: 'Loading',
-			showBackdrop: false
-		})
+		$ionicLoading.show()
 	});
 
 	$rootScope.$on('loading:hide', function() {
 		$ionicLoading.hide()
 	});
 
+	// Do we need this?
 	$rootScope.$on('requestRejection', function(obj, data) {
 		$ionicLoading.hide();
 
@@ -88,7 +93,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				content: "Something went wrong. Please check your internet connection."
 			});
 			$timeout(function() {
-				popup.close(); //close the popup after 3 seconds
+				popup.close();
 			}, 3000);
 		}
 
@@ -112,15 +117,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 .config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider
 
+	// abstract state for the tabs
 	.state('tab', {
 		url: "/tab",
 		abstract: true,
 		templateUrl: "templates/tabs.html"
 	})
-	
-	
-	// HOME
-	
+
+
+	// home state; tab-home view
 	.state('tab.home', {
 		url: '/home',
 		cache: false,
@@ -131,7 +136,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-	
+
+	// route state; tab-home view
 	.state('tab.route', {
 		url: '/route/:routeId/:routeName',
 		views: {
@@ -141,7 +147,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-	
+
+	// geolocation state; tab-home view
 	.state('tab.geolocation', {
 		url: '/geolocation/:latitude/:longitude/:address',
 		cache: false,
@@ -152,7 +159,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-	
+
+	// atstop state; tab-home view
 	.state('tab.atstop', {
 		url: '/atstop/:stopId/:stopName',
 		cache: false,
@@ -162,8 +170,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				controller: 'AtStopCtrl'
 			}
 		}
-	})	
-	
+	})
+
+	// map state; tab-home view
 	.state('tab.map', {
 		url: '/map/:routeId/:stopId',
 		cache: false,
@@ -175,6 +184,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
+	// about state; tab-home view
 	.state('tab.about', {
 		url: '/about',
 		views: {
@@ -183,12 +193,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				controller: 'AboutCtrl'
 			}
 		}
-	})	
-	
-	
-	
-	// FAVS
+	})
 
+
+	// favorites state; tab-favorites view
 	.state('tab.favorites', {
 		url: '/favorites',
 		cache: false,
@@ -200,6 +208,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
+	// atstop-favorites state; tab-favorites view
 	.state('tab.atstop-favorites', {
 		url: '/atstop-favorites/:stopId/:stopName',
 		cache: false,
@@ -210,7 +219,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-	
+
+	// map-favorites state; tab-favorites view
 	.state('tab.map-favorites', {
 		url: '/map-favorites/:routeId/:stopId',
 		cache: false,
@@ -221,11 +231,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
-	
-	
-	
-	// NEARBY
-	
+
+	// nearby-stops-and-routes state; tab-nearby-stops-and-routes view
 	.state('tab.nearby-stops-and-routes', {
 		url: '/nearby-stops-and-routes',
 		cache: false,
@@ -237,7 +244,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-
+	// atstop-gps state; tab-nearby-stops-and-routes view
 	.state('tab.atstop-gps', {
 		url: '/atstop-gps/:stopId/:stopName',
 		cache: false,
@@ -249,6 +256,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
+	// map-gps state; tab-nearby-stops-and-routes view
 	.state('tab.map-gps', {
 		url: '/map-gps/:routeId/:stopId',
 		cache: false,

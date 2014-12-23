@@ -1,8 +1,7 @@
 angular.module('starter.services', ['ionic', 'configuration'])
 
 .factory('SearchesService', function($q, $window) {
-	var searches = [];
-	searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
+	var searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
 
 	var insert = function(term, title, data) {
 		if (searches.length > 0) {
@@ -25,10 +24,11 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			data: data
 		});
 
-		window.localStorage.setItem("searches", JSON.stringify(searches));
+		$window.localStorage.setItem("searches", JSON.stringify(searches));
 	};
 
 	var add = function(matches) {
+		console.log(matches.type);
 		switch (matches.type) {
 			case "RouteResult":
 				insert(matches.id, matches.shortName, matches);
@@ -47,14 +47,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
 	var fetchAll = function() {
 		var deferred = $q.defer();
-		var lclData = [];
-		var i;
-
-		for (i = searches.length - 1; i > -1; i--) {
-			lclData.push(searches[i]);
-		}
-
-		deferred.resolve(lclData);
+		deferred.resolve(Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]')).reverse());
 		return deferred.promise;
 	};
 
@@ -85,20 +78,19 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
 .factory('FavoritesService', function($q, $window) {
 	var add = function(stopId, stopName) {
-		console.log('added');
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
 		data[stopId] = {
 			"stopId": stopId,
 			"stopName": stopName
 		};
-
-		window.localStorage.setItem("favorites", JSON.stringify(data));
+		$window.localStorage.setItem("favorites", JSON.stringify(data));
+		console.log('Added to the favorites');
 	};
 
 	var remove = function(stopId) {
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
 		delete data[stopId];
-		window.localStorage.setItem("favorites", JSON.stringify(data));
+		$window.localStorage.setItem("favorites", JSON.stringify(data));
 	};
 
 	var get = function() {
@@ -125,8 +117,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var locations = {};
 
-		var url = API_END_POINT + "api/siri/vehicle-monitoring.json?callback=JSON_CALLBACK";
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/siri/vehicle-monitoring.json?callback=JSON_CALLBACK", {
 			params: {
 				key: API_KEY,
 				LineRef: route
@@ -175,9 +166,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			color: ""
 		};
 
-		var url = API_END_POINT + "api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK";
-
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK", {
 			params: {
 				key: API_KEY,
 				version: 2,
@@ -214,9 +203,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var directions = {};
 
-		var url = API_END_POINT + "api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK";
-
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK", {
 			cache: DSCacheFactory.get('dataCache'),
 			params: {
 				key: API_KEY,
@@ -274,8 +261,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var stops = {};
 
-		var url = API_END_POINT + "api/stops-on-route-for-direction?callback=JSON_CALLBACK";
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/stops-on-route-for-direction?callback=JSON_CALLBACK", {
 			cache: DSCacheFactory.get('dataCache'),
 			params: {
 				routeId: route,
@@ -325,8 +311,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var routes = {};
 
-		var url = API_END_POINT + "api/where/routes-for-location.json?callback=JSON_CALLBACK";
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/where/routes-for-location.json?callback=JSON_CALLBACK", {
 			params: {
 				key: API_KEY,
 				lat: lat,
@@ -354,8 +339,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var stops = {};
 
-		var url = API_END_POINT + "api/where/stops-for-location.json?callback=JSON_CALLBACK";
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/where/stops-for-location.json?callback=JSON_CALLBACK", {
 			params: {
 				key: API_KEY,
 				lat: lat,
@@ -394,8 +378,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			responseTimestamp: ""
 		};
 
-		var url = API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK";
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK", {
 			params: {
 				key: API_KEY,
 				OperatorRef: "MTA",
@@ -480,8 +463,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var routes = {};
 
-		var url = API_END_POINT + "api/where/stop/" + stop + ".json?callback=JSON_CALLBACK";
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/where/stop/" + stop + ".json?callback=JSON_CALLBACK", {
 			params: {
 				key: API_KEY
 			},
@@ -507,8 +489,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var coordinates = {};
 
-		var url = API_END_POINT + "api/where/stop/" + stop + ".json?callback=JSON_CALLBACK";
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/where/stop/" + stop + ".json?callback=JSON_CALLBACK", {
 			params: {
 				key: API_KEY
 			},
@@ -540,8 +521,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var matches = [];
 
-		var url = API_END_POINT + "api/autocomplete?callback=JSON_CALLBACK";
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/autocomplete?callback=JSON_CALLBACK", {
 			params: {
 				term: searchKey
 			},
@@ -565,10 +545,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var deferred = $q.defer();
 		var matches = {};
 
-
-		var url = API_END_POINT + "api/search?callback=JSON_CALLBACK";
-
-		var responsePromise = $http.jsonp(url, {
+		var responsePromise = $http.jsonp(API_END_POINT + "api/search?callback=JSON_CALLBACK", {
 			params: {
 				q: term
 			},
