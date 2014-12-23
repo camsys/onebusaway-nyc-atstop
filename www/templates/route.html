@@ -7,7 +7,7 @@
     <ion-content ng-show="data.loaded" has-bouncing="true">
 
         <p>Choose a direction and stop:</p>
-        <div ng-repeat="group in ::groups">
+        <div ng-repeat="group in groups">
             <ion-item class="item-stable" ng-click="toggleGroup(group)" ng-class="{active: isGroupShown(group)}">
                 <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
                 <strong>&nbsp; {{group.name}}</strong>
