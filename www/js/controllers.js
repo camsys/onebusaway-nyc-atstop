@@ -332,14 +332,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"alerts": []
 		};
 
-		var favoritesDefer = $q.defer();
-
 		$scope.remove = function(stopId) {
 			FavoritesService.remove(stopId);
-			$scope.get();
+			get();
 		};
 
-		$scope.get = function() {
+		var get = function() {
+			var favoritesDefer = $q.defer();
+
 			FavoritesService.get().then(function(results) {
 				if (!angular.isUndefined(results) && results != null) {
 					$scope.data.favorites = results;
@@ -356,7 +356,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.init = (function() {
-			$scope.get();
+			get();
 		})();
 	}
 ])
@@ -407,7 +407,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		var getBuses = function() {
-
 			var busesDefer = $q.defer();
 
 			AtStopService.getBuses($scope.data.stopId).then(function(results) {
@@ -540,10 +539,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					});
 				} else {
 					// with one direction, set destination and remove second group.
+					oneDirection = true;
 					$scope.data.directionName = results[0].destination;
 					$scope.groups[0].name = results[0].destination;
 					$scope.groups.splice(1);
-					oneDirection = true;
 					$scope.toggleGroup($scope.groups[0]);
 				}
 				directionsDefer.resolve();
@@ -565,9 +564,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 
 			$q.all([directionsDefer.promise.then(function() {
-				console.log("resolved");
+				// console.log("resolved");
 			}), stopsDefer.promise.then(function() {
-				console.log("resolved");
+				// console.log("resolved");
 			})]).then(function() {
 				$scope.data.loaded = true;
 			});
@@ -586,6 +585,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.data = {
 			"loaded": true,
+			"showMap": false,
 			"stops": [],
 			"routes": [],
 			markers: {},
@@ -641,7 +641,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		var icons = {
 			stop: {
 				type: 'div',
-
 				iconSize: [13, 13],
 				className: 'stop'
 			},
@@ -681,7 +680,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.stops = results;
 					plotNearbyStops();
 					$scope.data.notifications = "";
+					$scope.data.showMap = true;
 				} else {
+					$scope.data.showMap = false;
 					$scope.data.notifications = "No nearby stops found.";
 				}
 			});
@@ -695,11 +696,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				timeout: 10000
 			}).then(
 				function(position) {
-					$ionicLoading.hide();
+					$scope.data.showMap = true;
 					console.log("GPS succeeded");
 					$scope.data.val = true;
 					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
 				}, function(error) {
+					$scope.data.showMap = false;
 					console.log("GPS failed", error);
 					$ionicLoading.hide();
 					var popup = $ionicPopup.alert({
@@ -849,18 +851,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
 			}
 		})();
-
-		$scope.getBuses = function(ID) {
-			AtStopService.getBuses(ID).then(function(results) {
-				if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
-					$scope.data.results = results.arriving;
-					$scope.data.notifications = "";
-				} else {
-					$scope.data.results = "";
-					$scope.data.notifications = "We are not tracking any buses to this stop at this time. Check back later for an update.";
-				}
-			});
-		};
 	}
 ])
 

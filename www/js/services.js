@@ -1,21 +1,19 @@
 angular.module('starter.services', ['ionic', 'configuration'])
 
 .factory('SearchesService', function($q, $window) {
-	var searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
-
 	var insert = function(term, title, data) {
+		var searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
+
 		if (searches.length > 0) {
-			var i = 0;
 			angular.forEach(searches, function(val, key) {
 				if (val.term == term) {
-					searches.splice(i, 1);
+					searches.splice(key, 1);
 				}
-				i++;
 			});
-		}
 
-		if (searches.length >= 5) {
-			searches.splice(0, 1);
+			if (searches.length >= 5) {
+				searches.splice(0, 1);
+			}
 		}
 
 		searches.push({
@@ -28,7 +26,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	};
 
 	var add = function(matches) {
-		console.log(matches.type);
 		switch (matches.type) {
 			case "RouteResult":
 				insert(matches.id, matches.shortName, matches);

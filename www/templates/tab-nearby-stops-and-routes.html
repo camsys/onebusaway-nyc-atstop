@@ -7,7 +7,7 @@
     <ion-content ng-show="data.loaded" has-bouncing="true" scroll="false">
 	
 		<div data-tap-disabled="true">
-    	<leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="{{data.mapHeight}}px"></leaflet>
+    	<leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="{{data.mapHeight}}px" ng-show="data.showMap"></leaflet>
 		</div>		
                 <ion-scroll style="height: {{data.listHeight}}px">
 				
