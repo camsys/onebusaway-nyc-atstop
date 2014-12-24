@@ -584,6 +584,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	function($stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, leafletBoundsHelpers, AtStopService, $ionicScrollDelegate, $timeout, MAPBOX_KEY) {
 
 		$scope.data = {
+			"title": "Nearby Stops",
 			"loaded": true,
 			"showMap": false,
 			"stops": [],
@@ -845,9 +846,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			map();
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
 				console.log("GPS Mode");
+				$scope.data.title = "Nearby Stops";
 				$scope.data.url = "/tab/atstop-gps";
 				$scope.getNearbyStopsAndRoutesGPS();
 			} else {
+				$scope.data.title = $stateParams.address;
 				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
 			}
 		})();
