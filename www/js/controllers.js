@@ -209,7 +209,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				"Main Street & Kissena Bl"
 			],
 			"searches": [],
-			"showSearches": false,
+			"showSearches": true,
 			"showTips": true
 		};
 
@@ -311,11 +311,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				if (results.length > 0) {
 					$scope.data.searches = results;
 					$scope.data.showSearches = true;
-					$scope.data.showTips = false;
+					//$scope.data.showTips = false;
 				} else {
 					$scope.data.searches = [];
 					$scope.data.showSearches = false;
-					$scope.data.showTips = true;
+					//$scope.data.showTips = true;
 				}
 			});
 		})();
