@@ -373,6 +373,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"stopName": $stateParams.stopName,
 			"notifications": '',
 			"alertsHide": false,
+			"alertsToggle": false,
 			"stopId": $stateParams.stopId
 		};
 
@@ -408,7 +409,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		var getBuses = function() {
 			var busesDefer = $q.defer();
-
 			AtStopService.getBuses($scope.data.stopId).then(function(results) {
 				if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
 					$scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
@@ -427,7 +427,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				} else {
 					$scope.data.alertsHide = false;
 				}
-
 				busesDefer.resolve();
 			});
 
@@ -435,10 +434,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.loaded = true;
 			});
 		};
-
-		var tick = function() {
-			getBuses();
-		}
 
 		var updateArrivalTimes = function(results) {
 			angular.forEach(results, function(val, key) {
@@ -452,6 +447,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			getBuses();
 			$scope.$broadcast('scroll.refreshComplete');
 		};
+		
+		$scope.toggleAlerts = function() {
+			$scope.data.alertsToggle = !$scope.data.alertsToggle;
+			$ionicScrollDelegate.resize();
+		}
 
 		$scope.$on('$destroy', function() {
 			$interval.cancel($scope.reloadTimeout);
@@ -470,7 +470,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.favClass = "";
 			};
 			getBuses();
-			$scope.reloadTimeout = $interval(tick, 35000);
+			$scope.reloadTimeout = $interval(getBuses, 35000);
 		})();
 	}
 ])
@@ -864,7 +864,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.text = PRIV_POLICY_TEXT;
 
 		$scope.toggleText = function() {
-			// resize the content since the Privacy Policy text is to big 
+			// resize the content since the Privacy Policy text is too big 
 			$ionicScrollDelegate.resize();
 			$scope.hideText = !$scope.hideText;
 		};
