@@ -367,20 +367,31 @@ angular.module('starter.services', ['ionic', 'configuration'])
 })
 
 .factory('AtStopService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
-	var getBuses = function(stop) {
+	var getBuses = function(params) {
+		var stop;
+		if (params.hasOwnProperty('stop')) {
+			 stop = params.stop;
+			 }
+		else {	 stop = params;		 }
+			 
 		var deferred = $q.defer();
 		var buses = {
 			arriving: {},
 			alerts: "",
 			responseTimestamp: ""
 		};
-
-		var responsePromise = $http.jsonp(API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK", {
-			params: {
+		//for single line support
+		var getParams = {
 				key: API_KEY,
 				OperatorRef: "MTA",
 				MonitoringRef: stop
-			},
+			};
+		if (params.hasOwnProperty('line')) {
+			 getParams.LineRef = params.line;
+			 }
+
+		var responsePromise = $http.jsonp(API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK", {
+			params: getParams,
 			timeout: httpTimeout
 		})
 			.success(function(data, status, header, config) {

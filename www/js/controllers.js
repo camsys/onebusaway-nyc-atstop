@@ -258,7 +258,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				// if one direction with no service-- handle on route/stop page.
 				if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
 					$scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
-					console.log($scope.data.notifications);
 				} else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService) {
 					noSchedService(matches.shortName);
 				} else {
