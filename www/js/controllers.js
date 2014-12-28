@@ -493,8 +493,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		/* if given group is the selected group, deselect it
-		 * else, select the given group
-		 */
+		 * else, select the given group*/
 		$scope.toggleGroup = function(group) {
 			if ($scope.isGroupShown(group)) {
 				$scope.shownGroup = null;
@@ -588,7 +587,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showMap": false,
 			"stops": [],
 			"routes": [],
-			markers: {},
+			"markers": {},
 			"lat": "",
 			"lon": "",
 			"notifications": "",
@@ -728,13 +727,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					//need to do something interesting here... show stop information below map and hide others?
 				});
 			});
-			leafletData.getMap().then(function(map) {
-				//leaflet attribution is not required
-				map.attributionControl.setPrefix('');
-			});
-
 			var mapCenter;
-
 			//if we received lat/long from the state, then use that center, otherwise use location
 			if (!angular.isUndefined($stateParams.latitude)) {
 				mapCenter = {
@@ -761,6 +754,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				},
 				markers: {},
 				paths: {}
+			});
+			leafletData.getMap().then(function(map) {
+				//leaflet attribution is not required
+				map.attributionControl.setPrefix('');
+				map.invalidateSize(true);
 			});
 
 		};
