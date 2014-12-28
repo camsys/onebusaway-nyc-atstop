@@ -22,7 +22,7 @@
                     </a>
                 </div>
                 <ion-list>
-                    <ion-item ng-repeat="item in info.distances">
+                    <ion-item ng-repeat="item in info.distances | limitTo: 3">
                         <h2>{{item.destination}}</h2>
                         <p class="novmargin" ng-hide="!item.expectedArrivalTime"><strong>{{item.arrivingIn|durationView}}</strong>
                         </p>

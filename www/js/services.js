@@ -400,16 +400,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
 					var tmp = [];
 					var grouped_tmp = [];
 					var grouped = {};
-					var counter = {};
 
 					angular.forEach(data.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit, function(value, key) {
-						if (angular.isUndefined(counter[value.MonitoredVehicleJourney.LineRef]) || counter[value.MonitoredVehicleJourney.LineRef] == null) {
-							counter[value.MonitoredVehicleJourney.LineRef] = 1;
-						} else {
-							counter[value.MonitoredVehicleJourney.LineRef] += 1;
-						}
-
-						if (counter[value.MonitoredVehicleJourney.LineRef] < 4) {
 							tmp.push({
 								routeId: value.MonitoredVehicleJourney.LineRef,
 								name: value.MonitoredVehicleJourney.PublishedLineName,
@@ -419,7 +411,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
 								departsTerminal: value.MonitoredVehicleJourney.OriginAimedDepartureTime,
 								expectedArrivalTime: value.MonitoredVehicleJourney.MonitoredCall.ExpectedArrivalTime
 							});
-						}
 					});
 
 					grouped_tmp = _.groupBy(tmp, "routeId");
@@ -434,9 +425,9 @@ angular.module('starter.services', ['ionic', 'configuration'])
 						});
 					});
 					buses.arriving = grouped;
-				} // check for sched svc:
+				} 
 				else {
-
+					// check for sched svc:
 				}
 
 				if (data.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {
@@ -446,7 +437,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
 							alerts.push(v.Description);
 						});
 					});
-
 					buses.alerts = alerts;
 				}
 			})
