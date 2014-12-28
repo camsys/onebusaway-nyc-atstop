@@ -10,6 +10,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		// Refresh Map
 		var refresh = function() {
 			console.log("refresh");
+			leafletData.getMap().then(function(map) {
+					map.closePopup();
+				});
 			drawStopsAndBuses($stateParams.routeId);
 		};
 
@@ -21,7 +24,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				className: 'stop'
 			}
 		}
-
 
 		var drawStopsAndBuses = function(route) {
 			$scope.markers = {};
