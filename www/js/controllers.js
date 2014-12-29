@@ -10,6 +10,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		// Refresh Map
 		var refresh = function() {
 			console.log("refresh");
+			leafletData.getMap().then(function(map) {
+					map.closePopup();
+				});
 			drawStopsAndBuses($stateParams.routeId);
 		};
 
@@ -21,7 +24,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				className: 'stop'
 			}
 		}
-
 
 		var drawStopsAndBuses = function(route) {
 			$scope.markers = {};
@@ -258,7 +260,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				// if one direction with no service-- handle on route/stop page.
 				if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
 					$scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
-					console.log($scope.data.notifications);
 				} else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService) {
 					noSchedService(matches.shortName);
 				} else {
@@ -373,6 +374,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"stopName": $stateParams.stopName,
 			"notifications": '',
 			"alertsHide": false,
+			"alertsToggle": false,
 			"stopId": $stateParams.stopId
 		};
 
@@ -408,7 +410,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		var getBuses = function() {
 			var busesDefer = $q.defer();
-
 			AtStopService.getBuses($scope.data.stopId).then(function(results) {
 				if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
 					$scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
@@ -427,7 +428,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				} else {
 					$scope.data.alertsHide = false;
 				}
-
 				busesDefer.resolve();
 			});
 
@@ -435,10 +435,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.loaded = true;
 			});
 		};
-
-		var tick = function() {
-			getBuses();
-		}
 
 		var updateArrivalTimes = function(results) {
 			angular.forEach(results, function(val, key) {
@@ -452,6 +448,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			getBuses();
 			$scope.$broadcast('scroll.refreshComplete');
 		};
+		
+		$scope.toggleAlerts = function() {
+			$scope.data.alertsToggle = !$scope.data.alertsToggle;
+			$ionicScrollDelegate.resize();
+		}
 
 		$scope.$on('$destroy', function() {
 			$interval.cancel($scope.reloadTimeout);
@@ -470,7 +471,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.favClass = "";
 			};
 			getBuses();
-			$scope.reloadTimeout = $interval(tick, 35000);
+			$scope.reloadTimeout = $interval(getBuses, 35000);
 		})();
 	}
 ])
@@ -494,8 +495,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		/* if given group is the selected group, deselect it
-		 * else, select the given group
-		 */
+		 * else, select the given group*/
 		$scope.toggleGroup = function(group) {
 			if ($scope.isGroupShown(group)) {
 				$scope.shownGroup = null;
@@ -589,7 +589,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showMap": false,
 			"stops": [],
 			"routes": [],
-			markers: {},
+			"markers": {},
 			"lat": "",
 			"lon": "",
 			"notifications": "",
@@ -729,13 +729,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					//need to do something interesting here... show stop information below map and hide others?
 				});
 			});
-			leafletData.getMap().then(function(map) {
-				//leaflet attribution is not required
-				map.attributionControl.setPrefix('');
-			});
-
 			var mapCenter;
-
 			//if we received lat/long from the state, then use that center, otherwise use location
 			if (!angular.isUndefined($stateParams.latitude)) {
 				mapCenter = {
@@ -762,6 +756,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				},
 				markers: {},
 				paths: {}
+			});
+			leafletData.getMap().then(function(map) {
+				//leaflet attribution is not required
+				map.attributionControl.setPrefix('');
+				map.invalidateSize(true);
 			});
 
 		};
@@ -864,7 +863,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.text = PRIV_POLICY_TEXT;
 
 		$scope.toggleText = function() {
-			// resize the content since the Privacy Policy text is to big 
+			// resize the content since the Privacy Policy text is too big 
 			$ionicScrollDelegate.resize();
 			$scope.hideText = !$scope.hideText;
 		};

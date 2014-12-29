@@ -10,8 +10,8 @@
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <ion-list>
 
-            <p class="highlight" ng-show="data.alertsHide">Service Alerts:</p>
-            <p class="alerts" ng-show="data.alertsHide" ng-repeat="a in data.alerts">{{::a}}</p>
+            <button class="button button-block button-stable" ng-show="data.alertsHide" ng-click="toggleAlerts()">Tap to show Service Alerts</button>
+            <p class="alerts" ng-show="data.alertsToggle" ng-repeat="a in data.alerts">{{::a}}</p>
             <div class="updated">Updated {{data.responseTime}}</div>
 			
             <div ng-repeat="(routeId, info) in data.results" class=" ">
@@ -22,7 +22,7 @@
                     </a>
                 </div>
                 <ion-list>
-                    <ion-item ng-repeat="item in info.distances">
+                    <ion-item ng-repeat="item in info.distances | limitTo: 3">
                         <h2>{{item.destination}}</h2>
                         <p class="novmargin" ng-hide="!item.expectedArrivalTime"><strong>{{item.arrivingIn|durationView}}</strong>
                         </p>
