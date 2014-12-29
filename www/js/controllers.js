@@ -11,8 +11,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		var refresh = function() {
 			console.log("refresh");
 			leafletData.getMap().then(function(map) {
-					map.closePopup();
-				});
+				map.closePopup();
+			});
 			drawStopsAndBuses($stateParams.routeId);
 		};
 
@@ -448,7 +448,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			getBuses();
 			$scope.$broadcast('scroll.refreshComplete');
 		};
-		
+
 		$scope.toggleAlerts = function() {
 			$scope.data.alertsToggle = !$scope.data.alertsToggle;
 			$ionicScrollDelegate.resize();
@@ -580,8 +580,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'leafletBoundsHelpers', 'AtStopService', '$ionicScrollDelegate', '$timeout', 'MAPBOX_KEY',
-	function($stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, leafletBoundsHelpers, AtStopService, $ionicScrollDelegate, $timeout, MAPBOX_KEY) {
+.controller('NearbyStopsAndRoutesCtrl', ['VehicleMonitoringService', '$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'leafletBoundsHelpers', 'AtStopService', '$ionicScrollDelegate', '$timeout', 'MAPBOX_KEY',
+	function(VehicleMonitoringService, $stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, leafletBoundsHelpers, AtStopService, $ionicScrollDelegate, $timeout, MAPBOX_KEY) {
 
 		$scope.data = {
 			"title": "Nearby Stops",
@@ -616,15 +616,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			return deg * (Math.PI / 180)
 		};
 
-		$scope.refresh = function() {
-			if ($location.$$path == "/tab/nearby-stops-and-routes") {
-				$scope.getNearbyStopsAndRoutesGPS();
-			} else {
-				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
-			}
-			$scope.$broadcast('scroll.refreshComplete');
-		};
-
 		var directionToDegrees = function(direction) {
 			var directions = {
 				"N": 0,
@@ -651,25 +642,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				className: 'stop-current'
 			}
 		};
-
-		var test = function(lat, lon) {
-
-			var stopsDefer = $q.defer();
-			var routesDefer = $q.defer();
-
-			GeolocationService.getStops(lat, lon).then(function(results) {
-				if (!angular.isUndefined(results) && results != null && results.length > 0) {
-					$scope.data.stops = results;
-					$scope.data.notifications = "";
-				} else {
-					$scope.data.notifications = "We could not find any stops near your location";
-				}
-				stopsDefer.resolve();
-				routesDefer.resolve();
-			});
-
-			$scope.data.loaded = true;
-		}
+		
+		$scope.refresh = function() {
+			if ($location.$$path == "/tab/nearby-stops-and-routes") {
+				$scope.getNearbyStopsAndRoutesGPS();
+			} else {
+				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
+			}
+			$scope.$broadcast('scroll.refreshComplete');
+		};
 
 		$scope.getNearbyStopsAndRoutes = function(lat, lon) {
 			GeolocationService.getStops(lat, lon).then(function(results) {
@@ -720,9 +701,18 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				console.log(event);
 				console.log(args);
 				var object = $scope.markers[args.markerName];
-				var content = '<p>' + object.stopName + '</p>' + '<a href="#' + $scope.data.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
-					latLng = [object.lat, object.lng],
-					popup = L.popup().setContent(content).setLatLng(latLng);
+
+				if ($filter('isUndefinedOrEmpty')(object.stopName)) {
+					var content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>",
+						latLng = [object.lat, object.lng],
+						popup = L.popup().setContent(content).setLatLng(latLng);
+				} else {
+					console.log(object);
+					var content = '<p>' + object.stopName + '</p>' + '<a href="#' + $scope.data.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
+						latLng = [object.lat, object.lng],
+						popup = L.popup().setContent(content).setLatLng(latLng);
+				}
+
 				leafletData.getMap().then(function(map) {
 					popup.openOn(map);
 					console.log('hi!');
@@ -771,6 +761,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			var stops = [];
 			var i = 0;
 
+			leafletData.getMap().then(function(map) {
+				map.closePopup();
+			});
+			
 			angular.forEach($scope.data.stops, function(s) {
 				stops[i] = {
 					lat: s["lat"],
@@ -786,6 +780,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				};
 				i++;
 			});
+			
+			leafletData.getMap().then(function(map) {
+				map.closePopup();
+				map.setView(stops[0], 13);
+			});
+			
 			$scope.markers = stops;
 		};
 
@@ -821,6 +821,36 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.paths = route;
 
 				});
+
+				VehicleMonitoringService.getLocations(ID).then(function(results) {
+					var i = 0;
+					var buses = [];
+
+					function round5(x) {
+						return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
+					}
+					angular.forEach(results, function(val, key) {
+						var angle = round5(val.angle);
+						if (angle == 360) {
+							angle = 0;
+						};
+						buses[i] = {
+							lat: val.latitude,
+							lng: val.longitude,
+							icon: {
+								iconUrl: 'img/bus_icons/vehicle-' + angle + '.png',
+								iconSize: [51, 51]
+							},
+							focus: false,
+							vehicleId: val.vehicleId,
+							destination: val.destination,
+							nextStop: val.stopPointName,
+							zIndexOffset: 800
+						}
+						i++;
+					});
+					$scope.markers = buses;
+				});
 			} else {
 				var stops = [];
 				stops[0] = {
@@ -836,6 +866,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					map.closePopup();
 					map.setView(stops[0], 13);
 				});
+
 				$scope.markers = stops;
 			}
 		};
