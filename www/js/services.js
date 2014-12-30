@@ -147,7 +147,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	}
 })
 
-.factory('RouteService', function($q, $http, httpTimeout, API_END_POINT, API_KEY, DSCacheFactory) {
+.factory('RouteService', function($filter, $q, $http, httpTimeout, API_END_POINT, API_KEY, DSCacheFactory) {
 	DSCacheFactory('dataCache', {
 		maxAge: 600000,
 		cacheFlushInterval: 600000,
@@ -370,10 +370,11 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	var getBuses = function(params) {
 		var stop;
 		if (params.hasOwnProperty('stop')) {
-			 stop = params.stop;
-			 }
-		else {	 stop = params;		 }
-			 
+			stop = params.stop;
+		} else {
+			stop = params;
+		}
+
 		var deferred = $q.defer();
 		var buses = {
 			arriving: {},
@@ -382,13 +383,13 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		};
 		//for single line support
 		var getParams = {
-				key: API_KEY,
-				OperatorRef: "MTA",
-				MonitoringRef: stop
-			};
+			key: API_KEY,
+			OperatorRef: "MTA",
+			MonitoringRef: stop
+		};
 		if (params.hasOwnProperty('line')) {
-			 getParams.LineRef = params.line;
-			 }
+			getParams.LineRef = params.line;
+		}
 
 		var responsePromise = $http.jsonp(API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK", {
 			params: getParams,
@@ -402,15 +403,15 @@ angular.module('starter.services', ['ionic', 'configuration'])
 					var grouped = {};
 
 					angular.forEach(data.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit, function(value, key) {
-							tmp.push({
-								routeId: value.MonitoredVehicleJourney.LineRef,
-								name: value.MonitoredVehicleJourney.PublishedLineName,
-								distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance,
-								destination: value.MonitoredVehicleJourney.DestinationName,
-								progress: value.MonitoredVehicleJourney.ProgressStatus,
-								departsTerminal: value.MonitoredVehicleJourney.OriginAimedDepartureTime,
-								expectedArrivalTime: value.MonitoredVehicleJourney.MonitoredCall.ExpectedArrivalTime
-							});
+						tmp.push({
+							routeId: value.MonitoredVehicleJourney.LineRef,
+							name: value.MonitoredVehicleJourney.PublishedLineName,
+							distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance,
+							destination: value.MonitoredVehicleJourney.DestinationName,
+							progress: value.MonitoredVehicleJourney.ProgressStatus,
+							departsTerminal: value.MonitoredVehicleJourney.OriginAimedDepartureTime,
+							expectedArrivalTime: value.MonitoredVehicleJourney.MonitoredCall.ExpectedArrivalTime
+						});
 					});
 
 					grouped_tmp = _.groupBy(tmp, "routeId");
@@ -425,8 +426,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 						});
 					});
 					buses.arriving = grouped;
-				} 
-				else {
+				} else {
 					// check for sched svc:
 				}
 
@@ -664,4 +664,110 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			getRemainingTime: getRemainingTime
 		};
 	}
-]);
+])
+
+.factory('MapService', function(RouteService, VehicleMonitoringService, $filter, $q) {
+	var getStopMarkers = function(route) {
+		var deferred = $q.defer();
+		var markers = {};
+
+		RouteService.getPolylines(route).then(function(res) {
+			angular.forEach(res.stops, function(val, key) {
+				markers['s' + key] = {
+					lat: val.lat,
+					lng: val.lon,
+					icon: {
+						iconUrl: 'img/stop_icons/stop.svg',
+						iconSize: [20, 20]
+					},
+					focus: false,
+					stopId: val.id,
+					stopName: $filter('encodeStopName')(val.name)
+				};
+			});
+			console.log(markers);
+			deferred.resolve(markers);
+		});
+
+		return deferred.promise;
+	};
+
+	var getRoutePolylines = function(route) {
+		var deferred = $q.defer();
+		var paths = {};
+
+		RouteService.getPolylines(route).then(function(res) {
+			angular.forEach(res.polylines, function(val, key) {
+				paths['p' + key] = {
+					color: '#' + res.color,
+					weight: 4,
+					latlngs: [],
+					clickable: false
+				};
+
+				angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function(v, k) {
+					paths['p' + key].latlngs.push({
+						lat: v.lat,
+						lng: v.lng
+					});
+				});
+			});
+			console.log(paths);
+			deferred.resolve(paths);
+		});
+
+		return deferred.promise;
+	};
+
+	var round5 = function round5(x) {
+		return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
+	}
+
+	var getBusMarkers = function(route) {
+		var deferred = $q.defer();
+		var markers = {};
+
+		VehicleMonitoringService.getLocations(route).then(function(res) {
+			angular.forEach(res, function(val, key) {
+				markers['b' + key] = {
+					lat: val.latitude,
+					lng: val.longitude,
+					icon: {
+						iconUrl: 'img/bus_icons/vehicle-' + ((round5(val.angle) == 360) ? 0 : round5(val.angle)) + '.png',
+						iconSize: [51, 51]
+					},
+					focus: false,
+					vehicleId: val.vehicleId,
+					destination: val.destination,
+					nextStop: val.stopPointName,
+					zIndexOffset: 800
+				};
+			});
+			console.log(markers);
+			deferred.resolve(markers);
+		});
+
+		return deferred.promise;
+	};
+	
+	var getDistanceInM = function(lat1, lon1, lat2, lon2) {
+		var R = 6371;
+		var dLat = deg2rad(lat2 - lat1);
+		var dLon = deg2rad(lon2 - lon1);
+		var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		var d = R * c * 1000;
+		return parseInt(d);
+	};
+
+	var deg2rad = function(deg) {
+		return deg * (Math.PI / 180)
+	};
+
+	return {
+		getDistanceInM: getDistanceInM,
+		getRoutePolylines: getRoutePolylines,
+		getStopMarkers: getStopMarkers,
+		getBusMarkers: getBusMarkers
+	}
+});

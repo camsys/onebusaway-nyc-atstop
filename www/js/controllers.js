@@ -1,193 +1,5 @@
 angular.module('starter.controllers', ['configuration', 'filters'])
 
-.controller('MapCtrl', ['$scope', '$location', '$stateParams', 'RouteService',
-	'VehicleMonitoringService', '$ionicLoading', '$timeout', 'leafletBoundsHelpers', 'leafletData', 'StopcodeService', 'GeolocationService', '$filter', '$q', '$interval',
-	function($scope, $location, $stateParams, RouteService, VehicleMonitoringService, $ionicLoading, $timeout, leafletBoundsHelpers, leafletData, StopcodeService, GeolocationService, $filter, $q, $interval, MAPBOX_KEY) {
-		$scope.paths = {};
-		$scope.markers = {};
-		$scope.url = "atstop"
-
-		// Refresh Map
-		var refresh = function() {
-			console.log("refresh");
-			leafletData.getMap().then(function(map) {
-				map.closePopup();
-			});
-			drawStopsAndBuses($stateParams.routeId);
-		};
-
-		// icons
-		var icons = {
-			stop: {
-				type: 'div',
-				iconSize: [13, 13],
-				className: 'stop'
-			}
-		}
-
-		var drawStopsAndBuses = function(route) {
-			$scope.markers = {};
-
-			var stopsAndBuses = [];
-			var i = 0;
-
-			var stopsDefer = $q.defer();
-
-			RouteService.getPolylines(route).then(function(results) {
-				angular.forEach(results.stops, function(val, key) {
-					var lclName = $filter('encodeStopName')(val.name);
-					stopsAndBuses[i] = {
-						lat: val.lat,
-						lng: val.lon,
-						icon: {
-							iconUrl: 'img/stop_icons/stop.svg',
-							iconSize: [20, 20]
-						},
-						focus: false,
-						stopId: val.id,
-						stopName: lclName
-					}
-					i++;
-				});
-				stopsDefer.resolve();
-			});
-
-			stopsDefer.promise.then(function() {
-				VehicleMonitoringService.getLocations(route).then(function(results) {
-					function round5(x) {
-						return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
-					}
-					angular.forEach(results, function(val, key) {
-						var angle = round5(val.angle);
-						if (angle == 360) {
-							angle = 0;
-						};
-						stopsAndBuses[i] = {
-							lat: val.latitude,
-							lng: val.longitude,
-							icon: {
-								iconUrl: 'img/bus_icons/vehicle-' + angle + '.png',
-								iconSize: [51, 51]
-							},
-							focus: false,
-							vehicleId: val.vehicleId,
-							destination: val.destination,
-							nextStop: val.stopPointName,
-							zIndexOffset: 800
-						}
-						i++;
-					});
-					$scope.markers = stopsAndBuses;
-				});
-			});
-		};
-
-		var drawRoute = function(route) {
-			RouteService.getPolylines(route).then(function(results) {
-				var route = [];
-				var i = 0;
-
-				angular.forEach(results.polylines, function(val, key) {
-					route['p' + i] = {
-						color: '#' + results.color,
-						weight: 4,
-						latlngs: [],
-						clickable: false
-					};
-
-					angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function(v, k) {
-						route['p' + i].latlngs.push({
-							lat: v.lat,
-							lng: v.lng
-						});
-					});
-
-					i++;
-				});
-
-				$scope.paths = route;
-
-				leafletData.getMap().then(function(map) {
-					console.log('route');
-					map.fitBounds([
-						[$scope.paths['p0']['latlngs'][0]['lat'], $scope.paths['p0']['latlngs'][0]['lng']],
-						[$scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lat'], $scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lng']]
-					]);
-				});
-
-			});
-		};
-
-
-		// Map
-		var map = function() {
-			// watch marker click events
-			$scope.$on('leafletDirectiveMarker.click', function(event, args) {
-				var object = $scope.markers[args.markerName];
-				if ($filter('isUndefinedOrEmpty')(object.stopName)) {
-					var content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>",
-						latLng = [object.lat, object.lng],
-						popup = L.popup().setContent(content).setLatLng(latLng);
-				} else {
-					console.log(object);
-					var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
-						latLng = [object.lat, object.lng],
-						popup = L.popup().setContent(content).setLatLng(latLng);
-				}
-
-				leafletData.getMap().then(function(map) {
-					popup.openOn(map);
-				});
-			});
-
-
-			leafletData.getMap().then(function(map) {
-				map.attributionControl.setPrefix('');
-			});
-
-
-			angular.extend($scope, {
-				events: {
-					markers: {
-						enable: ['click'],
-						logic: 'emit'
-					}
-				},
-				center: {},
-				defaults: {
-					tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
-					tileLayerOptions: {
-						attribution: $filter('hrefToJS')('Map:<a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data:<a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.')
-					},
-					scrollWheelZoom: false,
-					key: MAPBOX_KEY
-				},
-				markers: {},
-				paths: {}
-			});
-		};
-
-		$scope.$on('$destroy', function() {
-			$interval.cancel($scope.reloadTimeout);
-		});
-
-		$scope.init = (function() {
-			if ($location.$$path.indexOf("map-favorites") > -1) {
-				$scope.url = "atstop-favorites";
-			} else if ($location.$$path.indexOf("map-gps") > -1) {
-				$scope.url = "atstop-gps";
-			}
-
-			map();
-			drawRoute($stateParams.routeId);
-			drawStopsAndBuses($stateParams.routeId);
-			$scope.reloadTimeout = $interval(refresh, 35000);
-
-		})();
-
-	}
-])
-
 // Search
 .controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService',
 	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService) {
@@ -579,9 +391,136 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
+.controller('AboutCtrl', ['$scope', '$ionicScrollDelegate', 'PRIV_POLICY_TEXT',
+	function($scope, $ionicScrollDelegate, PRIV_POLICY_TEXT) {
+
+		$scope.hideText = true;
+		$scope.text = PRIV_POLICY_TEXT;
+
+		$scope.toggleText = function() {
+			// resize the content since the Privacy Policy text is too big 
+			$ionicScrollDelegate.resize();
+			$scope.hideText = !$scope.hideText;
+		};
+	}
+])
+
+
+.controller('MapCtrl', ['MapService', '$scope', '$location', '$stateParams', '$timeout', 'leafletData', '$filter', '$q', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+	function(MapService, $scope, $location, $stateParams, $timeout, leafletData, $filter, $q, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+		$scope.markers = {};
+		$scope.paths = {};
+		$scope.url = "atstop";
+
+		// refresh map
+		var refresh = function() {
+			console.log("refresh");
+			leafletData.getMap().then(function(map) {
+				map.closePopup();
+			});
+			showBusAndStopMarkers($stateParams.routeId);
+		};
+
+		// show route polylines
+		var showRoutePolylines = function(route) {
+			MapService.getRoutePolylines(route).then(function(res) {
+				$scope.paths = res;
+
+				// fit to polylines
+				leafletData.getMap().then(function(map) {
+					map.fitBounds([
+						[$scope.paths['p0']['latlngs'][0]['lat'], $scope.paths['p0']['latlngs'][0]['lng']],
+						[$scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lat'], $scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lng']]
+					]);
+				});
+			});
+		};
+
+		// show buses and stops
+		var showBusAndStopMarkers = function(route) {
+			$scope.markers = {};
+
+			MapService.getBusMarkers(route).then(function(res) {
+				angular.extend($scope.markers, res);
+			});
+
+			MapService.getStopMarkers(route).then(function(res) {
+				angular.extend($scope.markers, res);
+			});
+		};
+
+		// map
+		var map = function() {
+			angular.extend($scope, {
+				events: {
+					markers: {
+						enable: ['click'],
+						logic: 'emit'
+					}
+				},
+				center: {},
+				defaults: {
+					tileLayer: MAP_TILES,
+					tileLayerOptions: {
+						attribution: $filter('hrefToJS')(MAP_ATTRS)
+					},
+					scrollWheelZoom: false,
+					key: MAPBOX_KEY
+				},
+				markers: {},
+				paths: {}
+			});
+			leafletData.getMap().then(function(map) {
+				//leaflet attribution is not required
+				map.attributionControl.setPrefix('');
+				map.invalidateSize(true);
+			});
+		};
+
+		// map click event
+		$scope.$on('leafletDirectiveMarker.click', function(event, args) {
+			var object = $scope.markers[args.markerName];
+			if ($filter('isUndefinedOrEmpty')(object.stopName)) {
+				var content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>",
+					latLng = [object.lat, object.lng],
+					popup = L.popup().setContent(content).setLatLng(latLng);
+			} else {
+				console.log(object);
+				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
+					latLng = [object.lat, object.lng],
+					popup = L.popup().setContent(content).setLatLng(latLng);
+			}
+
+			leafletData.getMap().then(function(map) {
+				popup.openOn(map);
+			});
+		});
+
+		$scope.$on('$destroy', function() {
+			$interval.cancel($scope.reloadTimeout);
+		});
+
+		$scope.init = (function() {
+			if ($location.$$path.indexOf("map-favorites") > -1) {
+				$scope.url = "atstop-favorites";
+			} else if ($location.$$path.indexOf("map-gps") > -1) {
+				$scope.url = "atstop-gps";
+			}
+
+			map();
+			showRoutePolylines($stateParams.routeId);
+			showBusAndStopMarkers($stateParams.routeId);
+			$scope.reloadTimeout = $interval(refresh, 35000);
+		})();
+	}
+])
+
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['VehicleMonitoringService', '$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', 'leafletBoundsHelpers', 'AtStopService', '$ionicScrollDelegate', '$timeout', 'MAPBOX_KEY',
-	function(VehicleMonitoringService, $stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, leafletBoundsHelpers, AtStopService, $ionicScrollDelegate, $timeout, MAPBOX_KEY) {
+.controller('NearbyStopsAndRoutesCtrl', ['MapService', '$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+	function(MapService, $stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+		$scope.markers = {};
+		$scope.paths = {};
+		$scope.url = "atstop";
 
 		$scope.data = {
 			"title": "Nearby Stops",
@@ -599,51 +538,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"results": [],
 			"mapHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2) - 90,
 			"listHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2),
-			"url": "/tab/atstop"
 		};
 
-		var getDistanceInM = function(lat1, lon1, lat2, lon2) {
-			var R = 6371;
-			var dLat = deg2rad(lat2 - lat1);
-			var dLon = deg2rad(lon2 - lon1);
-			var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-			var d = R * c * 1000;
-			return parseInt(d);
-		};
-
-		var deg2rad = function(deg) {
-			return deg * (Math.PI / 180)
-		};
-
-		var directionToDegrees = function(direction) {
-			var directions = {
-				"N": 0,
-				"NE": 45,
-				"E": 90,
-				"SE": 135,
-				"S": 180,
-				"SW": 225,
-				"W": 270,
-				"NW": 315
-			};
-			return directions[direction];
-		};
-
-		var icons = {
-			stop: {
-				type: 'div',
-				iconSize: [13, 13],
-				className: 'stop'
-			},
-			currentStop: {
-				type: 'div',
-				iconSize: [14, 14],
-				className: 'stop-current'
-			}
-		};
-		
 		$scope.refresh = function() {
+			console.log('refresh');
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
 				$scope.getNearbyStopsAndRoutesGPS();
 			} else {
@@ -657,10 +555,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$ionicLoading.hide();
 				if (!angular.isUndefined(results) && results != null && results.length > 0) {
 					angular.forEach(results, function(stop) {
-						stop['dist'] = getDistanceInM(lat, lon, stop['lat'], stop['lon']);
+						stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
 					});
 					$scope.data.stops = results;
-					plotNearbyStops();
+					showNearbyStops();
 					$scope.data.notifications = "";
 					$scope.data.showMap = true;
 				} else {
@@ -694,32 +592,40 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					}, 3000);
 				}
 			);
-		}
+		};
 
-		var map = function() {
-			$scope.$on('leafletDirectiveMarker.click', function(event, args) {
-				console.log(event);
-				console.log(args);
-				var object = $scope.markers[args.markerName];
-
-				if ($filter('isUndefinedOrEmpty')(object.stopName)) {
-					var content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>",
-						latLng = [object.lat, object.lng],
-						popup = L.popup().setContent(content).setLatLng(latLng);
-				} else {
-					console.log(object);
-					var content = '<p>' + object.stopName + '</p>' + '<a href="#' + $scope.data.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
-						latLng = [object.lat, object.lng],
-						popup = L.popup().setContent(content).setLatLng(latLng);
-				}
-
-				leafletData.getMap().then(function(map) {
-					popup.openOn(map);
-					console.log('hi!');
-					//need to do something interesting here... show stop information below map and hide others?
-				});
+		var showNearbyStops = function() {
+			$scope.markers = {};
+			$scope.paths = {};
+			leafletData.getMap().then(function(map) {
+				map.closePopup();
 			});
-			var mapCenter;
+
+			var stops = [];
+			angular.forEach($scope.data.stops, function(v, k) {
+				stops['s' + k] = {
+					lat: v["lat"],
+					lng: v["lon"],
+					stopId: v["id"],
+					stopName: $filter('encodeStopName')(v['name']),
+					icon: {
+						iconUrl: 'img/stop_icons/stop.svg',
+						iconSize: [20, 20]
+					},
+					focus: false
+				};
+			});
+
+			leafletData.getMap().then(function(map) {
+				map.setView(stops['s0'], 13);
+			});
+
+			$scope.markers = stops;
+		};
+
+		// map
+		var map = function() {
+			var mapCenter = {};
 			//if we received lat/long from the state, then use that center, otherwise use location
 			if (!angular.isUndefined($stateParams.latitude)) {
 				mapCenter = {
@@ -735,11 +641,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			}
 
 			angular.extend($scope, {
+				events: {
+					markers: {
+						enable: ['click'],
+						logic: 'emit'
+					}
+				},
 				center: mapCenter,
 				defaults: {
-					tileLayer: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
+					tileLayer: MAP_TILES,
 					tileLayerOptions: {
-						attribution: $filter('hrefToJS')('Map:<a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC-BY-3</a>. Data:<a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://www.openstreetmap.org/copyright">ODbL</a>.')
+						attribution: $filter('hrefToJS')(MAP_ATTRS)
 					},
 					scrollWheelZoom: false,
 					key: MAPBOX_KEY
@@ -747,156 +659,89 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				markers: {},
 				paths: {}
 			});
+
 			leafletData.getMap().then(function(map) {
 				//leaflet attribution is not required
 				map.attributionControl.setPrefix('');
 				map.invalidateSize(true);
 			});
-
 		};
 
-		plotNearbyStops = function() {
-			$scope.markers = {};
+		// show route polylines
+		$scope.showRoutePolylines = function(route) {
 			$scope.paths = {};
-			var stops = [];
-			var i = 0;
+			MapService.getRoutePolylines(route).then(function(res) {
+				$scope.paths = res;
+			});
+		};
 
+		var showBusMarkers = function(route) {
 			leafletData.getMap().then(function(map) {
 				map.closePopup();
 			});
-			
-			angular.forEach($scope.data.stops, function(s) {
-				stops[i] = {
-					lat: s["lat"],
-					lng: s["lon"],
-					stopId: s["id"],
-					stopName: $filter('encodeStopName')(s["name"]),
-					icon: {
-						iconUrl: 'img/stop_icons/stop.svg',
-						iconSize: [20, 20]
-					},
-					//iconAngle: directionToDegrees(s["direction"]),
-					focus: false
-				};
-				i++;
+
+			MapService.getBusMarkers(route).then(function(res) {
+				angular.extend($scope.markers, res);
 			});
-			
-			leafletData.getMap().then(function(map) {
-				map.closePopup();
-				map.setView(stops[0], 13);
-			});
-			
-			$scope.markers = stops;
 		};
 
-		$scope.showOnMap = function(type, ID, lat, lon, name) {
-			lat = typeof lat !== 'undefined' ? lat : "";
-			lon = typeof lon !== 'undefined' ? lon : "";
-			name = typeof name !== 'undefined' ? name : "";
-
+		// show current stop
+		$scope.showCurrentStop = function(route, stop, lat, lon, name) {
 			$scope.markers = {};
-			$scope.paths = {};
+			leafletData.getMap().then(function(map) {
+				map.closePopup();
+			});
 
-			if (type == "route") {
-				RouteService.getPolylines(ID).then(function(results) {
-					var route = [];
-					var i = 0;
+			$scope.markers['currentStop'] = {
+				lat: lat,
+				lng: lon,
+				icon: {
+					iconUrl: 'img/stop_icons/stop-red.svg',
+					iconSize: [20, 20]
+				},
+				focus: false,
+				stopId: stop,
+				stopName: $filter('encodeStopName')(name)
+			};
 
-					angular.forEach(results.polylines, function(val, key) {
-						route['p' + i] = {
-							color: '#' + results.color,
-							weight: 3,
-							latlngs: [],
-							clickable: false
-						};
+			leafletData.getMap().then(function(map) {
+				map.closePopup();
+				map.setView($scope.markers['currentStop'], 13);
+			});
 
-						angular.forEach(L.Polyline.fromEncoded(val).getLatLngs(), function(v, k) {
-							route['p' + i].latlngs.push({
-								lat: v.lat,
-								lng: v.lng
-							});
-						});
-						i++;
-					});
-					$scope.paths = route;
+			showBusMarkers(route);
+		};
 
-				});
-
-				VehicleMonitoringService.getLocations(ID).then(function(results) {
-					var i = 0;
-					var buses = [];
-
-					function round5(x) {
-						return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
-					}
-					angular.forEach(results, function(val, key) {
-						var angle = round5(val.angle);
-						if (angle == 360) {
-							angle = 0;
-						};
-						buses[i] = {
-							lat: val.latitude,
-							lng: val.longitude,
-							icon: {
-								iconUrl: 'img/bus_icons/vehicle-' + angle + '.png',
-								iconSize: [51, 51]
-							},
-							focus: false,
-							vehicleId: val.vehicleId,
-							destination: val.destination,
-							nextStop: val.stopPointName,
-							zIndexOffset: 800
-						}
-						i++;
-					});
-					$scope.markers = buses;
-				});
+		// map click event
+		$scope.$on('leafletDirectiveMarker.click', function(event, args) {
+			var object = $scope.markers[args.markerName];
+			if ($filter('isUndefinedOrEmpty')(object.stopName)) {
+				var content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>",
+					latLng = [object.lat, object.lng],
+					popup = L.popup().setContent(content).setLatLng(latLng);
 			} else {
-				var stops = [];
-				stops[0] = {
-					lat: lat,
-					lng: lon,
-					icon: icons.currentStop,
-					focus: false,
-					stopId: ID,
-					stopName: $filter('encodeStopName')(name)
-				};
-
-				leafletData.getMap().then(function(map) {
-					map.closePopup();
-					map.setView(stops[0], 13);
-				});
-
-				$scope.markers = stops;
+				console.log(object);
+				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
+					latLng = [object.lat, object.lng],
+					popup = L.popup().setContent(content).setLatLng(latLng);
 			}
-		};
+
+			leafletData.getMap().then(function(map) {
+				popup.openOn(map);
+			});
+		});
 
 		$scope.init = (function() {
-			$scope.data.results = "";
 			map();
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
 				console.log("GPS Mode");
 				$scope.data.title = "Nearby Stops";
-				$scope.data.url = "/tab/atstop-gps";
+				$scope.url = "atstop-gps";
 				$scope.getNearbyStopsAndRoutesGPS();
 			} else {
 				$scope.data.title = $stateParams.address;
 				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
 			}
 		})();
-	}
-])
-
-.controller('AboutCtrl', ['$scope', '$ionicScrollDelegate', 'PRIV_POLICY_TEXT',
-	function($scope, $ionicScrollDelegate, PRIV_POLICY_TEXT) {
-
-		$scope.hideText = true;
-		$scope.text = PRIV_POLICY_TEXT;
-
-		$scope.toggleText = function() {
-			// resize the content since the Privacy Policy text is too big 
-			$ionicScrollDelegate.resize();
-			$scope.hideText = !$scope.hideText;
-		};
 	}
 ]);
