@@ -711,13 +711,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			showBusMarkers(route);
 		};
 
-		$scope.$on('$ionicView.afterEnter', function(event) {
-			$timeout(
-			leafletData.getMap().then(function(map) {
-				console.log('size');
-				map.invalidateSize();
-			}), 1200);
-		});
 
 		// map click event
 		$scope.$on('leafletDirectiveMarker.click', function(event, args) {
