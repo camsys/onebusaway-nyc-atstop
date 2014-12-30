@@ -537,7 +537,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showStops": true,
 			"results": [],
 			"mapHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2) - 90,
-			"listHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2),
+			"listHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2)
 		};
 
 		$scope.refresh = function() {
@@ -663,7 +663,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			leafletData.getMap().then(function(map) {
 				//leaflet attribution is not required
 				map.attributionControl.setPrefix('');
-				map.invalidateSize(true);
 			});
 		};
 
@@ -711,6 +710,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 			showBusMarkers(route);
 		};
+
+		$scope.$on('$ionicView.afterEnter', function(event) {
+			$timeout(
+			leafletData.getMap().then(function(map) {
+				console.log('size');
+				map.invalidateSize();
+			}), 1200);
+		});
 
 		// map click event
 		$scope.$on('leafletDirectiveMarker.click', function(event, args) {
