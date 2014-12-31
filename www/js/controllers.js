@@ -473,7 +473,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			leafletData.getMap().then(function(map) {
 				//leaflet attribution is not required
 				map.attributionControl.setPrefix('');
-				map.invalidateSize(true);
+				L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
 			});
 		};
 
@@ -561,6 +561,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					showNearbyStops();
 					$scope.data.notifications = "";
 					$scope.data.showMap = true;
+					leafletData.getMap().then(function(map) {
+						//leaflet attribution is not required
+						L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
+					});
 				} else {
 					$scope.data.showMap = false;
 					$scope.data.notifications = "No nearby stops found.";
@@ -576,7 +580,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				timeout: 10000
 			}).then(
 				function(position) {
-					$scope.data.showMap = true;
 					console.log("GPS succeeded");
 					$scope.data.val = true;
 					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
