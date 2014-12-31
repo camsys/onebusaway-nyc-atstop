@@ -418,7 +418,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			leafletData.getMap().then(function(map) {
 				map.closePopup();
 			});
-			showBusAndStopMarkers($stateParams.routeId);
+			showBusAndStopMarkers($stateParams.routeId, $stateParams.stopId);
 		};
 
 		// show route polylines
@@ -437,14 +437,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		// show buses and stops
-		var showBusAndStopMarkers = function(route) {
+		var showBusAndStopMarkers = function(route, stop) {
 			$scope.markers = {};
 
 			MapService.getBusMarkers(route).then(function(res) {
 				angular.extend($scope.markers, res);
 			});
 
-			MapService.getStopMarkers(route).then(function(res) {
+			MapService.getStopMarkers(route, stop).then(function(res) {
 				angular.extend($scope.markers, res);
 			});
 		};
@@ -509,7 +509,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 			map();
 			showRoutePolylines($stateParams.routeId);
-			showBusAndStopMarkers($stateParams.routeId);
+			showBusAndStopMarkers($stateParams.routeId, $stateParams.stopId);
 			$scope.reloadTimeout = $interval(refresh, 35000);
 		})();
 	}

@@ -667,7 +667,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 ])
 
 .factory('MapService', function(RouteService, VehicleMonitoringService, $filter, $q) {
-	var getStopMarkers = function(route) {
+	var getStopMarkers = function(route, stop = null) {
 		var deferred = $q.defer();
 		var markers = {};
 
@@ -684,7 +684,12 @@ angular.module('starter.services', ['ionic', 'configuration'])
 					stopId: val.id,
 					stopName: $filter('encodeStopName')(val.name)
 				};
+
+				if (stop == val.id && stop != null) {
+					markers['s' + key]['icon']['iconUrl'] = 'img/stop_icons/stop-red.svg';
+				}
 			});
+
 			console.log(markers);
 			deferred.resolve(markers);
 		});
@@ -749,7 +754,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
 		return deferred.promise;
 	};
-	
+
 	var getDistanceInM = function(lat1, lon1, lat2, lon2) {
 		var R = 6371;
 		var dLat = deg2rad(lat2 - lat1);
