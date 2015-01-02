@@ -667,7 +667,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
 ])
 
 .factory('MapService', function(RouteService, VehicleMonitoringService, $filter, $q) {
-	var getStopMarkers = function(route, stop = null) {
+	var getStopMarkers = function(route, stop ) {
+		stop = stop || null;
 		var deferred = $q.defer();
 		var markers = {};
 
