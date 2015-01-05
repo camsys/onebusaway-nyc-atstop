@@ -486,7 +486,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					popup = L.popup().setContent(content).setLatLng(latLng);
 			} else {
 				console.log(object);
-				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
+				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">See upcoming buses</a>',
 					latLng = [object.lat, object.lng],
 					popup = L.popup().setContent(content).setLatLng(latLng);
 			}
@@ -516,8 +516,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['MapService', '$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-	function(MapService, $stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('NearbyStopsAndRoutesCtrl', ['MapService', '$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+	function(MapService, $stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
 		$scope.markers = {};
 		$scope.paths = {};
 		$scope.url = "atstop";
@@ -542,6 +542,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.refresh = function() {
 			console.log('refresh');
+			if ($scope.reloadTimeout) {
+				$interval.cancel($scope.reloadTimeout);
+			}
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
 				$scope.getNearbyStopsAndRoutesGPS();
 			} else {
@@ -687,8 +690,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		};
 
-		// show current stop
+		// refresh specific route 
 		$scope.showCurrentStop = function(route, stop, lat, lon, name) {
+			$interval.cancel($scope.reloadTimeout);
+			drawCurrentStop(route, stop, lat, lon, name);
+			$scope.reloadTimeout = $interval(function() {
+				drawCurrentStop(route, stop, lat, lon, name);
+			}, 35000);
+		};
+
+		// show current stop
+		var drawCurrentStop = function(route, stop, lat, lon, name) {
 			$scope.markers = {};
 			leafletData.getMap().then(function(map) {
 				map.closePopup();
@@ -714,6 +726,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			showBusMarkers(route);
 		};
 
+		$scope.slideTo = function(location) {
+			location = $location.hash(location);
+
+			//console.log(location);
+			//console.log('scrolling to: ' + location);
+
+			$timeout(function() {
+				$ionicScrollDelegate.anchorScroll("#" + location);
+			});
+		};
+
 
 		// map click event
 		$scope.$on('leafletDirectiveMarker.click', function(event, args) {
@@ -723,8 +746,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					latLng = [object.lat, object.lng],
 					popup = L.popup().setContent(content).setLatLng(latLng);
 			} else {
-				console.log(object);
-				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">Go to Stop</a>',
+				$scope.slideTo(object.stopId);
+				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">See upcoming buses</a>',
 					latLng = [object.lat, object.lng],
 					popup = L.popup().setContent(content).setLatLng(latLng);
 			}
