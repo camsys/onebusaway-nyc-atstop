@@ -5,7 +5,7 @@
             <div class="item-input-inset">
                 <label class="item-input-wrapper">
                     <i class="icon ion-search placeholder-icon"></i>
-                    <input type="search" placeholder="Search" ng-change="autocomplete()" ng-enter="searchAndGo(data.searchKey)" ng-model="data.searchKey"ng-model-options="{debounce: 250}"></input>
+                    <input type="search" placeholder="Search" ng-change="autocomplete()" ng-enter="searchAndGo(data.searchKey)" ng-model="data.searchKey" ng-model-options="{debounce: 250}"></input>
 
                 </label>
                 <button class="button button-small" ng-click="searchAndGo(data.searchKey)">
@@ -25,25 +25,25 @@
 			<div ng-show="data.showSearches">
 			<p>Recent Searches</p>
             <p>
-                <i class="item"><span class="button-clear" ng-repeat="recentSearch in ::data.searches track by $index" ng-click="searchesGo(recentSearch.data)"> {{recentSearch.title}} <br></span>
+                <i class="item"><span class="button-clear" ng-repeat="recentSearch in ::data.searches track by $index" ng-click="searchesGo(recentSearch.data)"> {{recentSearch.title}} <br/></span>
                 </i>
             </p>
 			</div>
 
             <p>You can search for Stops, Routes, or Intersections in the bar above, or try one of the examples below:</p>
             <p><i class="item">
-                Routes: &nbsp;</i>
-                <i class="item"><span class="button-clear" ng-repeat="r in ::data.exampleRoutes" ng-click="searchAndGo(r)">{{r}} &nbsp;</span>
+                Routes: &#160;</i>
+                <i class="item"><span class="button-clear" ng-repeat="r in ::data.exampleRoutes" ng-click="searchAndGo(r)">{{r}} &#160;</span>
                 </i>
             </p>
             <p>
                 <i class="item">Stops:</i>
-                <i class="item"><span class="button-clear" ng-repeat="s in ::data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &nbsp;</span>
+                <i class="item"><span class="button-clear" ng-repeat="s in ::data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &#160;</span>
                 </i>
             </p>
             <p><i class="item">Intersections:</i>
 
-                <i class="item"><span class="button-clear" ng-repeat="i in ::data.exampleIntersections" ng-click="searchAndGo(i)">{{i}}</i>
+                <i class="item"><span class="button-clear" ng-repeat="i in ::data.exampleIntersections" ng-click="searchAndGo(i)">{{i}}</span></i>
             </p>
         </div>
 

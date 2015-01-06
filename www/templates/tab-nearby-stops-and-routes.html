@@ -1,8 +1,9 @@
 <ion-view view-title="{{data.title}}">
     <ion-nav-buttons side="secondary">
+        <button class="button button-clear" ng-click="refresh()" ng-show="data.returnShow">
+            <i class="icon ion-arrow-return-left"></i>
+        </button>
     </ion-nav-buttons>
-	
-
 
     <ion-content ng-show="data.loaded" has-bouncing="true" scroll="false">
 	

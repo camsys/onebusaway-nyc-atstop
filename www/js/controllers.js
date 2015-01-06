@@ -267,7 +267,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		}
 
 		$scope.$on('$destroy', function() {
-			$interval.cancel($scope.reloadTimeout);
+			if ($scope.reloadTimeout) {
+				$interval.cancel($scope.reloadTimeout);
+			}
 		});
 
 		$scope.init = (function() {
@@ -497,7 +499,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		});
 
 		$scope.$on('$destroy', function() {
-			$interval.cancel($scope.reloadTimeout);
+			if ($scope.reloadTimeout) {
+				$interval.cancel($scope.reloadTimeout);
+			}
 		});
 
 		$scope.init = (function() {
@@ -523,6 +527,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.url = "atstop";
 
 		$scope.data = {
+			"returnShow": false,
 			"title": "Nearby Stops",
 			"loaded": true,
 			"showMap": false,
@@ -542,6 +547,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.refresh = function() {
 			console.log('refresh');
+			$scope.data.returnShow = false;
 			if ($scope.reloadTimeout) {
 				$interval.cancel($scope.reloadTimeout);
 			}
@@ -692,6 +698,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		// refresh specific route 
 		$scope.showCurrentStop = function(route, stop, lat, lon, name) {
+			$scope.data.returnShow = true;
 			$interval.cancel($scope.reloadTimeout);
 			drawCurrentStop(route, stop, lat, lon, name);
 			$scope.reloadTimeout = $interval(function() {
