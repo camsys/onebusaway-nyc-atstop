@@ -745,9 +745,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			//console.log(location);
 			//console.log('scrolling to: ' + location);
 
+			// not satisfied with performance
+			/*
 			$timeout(function() {
 				$ionicScrollDelegate.anchorScroll("#" + location);
 			});
+			*/
 		};
 
 
