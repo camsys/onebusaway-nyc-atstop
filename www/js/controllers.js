@@ -61,7 +61,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				default:
 					$scope.data.results = [];
 					$scope.data.notifications = "No matches";
-					console.log("undefined type");
+					//console.log("undefined type");
 					break;
 			}
 		};
@@ -112,7 +112,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						default:
 							$scope.data.results = [];
 							$scope.data.notifications = "No matches";
-							console.log("undefined type");
+							//console.log("undefined type");
 							break;
 					}
 				}
@@ -416,7 +416,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		// refresh map
 		var refresh = function() {
-			console.log("refresh");
+			//console.log("refresh");
 			leafletData.getMap().then(function(map) {
 				map.closePopup();
 			});
@@ -487,7 +487,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					latLng = [object.lat, object.lng],
 					popup = L.popup().setContent(content).setLatLng(latLng);
 			} else {
-				console.log(object);
+				//console.log(object);
 				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">See upcoming buses</a>',
 					latLng = [object.lat, object.lng],
 					popup = L.popup().setContent(content).setLatLng(latLng);
@@ -546,7 +546,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.refresh = function() {
-			console.log('refresh');
+			//console.log('refresh');
 			$scope.data.returnShow = false;
 			if ($scope.reloadTimeout) {
 				$interval.cancel($scope.reloadTimeout);
@@ -582,19 +582,19 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.getNearbyStopsAndRoutesGPS = function() {
-			console.log("getNearbyStopsAndRoutesGPS called");
+			//console.log("getNearbyStopsAndRoutesGPS called");
 			$ionicLoading.show();
 			$cordovaGeolocation.getCurrentPosition({
 				enableHighAccuracy: false,
 				timeout: 10000
 			}).then(
 				function(position) {
-					console.log("GPS succeeded");
+					//console.log("GPS succeeded");
 					$scope.data.val = true;
 					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
 				}, function(error) {
 					$scope.data.showMap = false;
-					console.log("GPS failed", error);
+					//console.log("GPS failed", error);
 					$ionicLoading.hide();
 					var popup = $ionicPopup.alert({
 						content: "Cannot access your position. Check if location services are enabled."
@@ -696,6 +696,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		};
 
+		$scope.$on('$destroy', function() {
+			if ($scope.reloadTimeout) {
+				$interval.cancel($scope.reloadTimeout);
+			}
+		});
+
 		// refresh specific route 
 		$scope.showCurrentStop = function(route, stop, lat, lon, name) {
 			$scope.data.returnShow = true;
@@ -767,7 +773,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.init = (function() {
 			map();
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
-				console.log("GPS Mode");
+				//console.log("GPS Mode");
 				$scope.data.title = "Nearby Stops";
 				$scope.url = "atstop-gps";
 				$scope.getNearbyStopsAndRoutesGPS();

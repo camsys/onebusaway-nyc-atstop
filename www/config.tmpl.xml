@@ -21,6 +21,8 @@
 	<preference name="detect-data-types" value="false"/>
 	<preference name="deployment-target" value="6.0"/>
 	<!--  Preferences / Android only -->
+	<preference name="android-minSdkVersion" value="10" />
+	<preference name="AndroidLaunchMode" value="singleTask" />
 	<!-- Plugins -->
 	<gap:plugin name="org.apache.cordova.network-information"/>
 	<gap:plugin name="org.apache.cordova.geolocation"/>

@@ -37,7 +37,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				insert(matches.formattedAddress, matches.formattedAddress, matches);
 				break;
 			default:
-				console.log("undefined type");
+				//console.log("undefined type");
 				break;
 		}
 	};
@@ -81,7 +81,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			"stopName": stopName
 		};
 		$window.localStorage.setItem("favorites", JSON.stringify(data));
-		console.log('Added to the favorites');
+		//console.log('Added to the favorites');
 	};
 
 	var remove = function(stopId) {
@@ -136,7 +136,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				return deferred.resolve(locations);
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		return deferred.promise;
@@ -190,7 +190,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				return deferred.resolve(results);
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		return deferred.promise;
@@ -244,7 +244,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				}
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		responsePromise.then(function() {
@@ -271,7 +271,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				stops = data.stops;
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		responsePromise.then(function() {
@@ -322,7 +322,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				routes = data.data.routes;
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		responsePromise.then(function() {
@@ -349,7 +349,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				stops = data.data.stops;
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		responsePromise.then(function() {
@@ -441,7 +441,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				}
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		responsePromise.then(function() {
@@ -473,7 +473,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				routes['routes'] = data.data.routes;
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		responsePromise.then(function() {
@@ -498,7 +498,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				coordinates['lon'] = data.data.lon;
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		responsePromise.then(function() {
@@ -529,7 +529,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				matches = data;
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		responsePromise.then(function() {
@@ -615,12 +615,12 @@ angular.module('starter.services', ['ionic', 'configuration'])
 							}
 							break;
 						default:
-							console.log("undefined type");
+							//console.log("undefined type");
 					}
 				}
 			})
 			.error(function(data, status, header, config) {
-				console.log('error');
+				//console.log('error');
 			});
 
 		responsePromise.then(function() {
@@ -691,7 +691,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				}
 			});
 
-			console.log(markers);
+			//console.log(markers);
 			deferred.resolve(markers);
 		});
 
@@ -718,7 +718,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 					});
 				});
 			});
-			console.log(paths);
+			//console.log(paths);
 			deferred.resolve(paths);
 		});
 
@@ -749,7 +749,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 					zIndexOffset: 800
 				};
 			});
-			console.log(markers);
+			//console.log(markers);
 			deferred.resolve(markers);
 		});
 
