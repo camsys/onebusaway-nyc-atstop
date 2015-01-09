@@ -187,7 +187,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"notifications": '',
 			"alertsHide": false,
 			"alertsToggle": false,
-			"stopId": $stateParams.stopId
+			"stopId": $stateParams.stopId,
+			"tips": "Pull the list to refresh"
 		};
 
 		$scope.toggleFavorites = function() {
@@ -542,7 +543,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"showStops": true,
 			"results": [],
 			"mapHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2) - 90,
-			"listHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2)
+			"listHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2),
+			"tips": "Pull the list to refresh"
 		};
 
 		$scope.refresh = function() {
@@ -594,6 +596,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
 				}, function(error) {
 					$scope.data.showMap = false;
+					$scope.data.notifications = "No nearby stops found.";
 					//console.log("GPS failed", error);
 					$ionicLoading.hide();
 					var popup = $ionicPopup.alert({

@@ -27,48 +27,50 @@
     <script src="lib/angular-leaflet/angular-leaflet-directive.min.js"></script>
 
     <script>
-
-        describe('AtStopService Tests (note: server/data dependent)', function(){
+        describe('AtStopService Tests (note: server/data dependent)', function () {
             var ctrl, scope;
             beforeEach(module('starter'));
 
             it('should return results for a stop', function () {
                 var stop = 'MTA_400861';
-                inject(function(AtStopService){
-                    AtStopService.getBuses(stop).then(function(results){
+                inject(function (AtStopService) {
+                    AtStopService.getBuses(stop).then(function (results) {
                         expect(Object.keys(data.arriving).length).toBeGreaterThan(1);
                     })
                 })
             });
 
-			it('should return results for one route at a stop', function () {
+            it('should return results for one route at a stop', function () {
                 var stop = 'MTA_400861';
-				var line = 'MTA NYCT_M7';
-				var params = {'stop': stop, 'line':line};
-				var data = {};
-                inject(function(AtStopService){
-                    AtStopService.getBuses(params).then(function(results){
-						console.log(results.arriving);
-						console.log(Object.keys(results.arriving).length);
-						expect(Object.keys(data.arriving).length).toBeEqualTo(1);
-					})
+                var line = 'MTA NYCT_M7';
+                var params = {
+                    'stop': stop,
+                    'line': line
+                };
+                var data = {};
+                inject(function (AtStopService) {
+                    AtStopService.getBuses(params).then(function (results) {
+                        console.log(results.arriving);
+                        console.log(Object.keys(results.arriving).length);
+                        expect(Object.keys(data.arriving).length).toBeEqualTo(1);
+                    })
                 })
-				
+
             });
 
         });
 
 
-        describe('Geolocation Tests', function (){
+        describe('Geolocation Tests', function () {
             var ctrl, scope;
             beforeEach(module('starter'));
 
 
             it('should return nearby stops', function () {
-                var lat= 40.748433;
-                var lon=-73.985656;
+                var lat = 40.748433;
+                var lon = -73.985656;
                 inject(function (GeolocationService) {
-                    GeolocationService.getStops(lat, lon).then(function(results) {
+                    GeolocationService.getStops(lat, lon).then(function (results) {
                         expect(results.length).to.BeGreaterThan(0);
                     });
                 });

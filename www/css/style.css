@@ -150,3 +150,15 @@ label.item.item-input {
 		border: 2px solid #ffffff;
 
 }
+
+.tips {
+	background-color:rgba(102, 204, 51, 0.85);
+	color: #fff;
+	height: 30px;
+	padding: 4px;
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	top: 0;
+	z-index: 999;
+}

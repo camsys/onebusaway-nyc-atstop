@@ -14,13 +14,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		if (window.cordova && window.cordova.plugins.Keyboard) {
 			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 		}
-		
+
 		/*
 		if (window.StatusBar) {
 			StatusBar.styleDefault();
 		}
 		*/
-		
+
 		if ($cordovaNetwork.isOffline()) {
 			$ionicPopup.alert({
 				title: "Internet Disconnected",
@@ -104,6 +104,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 
 	});
+})
+
+.directive('ngTips', function($timeout) {
+	return {
+		restrict: 'E',
+		replace: true,
+		scope: {
+			ngModel: '='
+		},
+		template: '<div class="tips">{{ngModel}}</div>',
+		link: function(scope, element, attrs) {
+
+			var to = $timeout(function() {
+				element.remove();
+			}, 3000);
+
+			scope.$on("$destroy", function() {
+				$timeout.cancel(to);
+			});
+		}
+	}
 })
 
 
