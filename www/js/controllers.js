@@ -544,12 +544,23 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"results": [],
 			"mapHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2) - 90,
 			"listHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2),
-			"tips": "Pull the list to refresh"
+			"tips": "Pull the list to refresh",
+			"nearbyStops": []
+		};
+
+		$scope.back = function() {
+			$scope.data.returnShow = false;
+			if ($scope.reloadTimeout) {
+				$interval.cancel($scope.reloadTimeout);
+			}
+			$scope.data.stops = $scope.data.nearbyStops;
+			showNearbyStops();
+			$scope.data.notifications = "";
+			$scope.data.showMap = true;
 		};
 
 		$scope.refresh = function() {
 			//console.log('refresh');
-			$scope.data.returnShow = false;
 			if ($scope.reloadTimeout) {
 				$interval.cancel($scope.reloadTimeout);
 			}
@@ -569,6 +580,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
 					});
 					$scope.data.stops = results;
+					$scope.data.nearbyStops = results;
 					showNearbyStops();
 					$scope.data.notifications = "";
 					$scope.data.showMap = true;
