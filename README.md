@@ -11,6 +11,9 @@ A hybrid mobile app that provides information about when the next bus will arriv
 
 To run and test the app, use [PhoneGap Developer App](http://app.phonegap.com/). In order to build the native mobile app, use [Adobe PhoneGap Build](https://build.phonegap.com/). Rename the **config.tmpl.xml** to **config.xml**. You can also use [PhoneGap Emulatation extension](http://emulate.phonegap.com/) for Google Chrome. *NOTE:* The app uses several objects, like the connection object from the Apache Cordova framework, which may not be available locally (in a Web browser).
 
+### Using JSHint ###
+Run `npm install` in the root of the project. To use JSHint, run `gulp lint`.
+
 ### Project License ###
 
 The project is based on [GNU General Public License, version 2](http://www.gnu.org/licenses/gpl-2.0.html).
