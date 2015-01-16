@@ -7,6 +7,8 @@ var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
 var jshint = require('gulp-jshint');
+var uglify = require('gulp-uglify');
+var ngAnnotate = require('gulp-ng-annotate');
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -54,4 +56,15 @@ gulp.task('lint', function() {
   return gulp.src('./www/js/*.js')
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
+});
+
+gulp.task('compress', function() {
+	gulp.src('./www/js/*.js')
+		.pipe(ngAnnotate({
+			remove: true,
+			add: true,
+			single_quotes: true
+		}))
+		.pipe(uglify())
+		.pipe(gulp.dest('dist'))
 });

@@ -5,3 +5,4 @@ www/config.xml
 www/res-custom/
 platforms/
 node_modules/
+dist/
