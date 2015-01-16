@@ -61,8 +61,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				$rootScope.$broadcast('requestRejection', rejection);
 				return rejection;
 			}
-		}
-	})
+		};
+	});
 })
 
 
@@ -82,11 +82,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	// if 'loading:show' is broadcasted then show the loading indicator or hide if 'loading:hide' is broadcasted
 	$rootScope.$on('loading:show', function() {
-		$ionicLoading.show()
+		$ionicLoading.show();
 	});
 
 	$rootScope.$on('loading:hide', function() {
-		$ionicLoading.hide()
+		$ionicLoading.hide();
 	});
 
 	// Do we need this?
@@ -124,7 +124,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 				$timeout.cancel(to);
 			});
 		}
-	}
+	};
 })
 
 

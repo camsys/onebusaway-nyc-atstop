@@ -31,7 +31,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			if ($scope.data.searchKey.length > 0) {
 				SearchService.autocomplete($scope.data.searchKey).then(
 					function(matches) {
-						if (!angular.isUndefined(matches) && matches != null && matches.length > 0) {
+						if (!angular.isUndefined(matches) && matches !== null && matches.length > 0) {
 							$scope.data.results = matches;
 							$scope.data.notifications = "";
 						} else {
@@ -84,11 +84,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					noSchedService(matches.shortName);
 				}
 			}
-		}
+		};
 
 		var noSchedService = function(routeDirection) {
 			$scope.data.notifications = "There is no scheduled service on this route at this time.";
-		}
+		};
 
 		$scope.searchAndGo = function(term) {
 			// for search page, enter searches if only one autocomplete result is returned.
@@ -154,7 +154,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			var favoritesDefer = $q.defer();
 
 			FavoritesService.get().then(function(results) {
-				if (!angular.isUndefined(results) && results != null) {
+				if (!angular.isUndefined(results) && results !== null) {
 					$scope.data.favorites = results;
 					$scope.data.notifications = "";
 				} else {
@@ -199,7 +199,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				FavoritesService.add($scope.data.stopId, $scope.data.stopName);
 				$scope.data.favClass = "button-energized";
 			}
-		}
+		};
 
 		var handleLayovers = function(results) {
 			angular.forEach(results['arriving'], function(val, key) {
@@ -215,16 +215,16 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					} else {
 						v['distance'] = [v['distance']];
 					}
-				})
+				});
 
-			})
+			});
 
 		};
 
 		var getBuses = function() {
 			var busesDefer = $q.defer();
 			AtStopService.getBuses($scope.data.stopId).then(function(results) {
-				if (!angular.isUndefined(results.arriving) && results.arriving != null && !$filter('isEmptyObject')(results.arriving)) {
+				if (!angular.isUndefined(results.arriving) && results.arriving !== null && !$filter('isEmptyObject')(results.arriving)) {
 					$scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
 					handleLayovers(results);
 					updateArrivalTimes(results.arriving);
@@ -258,14 +258,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.refresh = function() {
+			// restart 'refresh' timer
+			$interval.cancel($scope.reloadTimeout);
 			getBuses();
+			$scope.reloadTimeout = $interval(getBuses, 35000);
 			$scope.$broadcast('scroll.refreshComplete');
 		};
 
 		$scope.toggleAlerts = function() {
 			$scope.data.alertsToggle = !$scope.data.alertsToggle;
 			$ionicScrollDelegate.resize();
-		}
+		};
 
 		$scope.$on('$destroy', function() {
 			if ($scope.reloadTimeout) {
@@ -284,7 +287,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.favClass = "button-energized";
 			} else {
 				$scope.data.favClass = "";
-			};
+			}
 			getBuses();
 			$scope.reloadTimeout = $interval(getBuses, 35000);
 		})();
@@ -342,7 +345,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				if (Object.keys(results).length > 1) {
 					oneDirection = false;
 					angular.forEach(results, function(val, key) {
-						if (val.directionId == 0) {
+						if (val.directionId === 0) {
 							$scope.data.directionName = val.destination;
 							$scope.groups[0].name = val.destination;
 						}
@@ -483,15 +486,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		// map click event
 		$scope.$on('leafletDirectiveMarker.click', function(event, args) {
 			var object = $scope.markers[args.markerName];
+			var content = '';
+			var latlng = [];
+			var popup = L.popup();
 			if ($filter('isUndefinedOrEmpty')(object.stopName)) {
-				var content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>",
-					latLng = [object.lat, object.lng],
-					popup = L.popup().setContent(content).setLatLng(latLng);
+				content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>";
+				latLng = [object.lat, object.lng];
+				popup.setContent(content).setLatLng(latLng);
 			} else {
-				//console.log(object);
-				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">See upcoming buses</a>',
-					latLng = [object.lat, object.lng],
-					popup = L.popup().setContent(content).setLatLng(latLng);
+				content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">See upcoming buses</a>';
+				latLng = [object.lat, object.lng];
+				popup.setContent(content).setLatLng(latLng);
 			}
 
 			leafletData.getMap().then(function(map) {
@@ -575,7 +580,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.getNearbyStopsAndRoutes = function(lat, lon) {
 			GeolocationService.getStops(lat, lon).then(function(results) {
 				$ionicLoading.hide();
-				if (!angular.isUndefined(results) && results != null && results.length > 0) {
+				if (!angular.isUndefined(results) && results !== null && results.length > 0) {
 					angular.forEach(results, function(stop) {
 						stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
 					});
@@ -739,7 +744,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				lng: lon,
 				icon: {
 					iconUrl: 'img/stop_icons/stop-red.svg',
-					iconSize: [20, 20]
+					iconSize: [35, 35]
 				},
 				focus: false,
 				stopId: stop,
@@ -772,15 +777,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		// map click event
 		$scope.$on('leafletDirectiveMarker.click', function(event, args) {
 			var object = $scope.markers[args.markerName];
+			var content = '';
+			var latlng = [];
+			var popup = L.popup();
 			if ($filter('isUndefinedOrEmpty')(object.stopName)) {
-				var content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>",
-					latLng = [object.lat, object.lng],
-					popup = L.popup().setContent(content).setLatLng(latLng);
+				content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>";
+				latLng = [object.lat, object.lng];
+				popup.setContent(content).setLatLng(latLng);
 			} else {
-				$scope.slideTo(object.stopId);
-				var content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">See upcoming buses</a>',
-					latLng = [object.lat, object.lng],
-					popup = L.popup().setContent(content).setLatLng(latLng);
+				content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">See upcoming buses</a>';
+				latLng = [object.lat, object.lng];
+				popup.setContent(content).setLatLng(latLng);
 			}
 
 			leafletData.getMap().then(function(map) {

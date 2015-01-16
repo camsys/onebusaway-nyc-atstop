@@ -51,7 +51,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	return {
 		add: add,
 		fetchAll: fetchAll
-	}
+	};
 })
 
 .factory('$localstorage', ['$window',
@@ -69,7 +69,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			getObject: function(key) {
 				return JSON.parse($window.localStorage[key] || '{}');
 			}
-		}
+		};
 	}
 ])
 
@@ -106,7 +106,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		remove: remove,
 		get: get,
 		inFavorites: inFavorites
-	}
+	};
 })
 
 .factory('VehicleMonitoringService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
@@ -130,7 +130,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 						stopPointName: val.MonitoredVehicleJourney.MonitoredCall.StopPointName,
 						vehicleId: val.MonitoredVehicleJourney.VehicleRef.replace(/\D/g, ''),
 						angle: val.MonitoredVehicleJourney.Bearing
-					}
+					};
 				});
 
 				return deferred.resolve(locations);
@@ -144,7 +144,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
 	return {
 		getLocations: getLocations
-	}
+	};
 })
 
 .factory('RouteService', function($filter, $q, $http, httpTimeout, API_END_POINT, API_KEY, DSCacheFactory) {
@@ -216,14 +216,14 @@ angular.module('starter.services', ['ionic', 'configuration'])
 						directions[0] = {
 							directionId: 0,
 							destination: data.data.entry.stopGroupings[0].stopGroups[0].name.name
-						}
+						};
 					}
 
 					if (data.data.entry.stopGroupings[0].stopGroups[0].id == "1") {
 						directions[1] = {
 							directionId: 1,
 							destination: data.data.entry.stopGroupings[0].stopGroups[0].name.name
-						}
+						};
 					}
 				}
 
@@ -232,14 +232,14 @@ angular.module('starter.services', ['ionic', 'configuration'])
 						directions[0] = {
 							directionId: 0,
 							destination: data.data.entry.stopGroupings[0].stopGroups[1].name.name
-						}
+						};
 					}
 
 					if (data.data.entry.stopGroupings[0].stopGroups[1].id == "1") {
 						directions[1] = {
 							directionId: 1,
 							destination: data.data.entry.stopGroupings[0].stopGroups[1].name.name
-						}
+						};
 					}
 				}
 			})
@@ -252,7 +252,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		});
 
 		return deferred.promise;
-	}
+	};
 
 	var getStops = function(route, direction) {
 		var deferred = $q.defer();
@@ -285,7 +285,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		getStops: getStops,
 		getDirections: getDirections,
 		getPolylines: getPolylines
-	}
+	};
 })
 
 .factory('GeolocationService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
@@ -302,7 +302,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 			geolocationOptions
 		);
 		return deferred.promise;
-	}
+	};
 
 	var getRoutes = function(lat, lon) {
 		var deferred = $q.defer();
@@ -363,7 +363,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		promiseCurrentPosition: promiseCurrentPosition,
 		getRoutes: getRoutes,
 		getStops: getStops
-	}
+	};
 })
 
 .factory('AtStopService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
@@ -453,7 +453,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
 	return {
 		getBuses: getBuses
-	}
+	};
 })
 
 .factory('StopcodeService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
@@ -511,7 +511,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	return {
 		getRoutes: getRoutes,
 		getCoordinates: getCoordinates
-	}
+	};
 })
 
 .factory('SearchService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
@@ -612,7 +612,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 								formattedAddress: matchesData.formattedAddress,
 								latitude: matchesData.latitude,
 								longitude: matchesData.longitude
-							}
+							};
 							break;
 						default:
 							//console.log("undefined type");
@@ -633,7 +633,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	return {
 		autocomplete: autocomplete,
 		search: search
-	}
+	};
 })
 
 .factory('datetimeService', ['$timeout',
@@ -667,7 +667,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 ])
 
 .factory('MapService', function(RouteService, VehicleMonitoringService, $filter, $q) {
-	var getStopMarkers = function(route, stop ) {
+	var getStopMarkers = function(route, stop) {
 		stop = stop || null;
 		var deferred = $q.defer();
 		var markers = {};
@@ -686,7 +686,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
 					stopName: $filter('encodeStopName')(val.name)
 				};
 
-				if (stop == val.id && stop != null) {
+				if (stop == val.id && stop !== null) {
+					markers['s' + key]['icon']['iconSize'] = [35, 35];
 					markers['s' + key]['icon']['iconUrl'] = 'img/stop_icons/stop-red.svg';
 				}
 			});
@@ -727,7 +728,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
 	var round5 = function round5(x) {
 		return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
-	}
+	};
 
 	var getBusMarkers = function(route) {
 		var deferred = $q.defer();
@@ -767,7 +768,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	};
 
 	var deg2rad = function(deg) {
-		return deg * (Math.PI / 180)
+		return deg * (Math.PI / 180);
 	};
 
 	return {
@@ -775,5 +776,5 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		getRoutePolylines: getRoutePolylines,
 		getStopMarkers: getStopMarkers,
 		getBusMarkers: getBusMarkers
-	}
+	};
 });

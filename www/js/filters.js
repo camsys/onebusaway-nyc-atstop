@@ -4,13 +4,13 @@ angular.module('filters', [])
 .filter('hrefToJS', function($sce, $sanitize) {
 	return function(text) {
 		return $sce.trustAsHtml($sanitize(text).replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', '_system', 'location=yes')\""));
-	}
+	};
 })
 
 .filter('isUndefinedOrEmpty', function() {
 	return function(a) {
 		return angular.isUndefined(a) || null === a;
-	}
+	};
 })
 
 .filter('isEmptyObject', function() {
@@ -28,7 +28,7 @@ angular.module('filters', [])
 .filter('encodeStopName', function() {
 	return function(input) {
 		return input.replace("/", " & ");
-	}
+	};
 })
 
 .filter('encode', function() {
@@ -40,7 +40,7 @@ angular.module('filters', [])
 .filter('decode', function() {
 	return function(input) {
 		return decodeURIComponent(input);
-	}
+	};
 })
 // always round down to nearest min, do not show time if lesss than 1 minute away
 .filter('durationView', ['datetimeService',
@@ -49,7 +49,7 @@ angular.module('filters', [])
 			var duration = datetime.duration(input);
 			var minutes = duration.minutes;
 			var displayTime = '';
-			if (duration.hours > 0) { 
+			if (duration.hours > 0) {
 				minutes = minutes + duration.hours * 60;
 			}
 			if (duration.minutes > 0) {
