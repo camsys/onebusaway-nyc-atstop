@@ -106,7 +106,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	});
 })
 
-.directive('ngTips', function($timeout) {
+.directive('ngTips', function($timeout, $rootScope) {
+       $rootScope.tipCt =0;
 	return {
 		restrict: 'E',
 		replace: true,
@@ -115,17 +116,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		},
 		template: '<div class="tips">{{ngModel}}</div>',
 		link: function(scope, element, attrs) {
+            $rootScope.tipCt =  ++$rootScope.tipCt;
+            //only show tips a few times after app load
+            if (scope.$root.tipCt < 3) {
+                var to = $timeout(function () {
+                    element.remove();
+                }, 3000);
 
-			var to = $timeout(function() {
-				element.remove();
-			}, 3000);
-
-			scope.$on("$destroy", function() {
-				$timeout.cancel(to);
-			});
+                scope.$on("$destroy", function () {
+                    $timeout.cancel(to);
+                });
+            } else {
+                element.remove();
+            }
 		}
 	};
-})
+    })
 
 
 .directive('ngEnter', function() {
