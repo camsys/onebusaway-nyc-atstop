@@ -1,8 +1,11 @@
 <ion-view view-title="About This App">
     <ion-content has-bouncing="true">
+        <app-header ng-show="data.showBranding"></app-header>
         <div class="card">
 
-            <p class="">This app was created by the MTA Bus Time Team, using
+            <p ng-show="data.showBranding" ng-bind-html="(data.brandAboutText|hrefToJS)"></p>
+
+            <p>This app was created by the MTA Bus Time Team, using
                 <a onClick="window.open('http://phonegap.com/', '_system', 'location=yes')">PhoneGap</a>,
                 <a onClick="window.open('http://ionicframework.com/', '_system', 'location=yes')">Ionic</a>,
                 <a onClick="window.open('https://angularjs.org/', '_system', 'location=yes')">AngularJS</a> ,
@@ -13,8 +16,8 @@
 
         <button class="button button-full" ng-click="toggleText()">Privacy Policy</button>
 
-        <div class="card" ng-hide="hideText">
-            <p class="longtext" ng-repeat="p in text"><span ng-bind-html="p"></span>
+        <div class="card" ng-hide="data.hideText">
+            <p class="longtext" ng-repeat="p in data.privText"><span ng-bind-html="p"></span>
             </p>
         </div>
 

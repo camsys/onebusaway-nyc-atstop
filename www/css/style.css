@@ -2,6 +2,10 @@
 .angular-leaflet-map {
     height: 100%;
 }
+em{
+    font-weight: bolder;
+    text-decoration: underline;
+}
 h1.title{
     font-size:2vmax !important;
 }
