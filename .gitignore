@@ -2,7 +2,7 @@
 *.swp
 www/js/config.js
 www/config.xml
-www/res-custom/
+www/resources/
 platforms/
 node_modules/
 dist/
