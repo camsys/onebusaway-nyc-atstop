@@ -6,3 +6,5 @@ www/res-custom/
 platforms/
 node_modules/
 dist/
+resources/
+bower_components/
