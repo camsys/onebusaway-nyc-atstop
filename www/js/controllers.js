@@ -468,14 +468,16 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				defaults: {
 					tileLayer: MAP_TILES,
 					tileLayerOptions: {
-						attribution: $filter('hrefToJS')(MAP_ATTRS)
+						attribution: $filter('hrefToJS')(MAP_ATTRS),
+                        reuseTiles: true,
+                        access_token: MAPBOX_KEY
 					},
 					scrollWheelZoom: false,
-					key: MAPBOX_KEY
 				},
 				markers: {},
 				paths: {}
 			});
+            console.log(MAPBOX_KEY);
 			leafletData.getMap().then(function(map) {
 				//leaflet attribution is not required
 				map.attributionControl.setPrefix('');
@@ -585,12 +587,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
 					});
 					$scope.data.stops = results;
-					$scope.data.nearbyStops = results;
 					showNearbyStops();
 					$scope.data.notifications = "";
 					$scope.data.showMap = true;
 					leafletData.getMap().then(function(map) {
-						//leaflet attribution is not required
 						L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
 					});
 				} else {
@@ -647,11 +647,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					focus: false
 				};
 			});
-
+            //set zoom
 			leafletData.getMap().then(function(map) {
-				map.setView(stops['s0'], 13);
+				map.setView(stops['s0'], 15);
 			});
-
 			$scope.markers = stops;
 		};
 
