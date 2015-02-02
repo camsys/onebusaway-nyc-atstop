@@ -1,8 +1,8 @@
 angular.module('starter.controllers', ['configuration', 'filters'])
 
 // Search
-.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService',
-	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService) {
+.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING',
+	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING) {
 
 
 		$scope.go = function(path) {
@@ -24,7 +24,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			],
 			"searches": [],
 			"showSearches": true,
-			"showTips": true
+			"showTips": true,
+            "showBranding": SHOW_BRANDING
 		};
 
 		$scope.autocomplete = function() {
@@ -136,13 +137,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 
-.controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q',
-	function($scope, $ionicLoading, FavoritesService, $q) {
+.controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
+	function($scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
 		$scope.data = {
 			"loaded": false,
 			"favorites": [],
 			"notifications": '',
-			"alerts": []
+			"alerts": [],
+            "showBranding": SHOW_BRANDING
 		};
 
 		$scope.remove = function(stopId) {
@@ -158,7 +160,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					$scope.data.favorites = results;
 					$scope.data.notifications = "";
 				} else {
-					$scope.data.notifications = "You have not added any favorites.";
+					$scope.data.notifications = "You have not added any favorites. Click the Star on a stop page to add one.";
 				}
 				favoritesDefer.resolve();
 			});
@@ -294,7 +296,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
-// Route Stops
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate',
 	function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate) {
 		$scope.routeId = $stateParams.routeId;
@@ -410,7 +411,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 	}
 ])
-
 
 .controller('MapCtrl', ['MapService', '$scope', '$location', '$stateParams', '$timeout', 'leafletData', '$filter', '$q', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
 	function(MapService, $scope, $location, $stateParams, $timeout, leafletData, $filter, $q, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
