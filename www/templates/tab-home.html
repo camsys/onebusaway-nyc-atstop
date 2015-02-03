@@ -22,7 +22,7 @@
 
         <div class="list" ng-show="data.showTips">
 
-            <div ng-show="data.showSearches">
+            <div class="list" ng-show="data.showSearches">
                 <p>Your Recent Searches:</p>
                     <button class="button button-full button-stable" ng-repeat="recentSearch in ::data.searches track by $index" ng-click="searchesGo(recentSearch.data)"> {{recentSearch.title}}</button>
             </div>
@@ -40,7 +40,7 @@
             </p>
         </div>
 
-        <a class="button button-full button-stable button-outline" href="#/tab/about"> About and Links</a>
+        <a class="button button-full button-positive" href="#/tab/about"> About and Links</a>
 
 
     </ion-content>
