@@ -660,6 +660,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		// map
 		var map = function() {
 			var mapCenter = {};
+			
 			//if we received lat/long from the state, then use that center, otherwise use location
 			if (!angular.isUndefined($stateParams.latitude)) {
 				mapCenter = {
@@ -668,11 +669,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					zoom: 15
 				};
 			} else {
-				mapCenter = {
-					autoDiscover: true,
-					zoom: 15
-				};
+				mapCenter = {};
 			}
+			
 			angular.extend($scope, {
 				events: {
 					markers: {
@@ -695,6 +694,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 			leafletData.getMap().then(function(map) {
 				//leaflet attribution is not required
+				map.setView({lat:40.71448, lng: -74.00598}, 12);
 				map.attributionControl.setPrefix('');
 			});
 		};
