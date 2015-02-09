@@ -9,3 +9,4 @@ dist/
 resources/
 bower_components/
 www/img/logo.svg
+www/hooks/

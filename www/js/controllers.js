@@ -589,6 +589,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
 					});
 					$scope.data.stops = results;
+					$scope.data.nearbyStops = results;
 					showNearbyStops();
 					$scope.data.notifications = "";
 					$scope.data.showMap = true;

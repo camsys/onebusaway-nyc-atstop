@@ -9,6 +9,8 @@ var sh = require('shelljs');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var ngAnnotate = require('gulp-ng-annotate');
+var optipng = require('gulp-optipng');
+var pngquant = require('imagemin-pngquant');
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -67,4 +69,14 @@ gulp.task('compress', function() {
 		}))
 		.pipe(uglify())
 		.pipe(gulp.dest('dist'))
+});
+
+
+var options = ['-o3'];
+
+gulp.task('compress_resources', function () {
+	gulp.src('./resources/**/*.png')
+		//.pipe(pngquant({quality: '80-90', speed: 4}))
+		.pipe(optipng(options))
+		.pipe(gulp.dest('dist'));
 });
