@@ -474,7 +474,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         reuseTiles: true,
                         access_token: MAPBOX_KEY
 					},
-					scrollWheelZoom: false,
+					scrollWheelZoom: false
 				},
 				markers: {},
 				paths: {}
@@ -672,7 +672,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					zoom: 15
 				};
 			}
-
 			angular.extend($scope, {
 				events: {
 					markers: {
