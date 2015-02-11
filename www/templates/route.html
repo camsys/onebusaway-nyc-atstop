@@ -1,0 +1,21 @@
+<ion-view view-title="{{data.routeName}}">
+    <ion-nav-buttons side="right">
+        <a class="button button-light" href="#/tab/map/{{routeId}}/">
+               Map
+            </a>
+    </ion-nav-buttons>
+    <ion-content ng-show="data.loaded" has-bouncing="true">
+
+        <p>Choose a direction and stop:</p>
+        <div ng-repeat="group in groups">
+            <ion-item class="item-stable" ng-click="toggleGroup(group)" ng-class="{active: isGroupShown(group)}">
+                <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
+                <strong>&#160; {{group.name}}</strong>
+            </ion-item>
+            <ion-item class="item-accordion" ng-repeat="item in group.items" ng-show="isGroupShown(group)" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+                {{::item.name | encodeStopName}}
+            </ion-item>
+        </div>
+        <p>{{data.notifications}}</p>
+    </ion-content>
+</ion-view>

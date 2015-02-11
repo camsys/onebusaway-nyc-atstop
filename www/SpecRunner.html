@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <title>Jasmine Spec Runner</title>
+
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/jasmine/2.0.0/jasmine.css" />
+
+    <script src="http://cdn.jsdelivr.net/jasmine/2.0.0/jasmine.js"></script>
+    <script src="http://cdn.jsdelivr.net/jasmine/2.0.0/jasmine-html.js"></script>
+    <script src="http://cdn.jsdelivr.net/jasmine/2.0.0/boot.js"></script>
+    <script src="lib/ionic/js/ionic.bundle.min.js"></script>
+    <script src="https://code.angularjs.org/1.3.6/angular-mocks.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="lib/underscore/underscore-min.js"></script>
+    <script src="lib/moment/moment.min.js"></script>
+    <script src="lib/angular-cache/angular-cache.min.js"></script>
+    <script src="lib/leaflet/leaflet.js"></script>
+    <script src="lib/leaflet/plugins/Polyline.encoded.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="lib/angular-leaflet/angular-leaflet-directive.min.js"></script>
+
+    <script>
+        describe('AtStopService Tests (note: server/data dependent)', function () {
+            var ctrl, scope;
+            beforeEach(module('starter'));
+
+            it('should return results for a stop', function () {
+                var stop = 'MTA_400861';
+                inject(function (AtStopService) {
+                    AtStopService.getBuses(stop).then(function (results) {
+                        expect(Object.keys(data.arriving).length).toBeGreaterThan(1);
+                    })
+                })
+            });
+
+            it('should return results for one route at a stop', function () {
+                var stop = 'MTA_400861';
+                var line = 'MTA NYCT_M7';
+                var params = {
+                    'stop': stop,
+                    'line': line
+                };
+                var data = {};
+                inject(function (AtStopService) {
+                    AtStopService.getBuses(params).then(function (results) {
+                        console.log(results.arriving);
+                        console.log(Object.keys(results.arriving).length);
+                        expect(Object.keys(data.arriving).length).toBeEqualTo(1);
+                    })
+                })
+
+            });
+
+        });
+
+
+        describe('Geolocation Tests', function () {
+            var ctrl, scope;
+            beforeEach(module('starter'));
+
+
+            it('should return nearby stops', function () {
+                var lat = 40.748433;
+                var lon = -73.985656;
+                inject(function (GeolocationService) {
+                    GeolocationService.getStops(lat, lon).then(function (results) {
+                        expect(results.length).to.BeGreaterThan(0);
+                    });
+                });
+            })
+
+        });
+        describe('Filter: encodeStopName', function () {
+            var encodeStopName;
+
+            beforeEach(module('starter'));
+            beforeEach(inject(function ($filter) {
+                encodeStopName = $filter('encodeStopName');
+            }));
+
+            it('should be able to replace a forward slash with & character', function () {
+                expect(encodeStopName('John St/Smith Ave')).toBe('John St & Smith Ave');
+                expect(encodeStopName('Adam Dr/Willson Pl')).toBe('Adam Dr & Willson Pl');
+            });
+
+        });
+
+        describe('Countdown filter tests', function () {
+            beforeEach(module('starter'));
+            beforeEach(inject(function ($filter) {
+                durationView = $filter('durationView');
+            }));
+
+            it('should not show  times <1 min', function () {
+                expect(durationView(0)).toBe('');
+            });
+            it('should show a time of 10 min', function () {
+                expect(durationView(633375)).toBe('10 min');
+            });
+            it('should properly show times of > 60 min', function () {
+                expect(durationView(4200922)).toBe('70 min');
+            });
+        });
+
+
+        describe('Function: Is Empty Object?', function () {
+            var isEmpty;
+
+            beforeEach(module('starter'));
+            beforeEach(inject(function ($filter) {
+                isEmpty = $filter('isEmptyObject');
+            }));
+
+            it('should detect an empty object', function () {
+                var bar;
+                var foo = {
+                    test: 5
+                };
+                expect(isEmpty(bar)).toBe(true);
+                expect(isEmpty(foo)).toBe(false);
+            });
+
+        });
+
+
+
+
+
+        describe('No Scheduled Service Tests', function () {
+            var ctrl, scope;
+
+            beforeEach(module('starter'));
+            beforeEach(inject(function ($rootScope, $controller) {
+                scope = $rootScope;
+                ctrl = $controller('SearchCtrl', {
+                    $scope: scope
+                });
+            }));
+
+            it('should not return the nssm if only one direction', function () {
+                var matches = {
+                    "directions": [{
+                        "hasUpcomingScheduledService": true
+                    }]
+                };
+                scope.handleRouteSearch(matches);
+                expect(scope.data.notifications).toEqual('');
+            });
+
+            it('should display nssm if no service', function () {
+                var matches = {
+                    "directions": [{
+                        "hasUpcomingScheduledService": false
+                    }, {
+                        "hasUpcomingScheduledService": false
+                    }]
+                };
+                scope.handleRouteSearch(matches);
+                expect(scope.data.notifications).not.toEqual('');
+            });
+
+            it('should not display nssm if active service in one direction', function () {
+                var matches = {
+                    "directions": [{
+                        "hasUpcomingScheduledService": false
+                    }, {
+                        "hasUpcomingScheduledService": true
+                    }]
+                };
+                scope.handleRouteSearch(matches);
+                expect(scope.data.notifications).toEqual('');
+            });
+        });
+
+        describe('Test SearchCtrl', function () {
+            var scope, newSearchCtrl, results = [];
+
+            beforeEach(module('starter'));
+
+            beforeEach(inject(function ($rootScope, $controller) {
+                scope = $rootScope;
+
+                newSearchCtrl = $controller('SearchCtrl', {
+                    $scope: scope
+                });
+            }));
+
+            it("Results should initially be empty", function () {
+                expect(scope.data.results).toEqual(results);
+            });
+        });
+    </script>
+</head>
+
+<body>(note: tests depend on MTA Bus Time url configured in config.js)</body>
+
+</html>

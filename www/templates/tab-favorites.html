@@ -1,0 +1,16 @@
+<ion-view title="Favorites">
+    <ion-content ng-show="data.loaded" has-bouncing="true">
+        <app-header ng-show="data.showBranding"></app-header>
+        <ion-list>
+            <ion-item ng-repeat="item in data.favorites " href="#/tab/atstop-favorites/{{item.stopId}}/{{item.stopName}}">
+                {{item.stopName}}
+                <ion-option-button class="button-positive" ng-click="remove(item.stopId)">
+                    <i class="icon ion-trash-b"></i>
+                </ion-option-button>
+            </ion-item>
+        </ion-list>
+
+        <p>{{data.notifications}}</p>
+        <p class="greytext">Tip: Swipe left to delete.</p>
+    </ion-content>
+</ion-view>

@@ -1,2 +1,12 @@
-# Ignore
-resources/js/config.js
+.idea/
+*.swp
+www/js/config.js
+www/config.xml
+www/resources/
+platforms/
+node_modules/
+dist/
+resources/
+bower_components/
+www/img/logo.svg
+www/hooks/

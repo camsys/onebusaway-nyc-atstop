@@ -1,0 +1,47 @@
+<ion-view view-title="Search">
+
+    <ion-content has-bouncing="true">
+        <app-header ng-show="data.showBranding"></app-header>
+        <div class="">
+            <div class="item-input-inset">
+                <label class="item-input-wrapper">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="search" placeholder="Stop, Route, or Intersection" ng-change="autocomplete()" ng-enter="searchAndGo(data.searchKey)" ng-model="data.searchKey" ng-model-options="{debounce: 250}"></input>
+                </label>
+                <button class="button button-small" ng-click="searchAndGo(data.searchKey)">
+                    Search
+                </button>
+            </div>
+            <p class="highlight">{{data.notifications}}</p>
+            <ion-list>
+                <ion-item ng-repeat="item in data.results track by $index" ng-click="searchAndGo(item)">
+                    <strong>{{item}}</strong>
+                </ion-item>
+            </ion-list>
+        </div>
+
+        <div class="list" ng-show="data.showTips">
+
+            <div class="list" ng-show="data.showSearches">
+                <p>Your Recent Searches:</p>
+                    <button class="button button-full button-stable" ng-repeat="recentSearch in ::data.searches track by $index" ng-click="searchesGo(recentSearch.data)"> {{recentSearch.title}}</button>
+            </div>
+
+            <p>You can search for Stops, Routes, or Intersections in the bar above, or try one of the examples below:</p>
+            <p>Routes:
+            <div class="button-bar"><span class="button button-stable" ng-repeat="r in ::data.exampleRoutes" ng-click="searchAndGo(r)">{{r}} &#160;</span>
+            </div>
+            </p>
+            <p>Stops:
+            <div class="button-bar"><span class="button button-stable" ng-repeat="s in ::data.exampleStops" ng-click="searchAndGo(s)">{{s}}  &#160;</span></div>
+            </p>
+            <p>Intersections:
+            <div class="button-bar"><span class="button button-stable" ng-repeat="i in ::data.exampleIntersections" ng-click="searchAndGo(i)">{{i}}</span></div>
+            </p>
+        </div>
+
+        <a class="button button-full button-positive" href="#/tab/about"> About and Links</a>
+
+
+    </ion-content>
+</ion-view>

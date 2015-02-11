@@ -1,0 +1,38 @@
+<ion-view view-title="{{data.stopName}}">
+    <ion-nav-buttons side="secondary">
+
+        <button class="button button-clear {{data.favClass}}" ng-click="toggleFavorites()">
+            <i class="icon ion-star"></i>
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content ng-show="data.loaded" has-bouncing="true">
+		<ng-tips ng-model="data.tips"></ng-tips>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
+        <ion-list>
+
+            <button class="button button-full button-stable" ng-show="data.alertsHide" ng-click="toggleAlerts()">Tap to show Service Alerts</button>
+            <p class="alerts" ng-show="data.alertsToggle" ng-repeat="a in data.alerts">{{::a}}</p>
+            <div class="updated">Updated {{data.responseTime}}</div>
+
+            <div ng-repeat="(routeId, info) in data.results" class=" ">
+                <div class="row item item-divider">
+                    <div class="route col vcenter"><a href="#/tab/route/{{routeId}}/{{info.name}}">{{::info.name}}</a>
+                    </div>
+                    <a class="button button-light rightAlign vcenter" href="#/tab/{{data.link}}/{{routeId}}/{{data.stopId}}">
+			Map
+                    </a>
+                </div>
+                <ion-list>
+                    <ion-item ng-repeat="item in info.distances | limitTo: 3">
+                        <h2>{{item.destination}}</h2>
+                        <p class="novmargin" ng-hide="!item.expectedArrivalTime"><strong>{{item.arrivingIn|durationView}}</strong>
+                        </p>
+                        <p class="novmargin" ng-repeat="d in item.distance">{{d}}</p>
+                    </ion-item>
+                </ion-list>
+            </div>
+        </ion-list>
+        <p>{{data.notifications}}</p>
+    </ion-content>
+</ion-view>

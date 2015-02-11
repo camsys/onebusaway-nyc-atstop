@@ -1,17 +1,20 @@
-# About #
+# At Stop #
 
-A hybrid mobile app that provides information about when the next bus will arrive at your stop. The app uses free MTA Bus Time Developer API's to get the real-time location of the buses serving a particular stop. The app is built on top of jQuery Mobile and PhoneGap.
+A hybrid mobile app that provides information about when the next bus will arrive at your stop. The app uses free [MTA Bus Time Developer API](http://bustime.mta.info/wiki/Developers/Index)'s to get the real-time location of the buses serving a particular stop. The app is built on top of [Ionic Framework](http://ionicframework.com/), [AngularJS](https://angularjs.org/) and [PhoneGap](http://phonegap.com/).
 
-## Setting up the project ##
+### Setting up the project ###
 
-First you'll need to get the MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one. You will receive one within half an hour. Then, rename the **resources/js/config_tmpl.js** to **config.js**. Insert your key to the *BTKey* field.
+* Download the source code from [BitBucket repository](https://bitbucket.org/khfayzullaev/at-stop)
+* Second, you'll need to get the MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one. You will receive the key within half an hour. Then, rename the **resources/js/config_tmpl.js** to **config.js**. Insert your key to the *BTKey field*.
 
-To run the app locally, use any web server ([Apache HTTP Server](http://httpd.apache.org/docs/2.4/), [IIS](http://www.iis.net/) or any other). In order to build the native mobile app, use [Adobe PhoneGap Build](https://build.phonegap.com/). You can also use the [PhoneGap Emulatation](http://emulate.phonegap.com/) extension for Google Chrome. 
+### Running and testing ###
 
-**NOTE:** The app uses the `connection` object from the [Apache Cordova](http://cordova.apache.org/docs/en/3.5.0/cordova_connection_connection.md.html#Connection) framework which is not available locally.
+To run and test the app, use [PhoneGap Developer App](http://app.phonegap.com/). In order to build the native mobile app, use [Adobe PhoneGap Build](https://build.phonegap.com/). Rename the **config.tmpl.xml** to **config.xml**. You can also use [PhoneGap Emulatation extension](http://emulate.phonegap.com/) for Google Chrome. *NOTE:* The app uses several objects, like the connection object from the Apache Cordova framework, which may not be available locally (in a Web browser).
+
+### Using JSHint and UglifyJS###
+Run `npm install` in the root of the project. To use JSHint, run `gulp lint`. In order to use UglifyJS, run `gulp compress`. It will create new compressed files in `dist` folder in the root of the project.
+
 
 ### Project License ###
 
-[GNU General Public License, version 2](http://www.gnu.org/licenses/gpl-2.0.html)
-
-Project page: http://khfayzullaev.bitbucket.org/atstop
+The project is based on [GNU General Public License, version 2](http://www.gnu.org/licenses/gpl-2.0.html).
