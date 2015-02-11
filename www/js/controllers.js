@@ -562,7 +562,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			if ($scope.reloadTimeout) {
 				$interval.cancel($scope.reloadTimeout);
 			}
-			$scope.data.stops = $scope.data.nearbyStops;
 			showNearbyStops();
 			$scope.data.notifications = "";
 			$scope.data.showMap = true;
@@ -589,7 +588,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
 					});
 					$scope.data.stops = results;
-					$scope.data.nearbyStops = results;
+					$scope.data.stops.push({id: "current_location", lat: lat, lon: lon});
 					showNearbyStops();
 					$scope.data.notifications = "";
 					$scope.data.showMap = true;
@@ -638,22 +637,35 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 			var stops = [];
 			angular.forEach($scope.data.stops, function(v, k) {
-				stops['s' + k] = {
-					lat: v["lat"],
-					lng: v["lon"],
-					stopId: v["id"],
-					stopName: $filter('encodeStopName')(v['name']),
-					icon: {
-						iconUrl: 'img/stop_icons/stop.svg',
-						iconSize: [20, 20]
-					},
-					focus: false
-				};
+				if (v["id"] != "current_location"){
+					stops['s' + k] = {
+						lat: v["lat"],
+						lng: v["lon"],
+						stopId: v["id"],
+						stopName: $filter('encodeStopName')(v['name']),
+						icon: {
+							iconUrl: 'img/stop_icons/stop.svg',
+							iconSize: [20, 20]
+						},
+						focus: false
+					};
+				} else {
+					//console.log(v["lat"], v["lon"]);
+					stops['currentLocation'] = {
+						lat: parseFloat(v["lat"]),
+						lng: parseFloat(v["lon"]),
+						stopId: v["currentLocation"],
+						stopName: "Current Location",
+						icon: {
+							iconUrl: 'img/stop_icons/stop-blue.svg',
+							iconSize: [20, 20]
+						},
+						focus: false,
+						clickable: false
+					};
+				}
 			});
-            //set zoom
-			leafletData.getMap().then(function(map) {
-				map.setView(stops['s0'], 15);
-			});
+			
 			$scope.markers = stops;
 		};
 
@@ -669,7 +681,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					zoom: 15
 				};
 			} else {
-				mapCenter = {};
+				mapCenter = {
+					lat:40.71448,
+					lng: -74.00598,
+					zoom: 12
+				};
 			}
 			
 			angular.extend($scope, {
@@ -693,8 +709,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 
 			leafletData.getMap().then(function(map) {
-				//leaflet attribution is not required
-				map.setView({lat:40.71448, lng: -74.00598}, 12);
 				map.attributionControl.setPrefix('');
 			});
 		};
@@ -744,8 +758,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				lat: lat,
 				lng: lon,
 				icon: {
-					iconUrl: 'img/stop_icons/stop-red.svg',
-					iconSize: [35, 35]
+					iconUrl: 'img/stop_icons/stop-blue.svg',
+					iconSize: [20, 20]
 				},
 				focus: false,
 				stopId: stop,
@@ -754,7 +768,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 			leafletData.getMap().then(function(map) {
 				map.closePopup();
-				map.setView($scope.markers['currentStop'], 13);
+				//map.setView($scope.markers['currentStop'], 13);
 			});
 
 			showBusMarkers(route);
@@ -783,14 +797,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			var popup = L.popup();
 			if ($filter('isUndefinedOrEmpty')(object.stopName)) {
 				content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>";
-				latLng = [object.lat, object.lng];
-				popup.setContent(content).setLatLng(latLng);
 			} else {
-				content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">See upcoming buses</a>';
-				latLng = [object.lat, object.lng];
-				popup.setContent(content).setLatLng(latLng);
+				if (object.stopName == "Current Location"){
+					content = "<p>Current Location</p>";
+				} else {
+					content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">See upcoming buses</a>';
+				}
 			}
-
+			
+			latLng = [object.lat, object.lng];
+			popup.setContent(content).setLatLng(latLng);
+			
 			leafletData.getMap().then(function(map) {
 				popup.openOn(map);
 			});
