@@ -496,7 +496,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				markers: {},
 				paths: {}
 			});
-            console.log(MAPBOX_KEY);
 			leafletData.getMap().then(function(map) {
 				//leaflet attribution is not required
 				map.attributionControl.setPrefix('');
@@ -694,7 +693,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		// map
 		var map = function() {
 			var mapCenter = {};
-				
+
 			angular.extend($scope, {
 				events: {
 					markers: {
