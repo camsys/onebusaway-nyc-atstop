@@ -579,13 +579,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			if ($scope.reloadTimeout) {
 				$interval.cancel($scope.reloadTimeout);
 			}
+            $scope.data.stops = $scope.data.nearbyStops;
 			showNearbyStops();
 			$scope.data.notifications = "";
 			$scope.data.showMap = true;
 		};
 
 		$scope.refresh = function() {
-			//console.log('refresh');
 			if ($scope.reloadTimeout) {
 				$interval.cancel($scope.reloadTimeout);
 			}
@@ -605,7 +605,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
 					});
 					$scope.data.stops = results;
-					$scope.data.stops.push({id: "current_location", lat: lat, lon: lon});
+                    $scope.data.stops.push({id: "current_location", lat: lat, lon: lon});
+                    $scope.data.nearbyStops = results;
 					showNearbyStops();
 					$scope.data.notifications = "";
 					$scope.data.showMap = true;
@@ -681,30 +682,19 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						clickable: false
 					};
 				}
-			});
-			
+			}
+            );
+            //set zoom around nearest stop
+            leafletData.getMap().then(function(map) {
+                map.setView(stops['s0'], 15);
+            });
 			$scope.markers = stops;
 		};
 
 		// map
 		var map = function() {
 			var mapCenter = {};
-			
-			//if we received lat/long from the state, then use that center, otherwise use location
-			if (!angular.isUndefined($stateParams.latitude)) {
-				mapCenter = {
-					lat: Number($stateParams.latitude),
-					lng: Number($stateParams.longitude),
-					zoom: 15
-				};
-			} else {
-				mapCenter = {
-					lat:40.71448,
-					lng: -74.00598,
-					zoom: 12
-				};
-			}
-			
+				
 			angular.extend($scope, {
 				events: {
 					markers: {
@@ -837,6 +827,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.title = "Nearby Stops";
 				$scope.url = "atstop-gps";
 				$scope.getNearbyStopsAndRoutesGPS();
+
 			} else {
 				$scope.data.title = $stateParams.address;
 				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
