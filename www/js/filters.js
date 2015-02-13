@@ -27,7 +27,8 @@ angular.module('filters', [])
 
 .filter('encodeStopName', function() {
 	return function(input) {
-		return input.replace("/", " & ");
+        input = input || '';
+        return input.replace("/", " & ");
 	};
 })
 
@@ -44,7 +45,7 @@ angular.module('filters', [])
 })
 
 
-// always round down to nearest min, do not show time if lesss than 1 minute away
+// always round down to nearest min, do not show time if less than 1 minute away
 .filter('durationView', ['datetimeService',
 	function(datetimeService) {
 		return function(input) {
