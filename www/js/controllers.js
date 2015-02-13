@@ -206,7 +206,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"alertsHide": false,
 			"alertsToggle": false,
 			"stopId": $stateParams.stopId,
-			"tips": "Pull the list to refresh"
+			"tips": "Refreshes automatically or pull for instant refresh."
 		};
 
 		$scope.toggleFavorites = function() {
@@ -435,6 +435,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.markers = {};
 		$scope.paths = {};
 		$scope.url = "atstop";
+        $scope.tips= "Map refreshes automatically";
 
 		// refresh map
 		var refresh = function() {

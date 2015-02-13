@@ -156,6 +156,7 @@ label.item.item-input {
 }
 
 .tips {
+    font-size: smaller;
 	background-color:rgba(102, 204, 51, 0.85);
 	color: #fff;
 	height: 30px;
