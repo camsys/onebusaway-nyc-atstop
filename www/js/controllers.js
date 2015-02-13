@@ -18,8 +18,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
     })
 // Search
-.controller('SearchCtrl', ['$scope', '$rootScope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING',
-	function($scope, $rootScope,  $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING) {
+.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING',
+	function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING) {
 
 		$scope.go = function(path) {
 			$location.path(path);
