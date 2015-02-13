@@ -49,7 +49,6 @@ angular.module('filters', [])
 	function(datetimeService) {
 		return function(input) {
 			var duration = datetimeService.duration(input);
-			console.log(duration);
 			var minutes = duration.minutes;
 			var displayTime = '';
 			if (duration.hours > 0) {

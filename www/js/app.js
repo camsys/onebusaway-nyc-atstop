@@ -165,7 +165,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	})
 
 
-	// home state; tab-home view
 	.state('tab.home', {
 		url: '/home',
 		cache: false,
@@ -177,7 +176,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	// route state; tab-home view
 	.state('tab.route', {
 		url: '/route/:routeId/:routeName',
 		views: {
@@ -188,7 +186,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	// geolocation state; tab-home view
 	.state('tab.geolocation', {
 		url: '/geolocation/:latitude/:longitude/:address',
 		cache: false,
@@ -200,7 +197,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	// atstop state; tab-home view
 	.state('tab.atstop', {
 		url: '/atstop/:stopId/:stopName',
 		cache: false,
@@ -212,7 +208,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	// map state; tab-home view
 	.state('tab.map', {
 		url: '/map/:routeId/:stopId',
 		cache: false,
@@ -224,7 +219,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	// about state; tab-home view
 	.state('tab.about', {
 		url: '/about',
 		views: {
@@ -236,7 +230,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	})
 
 
-	// favorites state; tab-favorites view
 	.state('tab.favorites', {
 		url: '/favorites',
 		cache: false,
@@ -248,7 +241,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	// atstop-favorites state; tab-favorites view
 	.state('tab.atstop-favorites', {
 		url: '/atstop-favorites/:stopId/:stopName',
 		cache: false,
@@ -260,7 +252,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	// map-favorites state; tab-favorites view
 	.state('tab.map-favorites', {
 		url: '/map-favorites/:routeId/:stopId',
 		cache: false,
@@ -272,7 +263,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	// nearby-stops-and-routes state; tab-nearby-stops-and-routes view
 	.state('tab.nearby-stops-and-routes', {
 		url: '/nearby-stops-and-routes',
 		cache: false,
@@ -284,7 +274,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	// atstop-gps state; tab-nearby-stops-and-routes view
 	.state('tab.atstop-gps', {
 		url: '/atstop-gps/:stopId/:stopName',
 		cache: false,
@@ -296,7 +285,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		}
 	})
 
-	// map-gps state; tab-nearby-stops-and-routes view
 	.state('tab.map-gps', {
 		url: '/map-gps/:routeId/:stopId',
 		cache: false,
