@@ -7084,9 +7084,8 @@ p {
 
 .highlight {
   font-weight: bolder;
-  background: #eeeeee;
   margin: 0;
-  padding: 15px; }
+  padding: 0 15px 0 15px; }
 
 .alerts {
   font-size: 12px;
