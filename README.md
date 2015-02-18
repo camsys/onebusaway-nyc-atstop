@@ -14,4 +14,4 @@ Run `npm install` in the root of the project. To use JSHint, run `gulp lint`. In
 
 
 ### Project License ###
-The project is based on [GNU General Public License, version 2](http://www.gnu.org/licenses/gpl-2.0.html).
+The project is based on [Apache License, version 2.0](http://opensource.org/licenses/Apache-2.0).
