@@ -598,7 +598,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.getNearbyStopsAndRoutes = function(lat, lon) {
 			GeolocationService.getStops(lat, lon).then(function(results) {
-				$ionicLoading.hide();
 				if (!angular.isUndefined(results) && results !== null && results.length > 0) {
 					angular.forEach(results, function(stop) {
 						stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
@@ -621,20 +620,18 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		$scope.getNearbyStopsAndRoutesGPS = function() {
 			//console.log("getNearbyStopsAndRoutesGPS called");
-			$ionicLoading.show();
+			$scope.data.notifications = "Waiting for location.";
 			$cordovaGeolocation.getCurrentPosition({
 				enableHighAccuracy: false,
 				timeout: 10000
 			}).then(
 				function(position) {
-					//console.log("GPS succeeded");
+					$scope.data.notifications = "";
 					$scope.data.val = true;
 					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
 				}, function(error) {
 					$scope.data.showMap = false;
-					$scope.data.notifications = "No nearby stops found.";
-					//console.log("GPS failed", error);
-					$ionicLoading.hide();
+					$scope.data.notifications = "Could not get location.";
 					var popup = $ionicPopup.alert({
 						content: "Cannot access your position. Check if location services are enabled."
 					});
