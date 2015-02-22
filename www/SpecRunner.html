@@ -27,6 +27,26 @@
     <script src="lib/angular-leaflet/angular-leaflet-directive.min.js"></script>
 
     <script>
+        describe('Favorites Tests', function () {
+            var ctrl, scope, service;
+            beforeEach(module('starter'));
+            beforeEach(inject(function ($rootScope, _FavoritesService_) {
+                service = _FavoritesService_;
+                scope = $rootScope;
+            }));
+            it('should be able to save a favorite stop', function(){
+                var stop = 'MTA_400861';
+                service.add(stop);
+                expect(Object.keys(service.get().$$state.value).length).toBeGreaterThan(0);
+            });
+            it('should be able to remove a favorite stop', function(){
+                var stop = 'MTA_400861';
+                service.add(stop);
+                service.remove(stop);
+                expect(Object.keys(service.get().$$state.value).length).toBe(0);
+            });
+        });
+
         describe('AtStopService Tests (note: server/data dependent)', function () {
             var ctrl, scope;
             beforeEach(module('starter'));
@@ -129,10 +149,6 @@
 
         });
 
-
-
-
-
         describe('No Scheduled Service Tests', function () {
             var ctrl, scope;
 
@@ -179,23 +195,24 @@
             });
         });
 
-        describe('Test SearchCtrl', function () {
+/*        describe('Test SearchCtrl', function () {
             var scope, newSearchCtrl, results = [];
 
             beforeEach(module('starter'));
 
             beforeEach(inject(function ($rootScope, $controller) {
                 scope = $rootScope;
-
                 newSearchCtrl = $controller('SearchCtrl', {
                     $scope: scope
                 });
+                console.log(scope);
             }));
 
             it("Results should initially be empty", function () {
+
                 expect(scope.data.results).toEqual(results);
             });
-        });
+        });*/
     </script>
 </head>
 

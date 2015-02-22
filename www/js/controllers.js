@@ -22,11 +22,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             $ionicHistory.nextViewOptions({
                 historyRoot: true
             });
-        }
+        };
         $scope.goHomeTab = function() {
             clearHistory();
             $state.go('tab.home');
-        }
+        };
         $scope.goFavsTab = function() {
             clearHistory();
             $state.go('tab.favorites');
@@ -437,7 +437,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             hideText: true,
             brandAboutText: BRAND_ABOUT_TEXT,
             privText: PRIV_POLICY_TEXT
-        }
+        };
 		$scope.toggleText = function() {
 			// resize the content since the Privacy Policy text is too big 
 			$ionicScrollDelegate.resize();
