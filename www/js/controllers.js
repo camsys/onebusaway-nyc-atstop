@@ -696,10 +696,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				}
 			}
             );
+            
             //set zoom around nearest stop
             leafletData.getMap().then(function(map) {
-                map.setView(stops['s0'], 15);
+                map.setView(stops['s0'], 15, {animate: true});
             });
+            
 			$scope.markers = stops;
 		};
 
@@ -787,7 +789,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 			leafletData.getMap().then(function(map) {
 				map.closePopup();
-				//map.setView($scope.markers['currentStop'], 13);
+				map.setView($scope.markers['currentStop'], 13, {animate: true});
 			});
 
 			showBusMarkers(route);
