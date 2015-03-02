@@ -44,7 +44,6 @@ angular.module('filters', [])
 	};
 })
 
-
 // always round down to nearest min, do not show time if less than 1 minute away
 .filter('durationView', ['datetimeService',
 	function(datetimeService) {

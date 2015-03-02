@@ -29,21 +29,59 @@
     <script>
         describe('Favorites Tests', function () {
             var ctrl, scope, service;
-            beforeEach(module('starter'));
+            var stop = 'MTA_400861';
+            var route = ['MTA NYCT_B63','B63','R'];
+            var routeMap = ['MTA NYCT_B63+MAP','B63','RM'];
+            var store = {};
+
+            beforeEach(function() {
+
+                module('starter');
+                var mock = (function() {
+                    var store = {};
+                    return {
+                        getItem: function(key) {
+                            return store[key];
+                        },
+                        setItem: function(key, value) {
+                            console.log(key, value);
+                            store[key] = value.toString();
+                        },
+                        clear: function() {
+                            store = {};
+                        }
+                    };
+                })();
+                Object.defineProperty(window, 'localStorage', { value: mock });
+
+            });
             beforeEach(inject(function ($rootScope, _FavoritesService_) {
                 service = _FavoritesService_;
                 scope = $rootScope;
             }));
+            afterEach(function(){
+                    store = {};
+            });
+
             it('should be able to save a favorite stop', function(){
-                var stop = 'MTA_400861';
                 service.add(stop);
                 expect(Object.keys(service.get().$$state.value).length).toBeGreaterThan(0);
             });
             it('should be able to remove a favorite stop', function(){
-                var stop = 'MTA_400861';
                 service.add(stop);
                 service.remove(stop);
                 expect(Object.keys(service.get().$$state.value).length).toBe(0);
+            });
+            it('should be able to save a favorite route', function(){
+                service.add(route[0],route[1],route[2]);
+             });
+            it('should be able to remove a favorite route amongst other items', function(){
+                service.add(route[0],route[1],route[2]);
+                service.add(stop);
+                service.add(routeMap[0],routeMap[1],routeMap[2]);
+                console.log(service.get());
+                service.remove(route[0]);
+                console.log(service.get());
             });
         });
 

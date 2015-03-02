@@ -74,31 +74,44 @@ angular.module('starter.services', ['ionic', 'configuration'])
 ])
 
 .factory('FavoritesService', function($q, $window) {
-	var add = function(stopId, stopName) {
+	var add = function(id, name, type) {
+        type = type || 'S';
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
-		data[stopId] = {
-			"stopId": stopId,
-			"stopName": stopName
+        //var favoriteCount = JSON.parse($window.localStorage['favoriteCount'] || '0');
+
+        //id for display, workaround for colliding route/routemap keys.
+        var dispId = id.replace('MAP','');
+
+        // favoriteCount exists in case a future version lets users reorder favorites.
+        //favoriteCount = Object.keys(data).length++;
+
+		data[id] = {
+			"id": dispId,
+			"name": name,
+            "type": type
+            //"order": favoriteCount
 		};
+        //$window.localStorage.setItem("favoriteCount", JSON.stringify(favoriteCount));
 		$window.localStorage.setItem("favorites", JSON.stringify(data));
-		//console.log('Added to the favorites');
+		console.log(data);
 	};
 
-	var remove = function(stopId) {
+	var remove = function(id) {
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
-		delete data[stopId];
+		delete data[id];
 		$window.localStorage.setItem("favorites", JSON.stringify(data));
 	};
 
 	var get = function() {
 		var deferred = $q.defer();
 		deferred.resolve(JSON.parse($window.localStorage.getItem("favorites") || '{}'));
+        console.log(JSON.parse($window.localStorage.getItem("favorites") || '{}'));
 		return deferred.promise;
 	};
 
-	var inFavorites = function(stopId) {
+	var inFavorites = function(id) {
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
-		return !(angular.isUndefined(data[stopId]) || data[stopId] === null);
+		return !(angular.isUndefined(data[id]) || data[id] === null);
 	};
 
 	return {

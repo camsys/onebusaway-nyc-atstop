@@ -5,6 +5,7 @@ angular.module('configuration', [])
     .constant('API_KEY','')
     .constant('MAPBOX_KEY','')
     .constant('SHOW_BRANDING', false)
+    //FYI: this currently is hard coded into the controller
     .constant('exampleSearches',
         {  'exampleRoutes':  [],
         'exampleStops': [],

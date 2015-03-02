@@ -173,26 +173,38 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	function($scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
 		$scope.data = {
 			"loaded": false,
-			"favorites": [],
 			"notifications": '',
-			"alerts": [],
             "showBranding": SHOW_BRANDING
 		};
 
-		$scope.remove = function(stopId) {
-			FavoritesService.remove(stopId);
+		$scope.remove = function(id) {
+            console.log(id);
+			FavoritesService.remove(id);
 			get();
 		};
 
 		var get = function() {
+            $scope.data.favoriteRoutes = [];
+            $scope.data.favoriteStops = [];
+            $scope.data.favoriteRouteMaps = [];
 			var favoritesDefer = $q.defer();
 
 			FavoritesService.get().then(function(results) {
-				if (!angular.isUndefined(results) && results !== null) {
-					$scope.data.favorites = results;
+                if  (Object.keys(results).length==  0 ){
+                    $scope.data.notifications = "You have not added any favorites. You can add favorites by clicking the star icon on routes, favorites, or maps.";
+                }
+				else if (!angular.isUndefined(results) && results !== null) {
+                    angular.forEach(results, function(value){
+                        if(value.type=='R'){
+                            $scope.data.favoriteRoutes.push(value);
+                        } else if(value.type=='RM'){
+                            $scope.data.favoriteRouteMaps.push(value);
+                        }
+                        else {
+                            $scope.data.favoriteStops.push(value);
+                        }
+                    });
 					$scope.data.notifications = "";
-				} else {
-					$scope.data.notifications = "You have not added any favorites. Click the Star on a stop page to add one.";
 				}
 				favoritesDefer.resolve();
 			});
@@ -203,7 +215,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		$scope.init = (function() {
-			get();
+            get();
 		})();
 	}
 ])
@@ -328,8 +340,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
-.controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate',
-	function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate) {
+.controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
+	function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate, FavoritesService) {
 		$scope.routeId = $stateParams.routeId;
 		var oneDirection = false;
 		$scope.groups = [];
@@ -345,8 +357,18 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			shown: false
 		};
 
-		/* if given group is the selected group, deselect it
-		 * else, select the given group*/
+        $scope.toggleFavorites = function() {
+            //type-R (for route) FTW
+            var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
+            if (FavoritesService.inFavorites(fav)) {
+                FavoritesService.remove(fav);
+                $scope.data.favClass = "";
+            } else {
+                FavoritesService.add(fav[0], fav[1], fav[2]);
+                $scope.data.favClass = "button-energized";
+            }
+        };
+
 		$scope.toggleGroup = function(group) {
 			if ($scope.isGroupShown(group)) {
 				$scope.shownGroup = null;
@@ -364,6 +386,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.data = {
 			"loaded": false,
 			"routeName": $stateParams.routeName,
+            "favClass": "",
 			"direction": [],
 			"directionName": "",
 			"direction_": [],
@@ -446,14 +469,28 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 	}
 ])
 
-.controller('MapCtrl', ['MapService', '$scope', '$location', '$stateParams', '$timeout', 'leafletData', '$filter', '$q', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-	function(MapService, $scope, $location, $stateParams, $timeout, leafletData, $filter, $q, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('MapCtrl', ['MapService', 'FavoritesService', '$scope', '$location', '$stateParams', '$timeout', 'leafletData', '$filter', '$q', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+	function(MapService, FavoritesService, $scope, $location, $stateParams, $timeout, leafletData, $filter, $q, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
 		$scope.markers = {};
 		$scope.paths = {};
 		$scope.url = "atstop";
         $scope.tips= "Map refreshes automatically";
+        $scope.data = {favClass : ""};
 
-		// refresh map
+        $scope.toggleFavorites = function() {
+            //hack to have Favorite RouteMap ID and Favorite Route ID not collide.
+            //routeId+MAP is the key, but inside the favorite object it's just routeId (see FavoritesService).
+            var id = $stateParams.routeId.concat('MAP');
+
+            if (FavoritesService.inFavorites()) {
+                FavoritesService.remove(id);
+                $scope.data.favClass = "";
+            } else {
+                FavoritesService.add(id, $stateParams.routeName, 'RM');
+                $scope.data.favClass = "button-energized";
+            }
+        };
+
 		var refresh = function() {
 			//console.log("refresh");
 			leafletData.getMap().then(function(map) {
@@ -523,8 +560,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		$scope.$on('leafletDirectiveMarker.click', function(event, args) {
 			var object = $scope.markers[args.markerName];
 			var content = '';
-			var latlng = [];
+			var latLng = [];
 			var popup = L.popup();
+
 			if ($filter('isUndefinedOrEmpty')(object.stopName)) {
 				content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>";
 				latLng = [object.lat, object.lng];

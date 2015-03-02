@@ -17,9 +17,9 @@
 
             <div ng-repeat="(routeId, info) in data.results" class=" ">
                 <div class="row item item-divider">
-                    <div class="route col vcenter"><a href="#/tab/route/{{routeId}}/{{info.name}}">{{::info.name}}</a>
+                    <div class="route col vcenter"><a href="#/tab/route/{{routeId}}/{{::info.name}}">{{::info.name}}</a>
                     </div>
-                    <a class="button button-light rightAlign vcenter" href="#/tab/{{data.link}}/{{routeId}}/{{data.stopId}}">
+                    <a class="button button-light rightAlign vcenter" href="#/tab/{{data.link}}/{{routeId}}/{{::info.name}}/{{data.stopId}}">
 			Map
                     </a>
                 </div>

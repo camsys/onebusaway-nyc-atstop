@@ -18,7 +18,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 // global timeout variable for HTTP requests
 .value('httpTimeout', 5000)
 
-// the default options for the $ionicLoading
 .constant('$ionicLoadingConfig', {
 	template: 'Loading',
 	showBackdrop: false
@@ -28,6 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	$ionicPlatform.ready(function() {
 		if (window.cordova && window.cordova.plugins.Keyboard) {
 			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+
 		}
 
 		/*
@@ -35,8 +35,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			StatusBar.styleDefault();
 		}
 		*/
-
-		if ($cordovaNetwork.isOffline()) {
+        //checking if app is in cordova. Otherwise, don't worry about network connections.
+		if (window.cordova && $cordovaNetwork.isOffline()) {
 			$ionicPopup.alert({
 				title: "Internet Disconnected",
 				content: "The internet is not available on your device."
@@ -224,7 +224,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	})
 
 	.state('tab.map', {
-		url: '/map/:routeId/:stopId',
+		url: '/map/:routeId/:routeName/:stopId',
 		cache: false,
 		views: {
 			'tab-home': {

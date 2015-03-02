@@ -1,8 +1,14 @@
 <ion-view view-title="{{data.routeName}}">
     <ion-nav-buttons side="right">
-        <a class="button button-light" href="#/tab/map/{{routeId}}/">
+        <a class="button button-light" href="#/tab/map/{{routeId}}/{{data.routeName}}/">
                Map
             </a>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="secondary">
+
+        <button class="button button-clear {{data.favClass}}" ng-click="toggleFavorites()">
+            <i class="icon ion-star"></i>
+        </button>
     </ion-nav-buttons>
     <ion-content ng-show="data.loaded" has-bouncing="true">
 
