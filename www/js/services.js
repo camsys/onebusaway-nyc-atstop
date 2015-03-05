@@ -79,7 +79,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
         //var favoriteCount = JSON.parse($window.localStorage['favoriteCount'] || '0');
 
-        //id for display, workaround for colliding route/routemap keys.
+        //Route Maps and Routes would share a key and collide, this solves that.
         var dispId = id.replace('MAP','');
 
         // favoriteCount exists in case a future version lets users reorder favorites.
@@ -93,7 +93,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		};
         //$window.localStorage.setItem("favoriteCount", JSON.stringify(favoriteCount));
 		$window.localStorage.setItem("favorites", JSON.stringify(data));
-		console.log(data);
 	};
 
 	var remove = function(id) {
@@ -105,13 +104,14 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	var get = function() {
 		var deferred = $q.defer();
 		deferred.resolve(JSON.parse($window.localStorage.getItem("favorites") || '{}'));
-        console.log(JSON.parse($window.localStorage.getItem("favorites") || '{}'));
 		return deferred.promise;
 	};
 
 	var inFavorites = function(id) {
+        id = id || '';
+        var dispId = id.replace('MAP','') || '';
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
-		return !(angular.isUndefined(data[id]) || data[id] === null);
+		return !(angular.isUndefined(data[dispId]) || data[dispId] === null);
 	};
 
 	return {

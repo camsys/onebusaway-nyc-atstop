@@ -482,11 +482,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             //routeId+MAP is the key, but inside the favorite object it's just routeId (see FavoritesService).
             var id = $stateParams.routeId.concat('MAP');
 
-            if (FavoritesService.inFavorites()) {
+            if (FavoritesService.inFavorites(id)) {
                 FavoritesService.remove(id);
                 $scope.data.favClass = "";
             } else {
                 FavoritesService.add(id, $stateParams.routeName, 'RM');
+                console.log(FavoritesService.get());
                 $scope.data.favClass = "button-energized";
             }
         };
