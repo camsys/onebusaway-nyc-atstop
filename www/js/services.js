@@ -109,9 +109,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
 	var inFavorites = function(id) {
         id = id || '';
-        var dispId = id.replace('MAP','') || '';
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
-		return !(angular.isUndefined(data[dispId]) || data[dispId] === null);
+		return !(angular.isUndefined(data[id]) || data[id] === null);
 	};
 
 	return {
