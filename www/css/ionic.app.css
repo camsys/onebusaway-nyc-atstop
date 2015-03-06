@@ -7169,3 +7169,5 @@ label.item.item-input {
   text-align: center;
   top: 0;
   z-index: 999; }
+.leaflet-control-layers.leaflet-control {
+    display: none; }

@@ -77,12 +77,13 @@ angular.module('starter.services', ['ionic', 'configuration'])
 	var add = function(id, name, type) {
         type = type || 'S';
 		var data = JSON.parse($window.localStorage['favorites'] || '{}');
+        // favoriteCount exists in case a future version lets users reorder favorites.
+        // This is also the reason that different types of favs are all in one object in LocalStorage.
         //var favoriteCount = JSON.parse($window.localStorage['favoriteCount'] || '0');
 
         //Route Maps and Routes would share a key and collide, this solves that.
         var dispId = id.replace('MAP','');
 
-        // favoriteCount exists in case a future version lets users reorder favorites.
         //favoriteCount = Object.keys(data).length++;
 
 		data[id] = {
@@ -689,6 +690,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				markers['s' + key] = {
 					lat: val.lat,
 					lng: val.lon,
+                    layer: 'stops',
 					icon: {
 						iconUrl: 'img/stop_icons/stop.svg',
 						iconSize: [20, 20]
@@ -701,6 +703,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				if (stop == val.id && stop !== null) {
 					markers['s' + key]['icon']['iconSize'] = [35, 35];
 					markers['s' + key]['icon']['iconUrl'] = 'img/stop_icons/stop-red.svg';
+                    markers['s' + key]['icon']['layer'] = 'currentStop';
 				}
 			});
 
