@@ -479,7 +479,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.toggleFavorites = function() {
             //hack to have Favorite RouteMap ID and Favorite Route ID not collide.
-            //routeId+MAP is the key, but inside the favorite object it's just routeId (see FavoritesService).
+            //routeId+MAP is the key, but inside the favorite object the id just routeId (see FavoritesService).
             var id = $stateParams.routeId.concat('MAP');
             if (FavoritesService.inFavorites(id)) {
                 FavoritesService.remove(id);
@@ -513,14 +513,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		};
 
-		// show buses and stops
 		var showBusAndStopMarkers = function(route, stop) {
 			$scope.markers = {};
 
 			MapService.getBusMarkers(route).then(function(res) {
 				angular.extend($scope.markers, res);
 			});
-
 			MapService.getStopMarkers(route, stop).then(function(res) {
 				angular.extend($scope.markers, res);
 			});
@@ -537,19 +535,34 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				},
 				center: {},
 				defaults: {
-					tileLayer: MAP_TILES,
-					tileLayerOptions: {
-						attribution: $filter('hrefToJS')(MAP_ATTRS),
-                        reuseTiles: true,
-                        access_token: MAPBOX_KEY
-					},
 					scrollWheelZoom: false
 				},
 				markers: {},
-				paths: {}
+				paths: {},
+                layers: {
+                    baselayers: {
+                        xyz: {
+                            url: MAP_TILES,
+                            type:'xyz',
+                            name:'base',
+                            options: {
+						attribution: $filter('hrefToJS')(MAP_ATTRS),
+                        reuseTiles: true,
+                        access_token: MAPBOX_KEY
+                            }
+                        }
+					},
+                    overlays: {
+                        stops:{
+                            type: 'group', name: 'stops', visible: false
+				},
+                        currentStop: {
+                            type: 'group', name: 'currentStop', visible: true
+                        }
+                    }}
 			});
 			leafletData.getMap().then(function(map) {
-				//leaflet attribution is not required
+                //leaflet attrib not required
 				map.attributionControl.setPrefix('');
 				L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
 			});
@@ -577,6 +590,21 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		});
 
+        var toggleLayer= function(type)        {
+            $scope.layers.overlays[type].visible = !$scope.layers.overlays[type].visible;
+        };
+        var isLayerVisible = function(type){
+            return $scope.layers.overlays[type].visible;
+        }
+        $scope.$on('leafletDirectiveMap.zoomend', function(event, args){
+            if(args.leafletEvent.target._zoom > 14 && !isLayerVisible('stops') ) {
+              toggleLayer('stops');
+            }
+            else if (args.leafletEvent.target._zoom < 14 && isLayerVisible('stops')){
+              toggleLayer('stops');
+            }
+        });
+
 		$scope.$on('$destroy', function() {
 			if ($scope.reloadTimeout) {
 				$interval.cancel($scope.reloadTimeout);
@@ -596,6 +624,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			map();
 			showRoutePolylines($stateParams.routeId);
 			showBusAndStopMarkers($stateParams.routeId, $stateParams.stopId);
+
+            if ($scope.center.zoom > 14){
+                toggleLayer('stops');
+            }
 			$scope.reloadTimeout = $interval(refresh, 35000);
 		})();
 	}
