@@ -56,7 +56,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			],
 			"searches": [],
 			"showSearches": true,
-			"showTips": true,
+			"showDefaultTips": true,
             "showBranding": SHOW_BRANDING
 		};
 
@@ -157,11 +157,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				if (results.length > 0) {
 					$scope.data.searches = results;
 					$scope.data.showSearches = true;
-					//$scope.data.showTips = false;
+					$scope.data.showDefaultTips = false;
 				} else {
 					$scope.data.searches = [];
 					$scope.data.showSearches = false;
-					//$scope.data.showTips = true;
 				}
 			});
 		})();
