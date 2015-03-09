@@ -3,7 +3,9 @@
         <app-header ng-show="data.showBranding"></app-header>
         <div class="card">
 
-            <p ng-show="data.showBranding" ng-bind-html="(data.brandAboutText|hrefToJS)"></p>
+            <p ng-show="data.showBranding" ng-repeat="p in data.brandAboutText">
+                <span ng-bind-html="p|hrefToJS"></span>
+            </p>
 
             <p>This app was created by the MTA Bus Time Team, using
                 PhoneGap,
