@@ -544,8 +544,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                             url: MAP_TILES,
                             type:'xyz',
                             name:'base',
+                                layerOptions: {
+                                    attribution: $filter('hrefToJS')(MAP_ATTRS)
+                                },
                             options: {
-						attribution: $filter('hrefToJS')(MAP_ATTRS),
                         reuseTiles: true,
                         access_token: MAPBOX_KEY
                             }
