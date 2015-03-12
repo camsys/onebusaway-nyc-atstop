@@ -233,7 +233,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"alertsHide": false,
 			"alertsToggle": false,
 			"stopId": $stateParams.stopId,
-			"tips": "Refreshes automatically or pull for instant refresh."
+			"tips": "Pull down for instant refresh."
 		};
 
 		$scope.toggleFavorites = function() {
