@@ -301,7 +301,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	})
 
 	.state('tab.map-gps', {
-		url: '/map-gps/:routeId/:stopId',
+		url: '/map-gps/:routeId/:routeName/:stopId',
 		cache: false,
 		views: {
 			'tab-nearby-stops-and-routes': {
