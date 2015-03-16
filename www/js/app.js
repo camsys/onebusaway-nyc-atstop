@@ -200,6 +200,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			}
 		}
 	})
+	
+	.state('tab.route-favorites', {
+		url: '/route-favorites/:routeId/:routeName',
+		views: {
+			'tab-favorites': {
+				templateUrl: 'templates/route.html',
+				controller: 'RouteCtrl'
+			}
+		}
+	})
 
 	.state('tab.geolocation', {
 		url: '/geolocation/:latitude/:longitude/:address',
