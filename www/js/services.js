@@ -1,3 +1,5 @@
+/*jshint sub:true*/
+
 angular.module('starter.services', ['ionic', 'configuration'])
 
 .factory('SearchesService', function($q, $window) {

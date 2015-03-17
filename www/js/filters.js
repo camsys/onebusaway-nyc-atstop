@@ -1,3 +1,5 @@
+/*jshint sub:true*/
+
 angular.module('filters', [])
 
 // modify a link to open URL in a device's browser

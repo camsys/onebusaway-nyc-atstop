@@ -1,3 +1,5 @@
+/*jshint sub:true*/
+
 /**
  * Copyright (c) 2015 Metropolitan Transportation Authority
  *
@@ -149,12 +151,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     })
 
 .directive('appHeader', function(){
-        return {
-            restrict: 'E',
-            //I know, I know.
-            template: '<div style="padding-bottom: -100%; position: relative; text-align: center"><img src="img/logo.svg" style="width: 90%; height: auto;"> </div>'
-        }
-    })
+	return {
+		restrict: 'E',
+		//I know, I know.
+		template: '<div style="padding-bottom: -100%; position: relative; text-align: center"><img src="img/logo.svg" style="width: 90%; height: auto;"> </div>'
+	};
+})
 
 .directive('ngEnter', function() {
 	return function(scope, element, attrs) {

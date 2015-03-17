@@ -1,3 +1,5 @@
+/*jshint sub:true*/
+
 /**
  * Copyright (c) 2015 Metropolitan Transportation Authority
  *
@@ -27,10 +29,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             clearHistory();
             $state.go('tab.home');
         };
+        
         $scope.goFavsTab = function() {
             clearHistory();
             $state.go('tab.favorites');
-        }
+        };
 
     })
 // Search
@@ -189,7 +192,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			var favoritesDefer = $q.defer();
 
 			FavoritesService.get().then(function(results) {
-                if  (Object.keys(results).length==  0 ){
+                if  (Object.keys(results).length ===  0 ){
                     $scope.data.notifications = "You have not added any favorites. You can add favorites by clicking the star icon on routes, favorites, or maps.";
                 }
 				else if (!angular.isUndefined(results) && results !== null) {
@@ -599,9 +602,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var toggleLayer= function(type)        {
             $scope.layers.overlays[type].visible = !$scope.layers.overlays[type].visible;
         };
+        
         var isLayerVisible = function(type){
             return $scope.layers.overlays[type].visible;
-        }
+        };
+        
         $scope.$on('leafletDirectiveMap.zoomend', function(event, args){
             if(args.leafletEvent.target._zoom > 14 && !isLayerVisible('stops') ) {
               toggleLayer('stops');
