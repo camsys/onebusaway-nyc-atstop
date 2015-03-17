@@ -8,7 +8,7 @@
                     <i class="icon ion-trash-b"></i>
                 </ion-option-button>
             </ion-item>
-            <ion-item ng-repeat="m in data.favoriteRouteMaps" href="#/tab/map-favorites/{{m.id}}/{{m.name}}">
+            <ion-item ng-repeat="m in data.favoriteRouteMaps" href="#/tab/map-favorites/{{m.id}}//{{m.name}}">
                 Map: {{m.name}}
                 <ion-option-button class="button-positive" ng-click="remove(m.id.concat('MAP'))">
                     <i class="icon ion-trash-b"></i>

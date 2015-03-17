@@ -1,6 +1,6 @@
 <ion-view view-title="{{data.routeName}}">
     <ion-nav-buttons side="right">
-        <a class="button button-light" href="#/tab/map/{{routeId}}/{{data.routeName}}/">
+        <a class="button button-light" href="#/tab/{{url}}/{{routeId}}/{{routeName}}/">
                Map
             </a>
     </ion-nav-buttons>
@@ -18,7 +18,7 @@
                 <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
                 <strong>&#160; {{group.name}}</strong>
             </ion-item>
-            <ion-item class="item-accordion" ng-repeat="item in group.items" ng-show="isGroupShown(group)" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
+            <ion-item class="item-accordion" ng-repeat="item in group.items" ng-show="isGroupShown(group)" href="#/tab/{{atStopUrl}}/{{item.id}}/{{item.name | encodeStopName}}">
                 {{::item.name | encodeStopName}}
             </ion-item>
         </div>

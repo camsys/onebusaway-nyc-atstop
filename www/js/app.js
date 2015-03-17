@@ -280,7 +280,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	})
 
 	.state('tab.map-favorites', {
-		url: '/map-favorites/:routeId/:stopId',
+		url: '/map-favorites/:routeId/:routeName/:stopId',
 		cache: false,
 		views: {
 			'tab-favorites': {

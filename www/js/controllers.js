@@ -344,7 +344,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
 	function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate, FavoritesService) {
+		$scope.mapUrl = "map";
+		$scope.atStopUrl = "atstop";
 		$scope.routeId = $stateParams.routeId;
+		$scope.routeName = $stateParams.routeName;
 		var oneDirection = false;
 		$scope.groups = [];
 		$scope.groups[0] = {
@@ -450,6 +453,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 
 		$scope.init = (function() {
+			if ($location.$$path.indexOf("favorites") > -1) {
+				$scope.mapUrl = "map-favorites";
+				$scope.atStopUrl = "atstop-favorites";
+			}
+			
 			var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
 			if (FavoritesService.inFavorites($stateParams.routeId)) {
 				$scope.data.favClass = "button-energized";
