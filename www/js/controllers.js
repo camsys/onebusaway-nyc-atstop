@@ -359,8 +359,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         $scope.toggleFavorites = function() {
             //type-R (for route) FTW
             var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
-            if (FavoritesService.inFavorites(fav)) {
-                FavoritesService.remove(fav);
+            if (FavoritesService.inFavorites(fav[0])) {
+                FavoritesService.remove(fav[0]);
                 $scope.data.favClass = "";
             } else {
                 FavoritesService.add(fav[0], fav[1], fav[2]);
@@ -447,6 +447,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 
 		$scope.init = (function() {
+			var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
+			if (FavoritesService.inFavorites($stateParams.routeId)) {
+				$scope.data.favClass = "button-energized";
+			}
+			
 			$scope.getDirectionsAndStops();
 		})();
 	}
@@ -622,6 +627,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             if (FavoritesService.inFavorites($stateParams.routeId.concat('MAP'))) {
                 $scope.data.favClass ="button-energized";
             }
+            
 			map();
 			showRoutePolylines($stateParams.routeId);
 			showBusAndStopMarkers($stateParams.routeId, $stateParams.stopId);
