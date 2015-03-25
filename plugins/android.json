@@ -15,6 +15,10 @@
                         {
                             "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"webView\" value=\"org.crosswalk.engine.XWalkCordovaWebView\" />",
+                            "count": 1
                         }
                     ]
                 }
@@ -29,6 +33,9 @@
             "PACKAGE_NAME": "com.ionicframework.atstopskeleton574514"
         },
         "org.apache.cordova.device": {
+            "PACKAGE_NAME": "com.ionicframework.atstopskeleton574514"
+        },
+        "org.crosswalk.engine": {
             "PACKAGE_NAME": "com.ionicframework.atstopskeleton574514"
         }
     },

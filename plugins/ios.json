@@ -34,6 +34,9 @@
         },
         "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.ionicframework.atstopskeleton574514"
+        },
+        "org.crosswalk.engine": {
+            "PACKAGE_NAME": "com.ionicframework.atstopskeleton574514"
         }
     },
     "dependent_plugins": {}
