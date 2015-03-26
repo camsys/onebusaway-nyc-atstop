@@ -11,12 +11,8 @@ A hybrid mobile app that provides information about when the next bus will arriv
   * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://app.prod.obanyc.com/`)
 
 ### Running and testing ###
-There are two methods to run and test the app, 
-
-1. Use the serve function of [ionic](http://ionicframework.com/docs/guide/testing.html)
-2. Use the [PhoneGap Developer App](http://app.phonegap.com/).
-
-In order to build the native mobile app, use [Adobe PhoneGap Build](https://build.phonegap.com/). Rename the **config.tmpl.xml** to **config.xml**. Archive the `www` folder and upload it on PhoneGap Build. You can also use [PhoneGap Emulatation extension](http://emulate.phonegap.com/) for Google Chrome. *NOTE:* The app uses several objects, like the connection object from the Apache Cordova framework, which may not be available locally (in a Web browser).
+* Use the serve function of [ionic](http://ionicframework.com/docs/guide/testing.html)
+* In order to build the native mobile app, use `ionic build [platform]`
 
 ### Using JSHint, UglifyJS, and Pngquant-Imagemin###
 Run `npm install` in the root of the project. To use JSHint, run `gulp lint`. In order to use UglifyJS, run `gulp compress`. It will create new compressed files in `dist` folder in the root of the project. To compress the splashes, run `compress_resources`.
