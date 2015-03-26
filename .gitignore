@@ -6,6 +6,7 @@ www/config.xml
 www/resources/
 platforms/
 plugins/
+hooks/
 node_modules/
 dist/
 resources/
