@@ -1,9 +1,11 @@
 .idea/
+.tmp
 *.swp
 www/js/config.js
 www/config.xml
 www/resources/
 platforms/
+plugins/
 node_modules/
 dist/
 resources/
@@ -11,5 +13,4 @@ bower_components/
 www/img/logo.svg
 www/hooks/
 engine/
-plugins/
 config/
