@@ -32,11 +32,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 		}
 
-		/*
 		if (window.StatusBar) {
 			StatusBar.styleDefault();
 		}
-		*/
+		
         //checking if app is in cordova. Otherwise, don't worry about network connections.
 		if (window.cordova && $cordovaNetwork.isOffline()) {
 			$ionicPopup.alert({
@@ -54,11 +53,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .config(function($httpProvider, $ionicConfigProvider) {
 	$ionicConfigProvider.tabs.position('bottom');
+	
 	if (ionic.Platform.isAndroid) {
-		$ionicConfigProvider.views.transition('platform');
+		$ionicConfigProvider.views.transition('none');
 	}
-	// Should be removed if it is not used
-	// $ionicConfigProvider.views.maxCache(2);
 
 	$httpProvider.interceptors.push(function($rootScope) {
 		return {
@@ -148,7 +146,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             }
 		}
 	};
-    })
+})
 
 .directive('appHeader', function(){
 	return {
@@ -325,5 +323,4 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 	// if none of the above states are matched, use this as the fallback
 	$urlRouterProvider.otherwise('/tab/home');
-
 });

@@ -86,7 +86,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			SearchesService.add(matches);
 			switch (matches.type) {
 				case "RouteResult":
-					$scope.handleRouteSearch(matches);
+					handleRouteSearch(matches);
 					break;
 				case "StopResult":
 					$scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
@@ -103,7 +103,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		// set no sched svc message.
-		$scope.handleRouteSearch = function(matches) {
+		var handleRouteSearch = function(matches) {
 			if (matches.directions.length > 1) {
 				// if one direction with no service-- handle on route/stop page.
 				if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
@@ -137,7 +137,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 					SearchesService.add(matches);
 					switch (matches.type) {
 						case "RouteResult":
-							$scope.handleRouteSearch(matches);
+							handleRouteSearch(matches);
 							break;
 						case "StopResult":
 							$scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
@@ -155,7 +155,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			);
 		};
 
-		$scope.init = (function() {
+		var init = (function() {
 			SearchesService.fetchAll().then(function(results) {
 				if (results.length > 0) {
 					$scope.data.searches = results;
@@ -216,7 +216,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		};
 
-		$scope.init = (function() {
+		var init = (function() {
             get();
 		})();
 	}
@@ -324,7 +324,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			}
 		});
 
-		$scope.init = (function() {
+		var init = (function() {
 			if ($location.$$path.indexOf("atstop-favorites") > -1) {
 				$scope.data.link = "map-favorites";
 			} else if ($location.$$path.indexOf("atstop-gps") > -1) {
@@ -336,6 +336,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			} else {
 				$scope.data.favClass = "";
 			}
+			
 			getBuses();
 			$scope.reloadTimeout = $interval(getBuses, 35000);
 		})();
@@ -398,7 +399,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			"directionName_": ""
 		};
 
-		$scope.getDirectionsAndStops = function() {
+		var getDirectionsAndStops = function() {
 			var directionsDefer = $q.defer();
 			var stopsDefer = $q.defer();
 
@@ -452,7 +453,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 
-		$scope.init = (function() {
+		var init = (function() {
 			if ($location.$$path.indexOf("favorites") > -1) {
 				$scope.mapUrl = "map-favorites";
 				$scope.atStopUrl = "atstop-favorites";
@@ -463,7 +464,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$scope.data.favClass = "button-energized";
 			}
 			
-			$scope.getDirectionsAndStops();
+			getDirectionsAndStops();
 		})();
 	}
 ])
@@ -510,6 +511,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			leafletData.getMap().then(function(map) {
 				map.closePopup();
 			});
+			
 			showBusAndStopMarkers($stateParams.routeId, $stateParams.stopId);
 		};
 
@@ -630,7 +632,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			}
 		});
 
-		$scope.init = (function() {
+		var init = (function() {
 			if ($location.$$path.indexOf("map-favorites") > -1) {
 				$scope.url = "atstop-favorites";
 			} else if ($location.$$path.indexOf("map-gps") > -1) {
@@ -697,14 +699,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				$interval.cancel($scope.reloadTimeout);
 			}
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
-				$scope.getNearbyStopsAndRoutesGPS();
+				getNearbyStopsAndRoutesGPS();
 			} else {
-				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
+				getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
 			}
 			$scope.$broadcast('scroll.refreshComplete');
 		};
 
-		$scope.getNearbyStopsAndRoutes = function(lat, lon) {
+		var getNearbyStopsAndRoutes = function(lat, lon) {
 			GeolocationService.getStops(lat, lon).then(function(results) {
 				if (!angular.isUndefined(results) && results !== null && results.length > 0) {
 					angular.forEach(results, function(stop) {
@@ -726,7 +728,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		};
 
-		$scope.getNearbyStopsAndRoutesGPS = function() {
+		var getNearbyStopsAndRoutesGPS = function() {
 			//console.log("getNearbyStopsAndRoutesGPS called");
 			$scope.data.notifications = "Waiting for location.";
 			$cordovaGeolocation.getCurrentPosition({
@@ -736,7 +738,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				function(position) {
 					$scope.data.notifications = "";
 					$scope.data.val = true;
-					$scope.getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
+					getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
 				}, function(error) {
 					$scope.data.showMap = false;
 					$scope.data.notifications = "Could not get location.";
@@ -887,18 +889,16 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			showBusMarkers(route);
 		};
 
-		$scope.slideTo = function(location) {
+		var slideTo = function(location) {
 			location = $location.hash(location);
-
+			console.log(location);
 			//console.log(location);
 			//console.log('scrolling to: ' + location);
 
-			// not satisfied with performance
-			/*
+			// not satisfied with performance though
 			$timeout(function() {
 				$ionicScrollDelegate.anchorScroll("#" + location);
 			});
-			*/
 		};
 
 
@@ -914,6 +914,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 				if (object.stopName == "Current Location"){
 					content = "<p>Current Location</p>";
 				} else {
+					slideTo(object.stopId);
 					content = '<p>' + object.stopName + '</p>' + '<a href="#/tab/' + $scope.url + '/' + object.stopId + '/' + object.stopName + '" class="button button-clear button-full button-small">See upcoming buses</a>';
 				}
 			}
@@ -926,17 +927,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 			});
 		});
 
-		$scope.init = (function() {
+		var init = (function() {
 			map();
 			if ($location.$$path == "/tab/nearby-stops-and-routes") {
 				//console.log("GPS Mode");
 				$scope.data.title = "Nearby Stops";
 				$scope.url = "atstop-gps";
-				$scope.getNearbyStopsAndRoutesGPS();
+				getNearbyStopsAndRoutesGPS();
 
 			} else {
 				$scope.data.title = $stateParams.address;
-				$scope.getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
+				getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
 			}
 		})();
 	}
