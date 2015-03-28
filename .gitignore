@@ -3,6 +3,34 @@
 
 # But not these files…
 !.gitignore
+!scss/ionic.app.scss
+!www/index.html
+!www/img/bus_icons/*
+!www/img/stop_icons/*
+!www/js/app.js
+!www/js/config.tmpl.js
+!www/js/controllers.js
+!www/js/filters.js
+!www/js/services.js
+!www/lib/angular-cache/*
+!www/lib/angular-leaflet/*
+!www/lib/leaflet/*
+!www/lib/moment/*
+!www/lib/underscore/*
+!www/templates/about.html
+!www/templates/atstop.html
+!www/templates/geolocation.html
+!www/templates/map.html
+!www/templates/route.html
+!www/templates/stopcode.html
+!www/templates/tab-favorites.html
+!www/templates/tab-home.html
+!www/templates/tab-nearby-stops-and-routes.html
+!www/tabs.html
 
 # …even if they are in subdirectories
 !*/
+
+# Ignore .DS_Store files
+.DS\_Store
+*.sw?

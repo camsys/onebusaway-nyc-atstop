@@ -1,0 +1,40 @@
+<ion-view view-title="{{data.title}}">
+    <ion-nav-buttons side="secondary">
+        <button class="button button-clear" ng-click="back()" ng-show="data.returnShow">
+            <i class="icon ion-arrow-return-left"></i>
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content ng-show="data.loaded" has-bouncing="true" scroll="false">
+
+        <div data-tap-disabled="true">
+            <leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="{{data.mapHeight}}px" ng-show="data.showMap"></leaflet>
+        </div>
+
+        <ion-scroll style="height: {{data.listHeight}}px;">
+
+            <ng-tips ng-model="data.tips"></ng-tips>
+
+            <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
+            <ion-list>
+                <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15" id="{{item.id}}">
+                    {{item.name}}
+                    <div class="row">
+                        <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
+                    </div>
+
+                    <!--				
+		                <button class="button button-positive button-small button-clear" ng-click="modal.show();getBuses(item.id);">
+		                    See more
+		                </button>
+						-->
+                    <a class="button button-positive button-small button-clear" href="#/tab/{{url}}/{{item.id}}/{{item.name | encodeStopName}}">
+			                    See upcoming buses
+			                </a>
+
+                </ion-item>
+            </ion-list>
+            <p>{{data.notifications}}</p>
+        </ion-scroll>
+    </ion-content>
+</ion-view>
