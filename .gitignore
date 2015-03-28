@@ -1,17 +1,8 @@
-.idea/
-.tmp
-*.swp
-www/js/config.js
-www/config.xml
-www/resources/
-platforms/
-plugins/
-hooks/
-node_modules/
-dist/
-resources/
-bower_components/
-www/img/logo.svg
-www/hooks/
-engine/
-config/
+# Ignore everything
+*
+
+# But not these files…
+!.gitignore
+
+# …even if they are in subdirectories
+!*/
