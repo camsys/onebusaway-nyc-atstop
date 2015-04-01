@@ -656,8 +656,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['MapService', '$stateParams', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-	function(MapService, $stateParams, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('NearbyStopsAndRoutesCtrl', ['MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+	function(MapService, $stateParams, $window, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
 		$scope.markers = {};
 		$scope.paths = {};
 		$scope.url = "atstop";
@@ -731,9 +731,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		var getNearbyStopsAndRoutesGPS = function() {
 			//console.log("getNearbyStopsAndRoutesGPS called");
 			$scope.data.notifications = "Waiting for location.";
+			
 			$cordovaGeolocation.getCurrentPosition({
 				enableHighAccuracy: false,
-				timeout: 10000
+				timeout: 10000,
+				maximumAge: 0
 			}).then(
 				function(position) {
 					$scope.data.notifications = "";

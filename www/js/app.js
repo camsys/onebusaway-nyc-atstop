@@ -54,7 +54,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 .config(function($httpProvider, $ionicConfigProvider) {
 	$ionicConfigProvider.tabs.position('bottom');
 	
-	if (ionic.Platform.isAndroid) {
+	if (ionic.Platform.isAndroid()) {
 		$ionicConfigProvider.views.transition('none');
 	}
 
