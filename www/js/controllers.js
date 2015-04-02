@@ -589,7 +589,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		// map click event
 		$scope.$on('leafletDirectiveMarker.click', function(event, args) {
-			var object = $scope.markers[args.markerName];
+			var object = $scope.markers[args.modelName];
 			var content = '';
 			var latLng = [];
 			var popup = L.popup();
@@ -713,7 +713,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 						stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
 					});
 					$scope.data.stops = results;
-                    $scope.data.stops.push({id: "current_location", lat: lat, lon: lon});
+					$scope.data.stops.push({id: "current_location", lat: lat, lon: lon});
                     $scope.data.nearbyStops = results;
 					showNearbyStops();
 					$scope.data.notifications = "";
@@ -899,7 +899,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		var slideTo = function(location) {
 			location = $location.hash(location);
-			console.log(location);
+			//console.log(location);
 			//console.log(location);
 			//console.log('scrolling to: ' + location);
 
@@ -912,7 +912,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		// map click event
 		$scope.$on('leafletDirectiveMarker.click', function(event, args) {
-			var object = $scope.markers[args.markerName];
+			var object = $scope.markers[args.modelName];
 			var content = '';
 			var latlng = [];
 			var popup = L.popup();
