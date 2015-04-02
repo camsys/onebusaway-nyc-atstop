@@ -17,7 +17,7 @@
 
             <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
             <ion-list>
-                <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15" id="{{item.id}}">
+                <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15 | filter:{id: '!current_location'}" id="{{item.id}}">
                     {{item.name}}
                     <div class="row">
                         <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
