@@ -21,7 +21,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 .value('httpTimeout', 5000)
 
 .constant('$ionicLoadingConfig', {
-	template: 'Loading',
+	template: '<ion-spinner></ion-spinner>',
 	showBackdrop: false
 })
 
