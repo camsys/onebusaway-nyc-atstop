@@ -36,3 +36,5 @@
 # Ignore .DS_Store files
 .DS\_Store
 *.sw?
+engine/*
+platforms/*
