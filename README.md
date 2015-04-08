@@ -9,6 +9,8 @@ A hybrid mobile app that provides information about when the next bus will arriv
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one. You will receive the key within half an hour.
   * Insert your key into the `API_KEY` field of `config.js`.
   * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://app.prod.obanyc.com/`)
+ 
+* Pure Ionic Version [Instructions](https://github.com/camsys/onebusaway-nyc-atstop/tree/ionic)
 
 ### Running and testing ###
 * Use the serve function of [ionic](http://ionicframework.com/docs/guide/testing.html)
