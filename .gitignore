@@ -15,3 +15,4 @@ www/img/logo.svg
 www/hooks/
 engine/
 config/
+npm-debug.log
