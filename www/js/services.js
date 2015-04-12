@@ -743,10 +743,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
 		return deferred.promise;
 	};
 
-	var round5 = function round5(x) {
-		return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
-	};
-
 	var getBusMarkers = function(route) {
 		var deferred = $q.defer();
 		var markers = {};
@@ -756,10 +752,11 @@ angular.module('starter.services', ['ionic', 'configuration'])
 				markers['b' + key] = {
 					lat: val.latitude,
 					lng: val.longitude,
-					icon: {
-						iconUrl: 'img/bus_icons/vehicle-' + ((round5(val.angle) == 360) ? 0 : round5(val.angle)) + '.png',
-						iconSize: [51, 51]
-					},
+					icon: { type: 'div',
+						html: '<svg width="45" height="45"><image xlink:href="img/bus_icons/ring.svg" width="45" height="45" transform="rotate(' + (val.angle == 360 ? 0 : -1 * val.angle) + ', 22.5, 22.5)" /><image xlink:href="img/bus_icons/bus.svg" width="45" height="45"/></svg>',
+						className: '',
+						iconSize: [45, 45]
+					      },
 					focus: false,
 					vehicleId: val.vehicleId,
 					destination: val.destination,
