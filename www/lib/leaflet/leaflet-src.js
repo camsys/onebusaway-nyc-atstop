@@ -1,5 +1,5 @@
 /*
- Leaflet 0.8-dev (e708e37), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 0.8-dev (57580ec), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -584,7 +584,7 @@ L.Mixin = {Events: proto};
 	    ie3d = ie && ('transition' in doc.style),
 	    webkit3d = ('WebKitCSSMatrix' in window) && ('m11' in new window.WebKitCSSMatrix()) && !android23,
 	    gecko3d = 'MozPerspective' in doc.style,
-	    opera3d = 'OTransition' in doc.style;
+	    opera12 = 'OTransition' in doc.style;
 
 	var touch = !window.L_NO_TOUCH && !phantomjs && (pointer || 'ontouchstart' in window ||
 			(window.DocumentTouch && document instanceof window.DocumentTouch));
@@ -602,8 +602,8 @@ L.Mixin = {Events: proto};
 		ie3d: ie3d,
 		webkit3d: webkit3d,
 		gecko3d: gecko3d,
-		opera3d: opera3d,
-		any3d: !window.L_DISABLE_3D && (ie3d || webkit3d || gecko3d || opera3d) && !phantomjs,
+		opera12: opera12,
+		any3d: !window.L_DISABLE_3D && (ie3d || webkit3d || gecko3d) && !opera12 && !phantomjs,
 
 		mobile: mobile,
 		mobileWebkit: mobile && webkit,
@@ -2136,11 +2136,25 @@ L.Map = L.Evented.extend({
 		this._container.scrollLeft = 0;
 	},
 
+	_findEventTarget: function (src) {
+		while (src) {
+			var target = this._targets[L.stamp(src)];
+			if (target) {
+				return target;
+			}
+			if (src === this._container) {
+				break;
+			}
+			src = src.parentNode;
+		}
+		return null;
+	},
+
 	_handleDOMEvent: function (e) {
 		if (!this._loaded || L.DomEvent._skipped(e)) { return; }
 
 		// find the layer the event is propagating from
-		var target = this._targets[L.stamp(e.target || e.srcElement)],
+		var target = this._findEventTarget(e.target || e.srcElement),
 			type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
 
 		// special case for map mouseover/mouseout events so that they're actually mouseenter/mouseleave
@@ -2592,10 +2606,7 @@ L.GridLayer = L.Layer.extend({
 
 	setOpacity: function (opacity) {
 		this.options.opacity = opacity;
-
-		if (this._map) {
-			this._updateOpacity();
-		}
+		this._updateOpacity();
 		return this;
 	},
 
@@ -2604,6 +2615,10 @@ L.GridLayer = L.Layer.extend({
 		this._updateZIndex();
 
 		return this;
+	},
+
+	isLoading: function () {
+		return this._loading;
 	},
 
 	redraw: function () {
@@ -2664,6 +2679,7 @@ L.GridLayer = L.Layer.extend({
 	},
 
 	_updateOpacity: function () {
+		if (!this._map) { return; }
 		var opacity = this.options.opacity;
 
 		// IE doesn't inherit filter opacity properly, so we're forced to set it on tiles
@@ -2946,7 +2962,8 @@ L.GridLayer = L.Layer.extend({
 
 		if (queue.length !== 0) {
 			// if its the first batch of tiles to load
-			if (this._noTilesToLoad()) {
+			if (!this._loading) {
+				this._loading = true;
 				this.fire('loading');
 			}
 
@@ -3112,6 +3129,7 @@ L.GridLayer = L.Layer.extend({
 		});
 
 		if (this._noTilesToLoad()) {
+			this._loading = false;
 			this.fire('load');
 		}
 	},
@@ -7684,7 +7702,7 @@ L.Map.Keyboard = L.Handler.extend({
 		down:    [40],
 		up:      [38],
 		zoomIn:  [187, 107, 61, 171],
-		zoomOut: [189, 109, 173]
+		zoomOut: [189, 109, 54, 173]
 	},
 
 	initialize: function (map) {
