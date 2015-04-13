@@ -508,6 +508,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 		var refresh = function() {
 			//console.log("refresh");
+
 			leafletData.getMap().then(function(map) {
 				map.closePopup();
 			});
@@ -531,6 +532,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 		};
 
 		var showBusAndStopMarkers = function(route, stop) {
+			//start countdown on markers refresh
+
+			$scope.$broadcast('timer-start');
 			$scope.markers = {};
 
 			MapService.getBusMarkers(route).then(function(res) {
@@ -650,6 +654,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             if ($scope.center.zoom > 14){
                 toggleLayer('stops');
             }
+
 			$scope.reloadTimeout = $interval(refresh, 35000);
 		})();
 	}
