@@ -2,10 +2,10 @@
 <widget id="com.ionicframework.atstopskeleton574514" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>at-stop-skeleton</name>
   <description>
-        An Ionic Framework and Cordova project.
+        A hybrid mobile app that provides information about when the next bus will arrive at your stop.
     </description>
-  <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
+  <author email="hi@email" href="https://github.com/camsys/onebusaway-nyc-atstop">
+      MTA Bus Time Team
     </author>
   <content src="index.html"/>
   <access origin="*"/>

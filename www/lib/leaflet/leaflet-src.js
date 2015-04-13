@@ -1,5 +1,5 @@
 /*
- Leaflet 0.8-dev (57580ec), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 0.8-dev (7b1ddd8), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -5109,10 +5109,17 @@ L.Polyline = L.Path.extend({
 		    points = this._rings[0],
 		    len = points.length;
 
+		if (!len) { return null; }
+
 		// polyline centroid algorithm; only uses the first ring if there are multiple
 
 		for (i = 0, halfDist = 0; i < len - 1; i++) {
 			halfDist += points[i].distanceTo(points[i + 1]) / 2;
+		}
+
+		// The line is so small in the current view that all points are on the same pixel.
+		if (halfDist === 0) {
+			return this._map.layerPointToLatLng(points[0]);
 		}
 
 		for (i = 0, dist = 0; i < len - 1; i++) {
@@ -5324,14 +5331,17 @@ L.Polygon = L.Polyline.extend({
 	},
 
 	getCenter: function () {
-		var i, j, len, p1, p2, f, area, x, y,
-		    points = this._rings[0];
+		var i, j, p1, p2, f, area, x, y, center,
+		    points = this._rings[0],
+		    len = points.length;
+
+		if (!len) { return null; }
 
 		// polygon centroid algorithm; only uses the first ring if there are multiple
 
 		area = x = y = 0;
 
-		for (i = 0, len = points.length, j = len - 1; i < len; j = i++) {
+		for (i = 0, j = len - 1; i < len; j = i++) {
 			p1 = points[i];
 			p2 = points[j];
 
@@ -5341,7 +5351,13 @@ L.Polygon = L.Polyline.extend({
 			area += f * 3;
 		}
 
-		return this._map.layerPointToLatLng([x / area, y / area]);
+		if (area === 0) {
+			// Polygon is so small that all points are on same pixel.
+			center = points[0];
+		} else {
+			center = [x / area, y / area];
+		}
+		return this._map.layerPointToLatLng(center);
 	},
 
 	_convertLatLngs: function (latlngs) {
