@@ -19,6 +19,7 @@
 !www/lib/leaflet/plugins/*
 !www/lib/moment/*
 !www/lib/underscore/*
+!www/lib/angular-timer/*
 !www/templates/about.html
 !www/templates/atstop.html
 !www/templates/geolocation.html
