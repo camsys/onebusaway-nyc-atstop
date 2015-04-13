@@ -14,7 +14,10 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
+ *
+ * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
+ 
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova', 'angular-data.DSCacheFactory', 'timer'])
 
 // global timeout variable for HTTP requests
