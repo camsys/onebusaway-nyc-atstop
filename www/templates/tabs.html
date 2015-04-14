@@ -1,0 +1,15 @@
+<ion-tabs class="tabs-icon-only">
+    <ion-tab title="Search" icon="icon ion-search" href="#/tab/home" ng-click="goHomeTab()" ng-controller="GoHomeCtrl">
+        <ion-nav-view name="tab-home"></ion-nav-view>
+    </ion-tab>
+
+    <ion-tab title="Favorites" icon="icon ion-star" href="#/tab/favorites" ng-click="goFavsTab()" ng-controller="GoHomeCtrl">
+        <ion-nav-view name="tab-favorites"></ion-nav-view>
+    </ion-tab>
+
+
+    <ion-tab title="Nearby" icon="icon ion-location" href="#/tab/nearby-stops-and-routes">
+        <ion-nav-view name="tab-nearby-stops-and-routes"></ion-nav-view>
+    </ion-tab>
+
+</ion-tabs>
