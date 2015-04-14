@@ -16,6 +16,11 @@ A hybrid mobile app that provides information about when the next bus will arriv
 * Use the serve function of [ionic](http://ionicframework.com/docs/guide/testing.html)
 * In order to build the native mobile app, use `ionic build [platform]`
 
+## Required Cordova Plugins
+ * org.apache.cordova.network-information
+ * org.apache.cordova.geolocation
+ * org.apache.cordova.inappbrowser
+
 ### Using JSHint, UglifyJS, and Pngquant-Imagemin###
 Run `npm install` in the root of the project. To use JSHint, run `gulp lint`. In order to use UglifyJS, run `gulp compress`. It will create new compressed files in `dist` folder in the root of the project. To compress the splashes, run `compress_resources`.
 
