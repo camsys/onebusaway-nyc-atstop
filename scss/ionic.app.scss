@@ -17,198 +17,213 @@ $dark:                            #444 !default;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
-
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+
+$progress-bar-height: 5px !default;
+
 .leaflet-control-layers.leaflet-control {
-  display: none;
+    display: none;
 }
+
 .scroll, .angular-leaflet-map {
-  height: 100%;
+    height: 100%;
+}
+
+.angular-leaflet-map {
+  margin-top: -$progress-bar-height;
+  z-index: -1;
 }
 
 em {
-  font-weight: bolder;
-  text-decoration: underline;
+    font-weight: bolder;
+    text-decoration: underline;
 }
 
 h1.title {
-  font-size: 2vmax !important;
+    font-size: 2vmax !important;
 }
 
 .routesAtStop {
-  display: block;
-  font-size: smaller;
-  -webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
+    display: block;
+    font-size: smaller;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
 }
 
 div.route {
-  font-size: 1.4em;
-  padding: 0px 14px;
+    font-size: 1.4em;
+    padding: 0px 14px;
 }
 
 .stopname {
-  text-align: center;
+    text-align: center;
 }
 
 .updated {
-  font-weight: lighter;
-  font-size: smaller;
-  text-align: center;
+    font-weight: lighter;
+    font-size: smaller;
+    text-align: center;
 }
 
 .rightAlign {
-  float: right;
+    float: right;
 }
 
 .largeIcon {
-  font-size: 1.5em;
+    font-size: 1.5em;
 }
 
 .vcenter {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-direction: normal;
-  -moz-box-direction: normal;
-  -webkit-box-orient: horizontal;
-  -moz-box-orient: horizontal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-wrap: nowrap;
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  -webkit-box-pack: start;
-  -moz-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  -webkit-align-content: space-between;
-  -ms-flex-line-pack: justify;
-  align-content: space-between;
-  -webkit-box-align: center;
-  -moz-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-box-pack: start;
+    -moz-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-align-content: space-between;
+    -ms-flex-line-pack: justify;
+    align-content: space-between;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
 }
 
 p {
-  margin: 15px;
+    margin: 15px;
 }
 
 .highlight {
-  font-weight: bolder;
-  margin: 0;
-  padding: 0 15px 0 15px;
+    font-weight: bolder;
+    margin: 0;
+    padding: 0 15px 0 15px;
 }
 
 .alerts {
-  font-size: 12px;
-  color: #B21212;
-  margin-bottom: 8px;
-  margin-top: 8px;
+    font-size: 12px;
+    color: #B21212;
+    margin-bottom: 8px;
+    margin-top: 8px;
 }
 
 .bus {
-  padding-left: 5px;
-  padding-top: 5px;
+    padding-left: 5px;
+    padding-top: 5px;
 }
 
 .novmargin {
-  margin: 0;
+    margin: 0;
 }
 
 .greytext {
-  color: #666;
+    color: #666;
 }
 
 .longtext {
-  text-align: justify;
-  text-justify: auto;
-  line-height: 1.5;
-  hyphens: auto;
+    text-align: justify;
+    text-justify: auto;
+    line-height: 1.5;
+    hyphens: auto;
 }
 
 a {
-  text-decoration: none;
-  color: inherit;
+    text-decoration: none;
+    color: inherit;
 }
 
 body {
-  font-size: 1em;
-  line-height: 1.4;
-  margin: 0;
+    font-size: 1em;
+    line-height: 1.4;
+    margin: 0;
 }
 
 pre {
-  overflow: auto;
+    overflow: auto;
 }
 
 button, input, optgroup, select, textarea {
-  color: inherit;
-  /* 1 */
-  font: inherit;
-  /* 2 */
-  margin: 0;
-  /* 3 */
+    color: inherit;
+    /* 1 */
+    
+    font: inherit;
+    /* 2 */
+    
+    margin: 0;
+    /* 3 */
 }
 
 button, select {
-  text-transform: none;
+    text-transform: none;
 }
 
 label.item.item-input {
-  margin-top: 1px;
-  border-color: #111;
+    margin-top: 1px;
+    border-color: #111;
 }
 
 .list .item.item-accordion {
-  line-height: 38px;
-  padding-top: 0;
-  padding-bottom: 0;
-  transition: 0.01s all linear;
-  &.ng-hide {
-	line-height: 0px;
-  }
-  &.ng-hide-add, &.ng-hide-remove {
-	display: block !important;
-  }
+    line-height: 38px;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: 0.01s all linear;
+    &.ng-hide {
+        line-height: 0px;
+    }
+    &.ng-hide-add, &.ng-hide-remove {
+        display: block !important;
+    }
 }
 
 .leaflet-popup-close-button {
-  display: none;
+    display: none;
 }
 
 .stop {
-  border-radius: 120px;
-  background-color: #888888;
+    border-radius: 120px;
+    background-color: #888888;
 }
 
 .stop-current {
-  border-radius: 120px;
-  background-color: #f03b20;
-  border: 2px solid #ffffff;
+    border-radius: 120px;
+    background-color: #f03b20;
+    border: 2px solid #ffffff;
 }
 
 .tips {
-  font-size: smaller;
-  background-color: rgba(102, 204, 51, 0.85);
-  color: #fff;
-  height: 30px;
-  padding: 4px;
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 0;
-  z-index: 999;
+    font-size: smaller;
+    background-color: rgba(102, 204, 51, 0.85);
+    color: #fff;
+    height: 30px;
+    padding: 4px;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 0;
+    z-index: 999;
 }
 
 .loading-container .loading {
-  background-color: white;
+    background-color: white;
+}
+
+.progress-bar {
+  height: $progress-bar-height;
+  background-color: $positive;
 }

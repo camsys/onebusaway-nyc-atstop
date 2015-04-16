@@ -1,7 +1,7 @@
 <ion-view view-title="Map">
     <ion-nav-buttons side="secondary">
         <button class="button button-clear" ng-click="refresh()">
-            <timer interval="1000" countdown="35" style="margin-left: 2px;">{{countdown}}</timer> <i class="icon ion-refresh"></i>
+            <i class="icon ion-refresh"></i>
         </button>
         <button class="button button-clear {{data.favClass}}" ng-click="toggleFavorites()">
             <i class="icon ion-star"></i>
@@ -9,6 +9,7 @@
     </ion-nav-buttons>
 
     <ion-content data-tap-disabled="true">
+        <timer interval="1000" countdown="35"><div class="progress-bar" style="width: {{progressBar}}%;"></div></timer> 
         <leaflet center="center" defaults="defaults" markers="markers" paths="paths" layers="layers"></leaflet>
     </ion-content>
 </ion-view>
