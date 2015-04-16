@@ -30,7 +30,6 @@
 !www/templates/tab-home.html
 !www/templates/tab-nearby-stops-and-routes.html
 !www/templates/tabs.html
-!www/tabs.html
 
 # …even if they are in subdirectories
 !*/
