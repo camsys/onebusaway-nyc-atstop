@@ -5,10 +5,10 @@
             <p>Location: {{data.address}}</p>
             <p class="highlight">Stops &amp; Routes:</p>
 
-
             <ion-item ng-repeat="item in ::data.stops" href="#/tab/atstop/{{item.id}}/{{item.name | encodeStopName}}">
                 {{item.name}}
-                <p>Routes:<span ng-repeat="r in ::item.routes"> {{r.shortName}} </span> 
+                <p>Routes:
+                    <span ng-repeat="r in ::item.routes"> {{r.shortName}} </span>
                 </p>
             </ion-item>
         </div>

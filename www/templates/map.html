@@ -1,13 +1,14 @@
 <ion-view view-title="Map">
     <ion-nav-buttons side="secondary">
-
+        <button class="button button-clear" ng-click="refresh()">
+            <timer interval="1000" countdown="35" style="margin-left: 2px;">{{countdown}}</timer> <i class="icon ion-refresh"></i>
+        </button>
         <button class="button button-clear {{data.favClass}}" ng-click="toggleFavorites()">
             <i class="icon ion-star"></i>
         </button>
-        </ion-nav-buttons>
+    </ion-nav-buttons>
+
     <ion-content data-tap-disabled="true">
-    	<timer class="tips" interval="1000" countdown="35">Update after {{countdown}}</timer>
-      	<!-- <ng-tips ng-model="tips"></ng-tips> -->
         <leaflet center="center" defaults="defaults" markers="markers" paths="paths" layers="layers"></leaflet>
     </ion-content>
 </ion-view>

@@ -23,14 +23,14 @@
                         <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
                     </div>
 
-                    <!--				
-		                <button class="button button-positive button-small button-clear" ng-click="modal.show();getBuses(item.id);">
-		                    See more
-		                </button>
-						-->
+                    <!--                
+                        <button class="button button-positive button-small button-clear" ng-click="modal.show();getBuses(item.id);">
+                            See more
+                        </button>
+                        -->
                     <a class="button button-positive button-small button-clear" href="#/tab/{{url}}/{{item.id}}/{{item.name | encodeStopName}}">
-			                    See upcoming buses
-			                </a>
+                                See upcoming buses
+                            </a>
 
                 </ion-item>
             </ion-list>
