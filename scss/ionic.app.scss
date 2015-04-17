@@ -19,18 +19,12 @@ $dark:                            #444 !default;
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
-$progress-bar-height: 5px !default;
 .leaflet-control-layers.leaflet-control {
     display: none;
 }
 
 .scroll, .angular-leaflet-map {
     height: 100%;
-}
-
-.angular-leaflet-map {
-    margin-top: -$progress-bar-height;
-    z-index: -1;
 }
 
 em {
@@ -218,9 +212,4 @@ label.item.item-input {
 
 .loading-container .loading {
     background-color: white;
-}
-
-.progress-bar {
-    height: $progress-bar-height;
-    background-color: $positive;
 }

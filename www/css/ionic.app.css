@@ -7608,10 +7608,6 @@ a.button {
 .scroll, .angular-leaflet-map {
   height: 100%; }
 
-.angular-leaflet-map {
-  margin-top: -5px;
-  z-index: -1; }
-
 em {
   font-weight: bolder;
   text-decoration: underline; }
@@ -7766,7 +7762,3 @@ label.item.item-input {
 
 .loading-container .loading {
   background-color: white; }
-
-.progress-bar {
-  height: 5px;
-  background-color: #387ef5; }
