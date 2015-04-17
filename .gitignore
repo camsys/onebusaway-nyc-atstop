@@ -21,6 +21,7 @@
 !www/lib/moment/*
 !www/lib/underscore/*
 !www/lib/angular-timer/*
+!www/lib/round-progress/*
 !www/templates/about.html
 !www/templates/atstop.html
 !www/templates/geolocation.html
