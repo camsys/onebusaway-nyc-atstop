@@ -180,13 +180,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('RouteService', function($filter, $q, $http, httpTimeout, API_END_POINT, API_KEY, DSCacheFactory) {
-    DSCacheFactory('dataCache', {
-        maxAge: 600000,
-        cacheFlushInterval: 600000,
-        deleteOnExpire: 'aggressive' // Items will be deleted from this cache right when they expire.
-    });
-
+.factory('RouteService', function($filter, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getPolylines = function(route) {
         var deferred = $q.defer();
         var results = {
@@ -233,7 +227,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var directions = {};
 
         var responsePromise = $http.jsonp(API_END_POINT + "api/where/stops-for-route/" + route + ".json?callback=JSON_CALLBACK", {
-                cache: DSCacheFactory.get('dataCache'),
+                cache: true,
                 params: {
                     key: API_KEY,
                     version: 2,
@@ -291,7 +285,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var stops = {};
 
         var responsePromise = $http.jsonp(API_END_POINT + "api/stops-on-route-for-direction?callback=JSON_CALLBACK", {
-                cache: DSCacheFactory.get('dataCache'),
+                cache: true,
                 params: {
                     routeId: route,
                     directionId: direction,

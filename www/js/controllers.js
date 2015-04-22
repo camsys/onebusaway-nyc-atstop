@@ -598,11 +598,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     }
                 }
             });
+
+            /* New Angular Leaflet Directive should have this functionality now.
             leafletData.getMap().then(function(map) {
                 //leaflet attrib not required
                 map.attributionControl.setPrefix('');
                 L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
             });
+            */
         };
 
         // map click event
@@ -638,7 +641,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         $scope.$on('leafletDirectiveMap.zoomend', function(event, args) {
             if(args.leafletEvent.target._zoom > 14 && !isLayerVisible('stops')) {
                 toggleLayer('stops');
-            } else if(args.leafletEvent.target._zoom < 14 && isLayerVisible('stops')) {
+            } else if(args.leafletEvent.target._zoom <= 14 && isLayerVisible('stops')) {
                 toggleLayer('stops');
             }
         });
@@ -740,9 +743,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     showNearbyStops();
                     $scope.data.notifications = "";
                     $scope.data.showMap = true;
+                    
+                    /*
                     leafletData.getMap().then(function(map) {
                         L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
                     });
+                    */
                 } else {
                     $scope.data.showMap = false;
                     $scope.data.notifications = "No nearby stops found.";

@@ -18,7 +18,7 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova', 'angular-data.DSCacheFactory', 'timer', 'angular-svg-round-progress'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress'])
 
 // global timeout variable for HTTP requests
 .value('httpTimeout', 5000)
@@ -83,19 +83,28 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     });
 })
 
+// use Angular Cache by default
+.run(function($http, CacheFactory) {
+    $http.defaults.cache = CacheFactory('dataCache', {
+        maxAge: 15 * 60 * 1000, // Items added to this cache expire after 15 minutes
+        cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+        deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
+    });
+})
+
 .run(function($rootScope, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout, $ionicTabsDelegate) {
     // State change events
     /*
-	$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-		$ionicLoading.show();
-	});
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+        $ionicLoading.show();
+    });
 
-	$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-		$timeout(function() {
-			$ionicLoading.hide()
-		}, 2000);
-	});
-	*/
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+        $timeout(function() {
+            $ionicLoading.hide()
+        }, 2000);
+    });
+    */
 
     // if 'loading:show' is broadcasted then show the loading indicator or hide if 'loading:hide' is broadcasted
     $rootScope.$on('loading:show', function() {
