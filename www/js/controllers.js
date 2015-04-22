@@ -641,7 +641,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         $scope.$on('leafletDirectiveMap.zoomend', function(event, args) {
             if(args.leafletEvent.target._zoom > 14 && !isLayerVisible('stops')) {
                 toggleLayer('stops');
-            } else if(args.leafletEvent.target._zoom < 14 && isLayerVisible('stops')) {
+            } else if(args.leafletEvent.target._zoom <= 14 && isLayerVisible('stops')) {
                 toggleLayer('stops');
             }
         });
