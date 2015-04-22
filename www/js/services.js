@@ -152,7 +152,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     key: API_KEY,
                     LineRef: route
                 },
-                timeout: httpTimeout
+                timeout: httpTimeout,
+                cache: false
             })
             .success(function(data, status, header, config) {
                 angular.forEach(data.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity, function(val, key) {
@@ -342,6 +343,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     radius: 200,
                     includeReferences: false
                 },
+                cache: true,
                 timeout: httpTimeout
             })
             .success(function(data, status, header, config) {
@@ -369,6 +371,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     lon: lon,
                     radius: 200
                 },
+                cache: true,
                 timeout: httpTimeout
             })
             .success(function(data, status, header, config) {
@@ -419,6 +422,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
         var responsePromise = $http.jsonp(API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK", {
                 params: getParams,
+                cache: false,
                 timeout: httpTimeout
             })
             .success(function(data, status, header, config) {
@@ -491,6 +495,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                 params: {
                     key: API_KEY
                 },
+                cache: true,
                 timeout: httpTimeout
             })
             .success(function(data, status, header, config) {
@@ -517,6 +522,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                 params: {
                     key: API_KEY
                 },
+                cache: true,
                 timeout: httpTimeout
             })
             .success(function(data, status, header, config) {
@@ -549,6 +555,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                 params: {
                     term: searchKey
                 },
+                cache: true,
                 timeout: httpTimeout
             })
             .success(function(data, status, header, config) {
@@ -573,6 +580,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                 params: {
                     q: term
                 },
+                cache: true,
                 timeout: httpTimeout
             })
             .success(function(data, status, header, config) {
