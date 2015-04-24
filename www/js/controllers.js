@@ -599,13 +599,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 }
             });
 
-            /* New Angular Leaflet Directive should have this functionality now.
+
             leafletData.getMap().then(function(map) {
                 //leaflet attrib not required
                 map.attributionControl.setPrefix('');
-                L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
+                //New Angular Leaflet Directive should have this functionality now.
+                //L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
             });
-            */
+
         };
 
         // map click event
