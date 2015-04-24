@@ -3,6 +3,7 @@
 
 # But not these files…
 !.gitignore
+!apache-license-2.0.md
 !scss/ionic.app.scss
 !www/index.html
 !www/css/*
