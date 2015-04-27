@@ -677,8 +677,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
         $scope.paths = {};
         $scope.url = "atstop";
@@ -768,7 +768,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             var timeout = $timeout(function() {
                 $scope.data.showMap = false;
                 $scope.data.notifications = "Pull to refresh.";
-                loading.hide();
+                $ionicLoading.hide();
                 if($scope.left != true) {
                     var popup = $ionicPopup.alert({
                         content: "Cannot access your position. Check if location services are enabled."
@@ -788,7 +788,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 maximumAge: 0
             }).then(
                 function(position) {
-                    loading.hide();
+                    $ionicLoading.hide();
                     $timeout.cancel(timeout);
                     $scope.data.notifications = "";
                     $scope.data.val = true;
@@ -797,7 +797,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 function(error) {
                     $scope.data.showMap = false;
                     $scope.data.notifications = "Pull to refresh.";
-                    loading.hide();
+                    $ionicLoading.hide();
                     $timeout.cancel(timeout);
                     if($scope.left != true) {
                         var popup = $ionicPopup.alert({
