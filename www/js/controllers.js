@@ -159,6 +159,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             );
         };
 
+        $scope.clearSearches = function() {
+            SearchesService.clear();
+            $scope.data.searches = [];
+            $scope.data.showSearches = false;
+            $scope.data.showDefaultTips = true;
+        };
+
         var init = (function() {
             SearchesService.fetchAll().then(function(results) {
                 if(results.length > 0) {
@@ -716,6 +723,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.refresh = function() {
+            $scope.data.notifications = "";
             if($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
@@ -760,7 +768,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             //console.log("getNearbyStopsAndRoutesGPS called");
 
             var loading = $ionicLoading.show({
-                template: '<ion-spinner></ion-spinner>'
+                template: '<ion-spinner></ion-spinner>' + '<p style="color: #000;">It may take up to 15 seconds.</p>'
             });
 
             var timeoutVal = 10000;
@@ -783,7 +791,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
             // Unfortunately, this function is asynchronous. So, we cannot cancel it. However, we have a trick for this. DO NOT show the popup if a user left the page.
             $cordovaGeolocation.getCurrentPosition({
-                enableHighAccuracy: true,
+                enableHighAccuracy: false,
                 timeout: timeoutVal,
                 maximumAge: 0
             }).then(

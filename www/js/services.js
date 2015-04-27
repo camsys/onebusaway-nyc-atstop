@@ -68,9 +68,14 @@ angular.module('starter.services', ['ionic', 'configuration'])
         return deferred.promise;
     };
 
+    var clear = function() {
+        $window.localStorage.removeItem("searches");
+    };
+
     return {
         add: add,
-        fetchAll: fetchAll
+        fetchAll: fetchAll,
+        clear: clear
     };
 })
 
