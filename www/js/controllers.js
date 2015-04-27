@@ -767,7 +767,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var getNearbyStopsAndRoutesGPS = function() {
             //console.log("getNearbyStopsAndRoutesGPS called");
 
-            var loading = $ionicLoading.show({
+            $ionicLoading.show({
                 template: '<ion-spinner></ion-spinner>' + '<p style="color: #000;">It may take up to 15 seconds.</p>'
             });
 
@@ -776,7 +776,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             var timeout = $timeout(function() {
                 $scope.data.showMap = false;
                 $scope.data.notifications = "Pull to refresh.";
-                loading.hide();
+                $ionicLoading.hide();
                 if($scope.left != true) {
                     var popup = $ionicPopup.alert({
                         content: "Cannot access your position. Check if location services are enabled."
@@ -796,7 +796,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 maximumAge: 0
             }).then(
                 function(position) {
-                    loading.hide();
+                    $ionicLoading.hide();
                     $timeout.cancel(timeout);
                     $scope.data.notifications = "";
                     $scope.data.val = true;
@@ -805,7 +805,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 function(error) {
                     $scope.data.showMap = false;
                     $scope.data.notifications = "Pull to refresh.";
-                    loading.hide();
+                    $ionicLoading.hide();
                     $timeout.cancel(timeout);
                     if($scope.left != true) {
                         var popup = $ionicPopup.alert({
