@@ -779,7 +779,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 } else {
                     console.log("You left the current page! Destroying ...");
                 };
-            }, timeoutVal);
+            }, timeoutVal + 5000);
 
             // Unfortunately, this function is asynchronous. So, we cannot cancel it. However, we have a trick for this. DO NOT show the popup if a user left the page.
             $cordovaGeolocation.getCurrentPosition({
