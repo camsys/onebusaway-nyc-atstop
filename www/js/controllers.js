@@ -723,6 +723,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.refresh = function() {
+            $scope.data.notifications = "";
             if($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
@@ -767,7 +768,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             //console.log("getNearbyStopsAndRoutesGPS called");
 
             var loading = $ionicLoading.show({
-                template: '<ion-spinner></ion-spinner>'
+                template: '<ion-spinner></ion-spinner>' + '<p style="color: #000;">It may take up to 15 seconds.</p>'
             });
 
             var timeoutVal = 10000;
