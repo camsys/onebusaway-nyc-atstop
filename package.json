@@ -27,5 +27,6 @@
       "id": "org.crosswalk.engine",
       "locator": "./engine/cordova-crosswalk-engine-c0.6.2"
     }
-  ]
+  ],
+  "cordovaPlatforms": []
 }
