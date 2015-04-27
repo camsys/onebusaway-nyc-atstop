@@ -48,7 +48,9 @@ angular.module('filters', [])
 .filter('encodeStopName', function() {
     return function(input) {
         input = input || '';
-        return input.replace("/", " & ");
+        input = input.replace("/", " & ");
+        input = input.replace("\\", " & ");
+        return input;
     };
 })
 
