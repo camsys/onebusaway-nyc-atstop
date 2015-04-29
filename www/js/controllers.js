@@ -818,7 +818,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         console.log("You left the current page! Destroying ...");
                     };
                 }
-            );
+            )
+            .finally(function() {
+                $scope.data.showMap = false;
+                $scope.data.notifications = "Pull to refresh.";
+                $ionicLoading.hide();
+                $timeout.cancel(timeout);
+            });
         };
 
         var showNearbyStops = function() {
