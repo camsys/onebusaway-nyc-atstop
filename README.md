@@ -10,8 +10,11 @@ A hybrid mobile app that provides information about when the next bus will arriv
 * Second, start a new project using `ionic start atstop blank`.
   * Setup SASS running `ionic setup sass` in the project root.
   * Install ngCordova running `bower install ngCordova` in the project root.
-  * Remove all files from `www` except `lib` directory and its files.
-  * Download `scss` and `www` from the repository and merge with the new projet.
+  * git init
+  * git remote add origin PATH/TO/THIS/REPO
+  * git fetch --all
+  * git reset --hard origin/ionic
+  * rm www/img/ionic.png www/css/style.css
   * Rename `www/js/config.tmpl.js` to `config.js` (in the same folder)
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one. You will receive the key within half an hour.
   * Insert your key into the `API_KEY` field of `config.js`.
