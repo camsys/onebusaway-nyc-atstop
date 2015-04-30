@@ -159,6 +159,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             );
         };
 
+        $scope.clearSearches = function() {
+            SearchesService.clear();
+            $scope.data.searches = [];
+            $scope.data.showSearches = false;
+            $scope.data.showDefaultTips = true;
+        };
+
         var init = (function() {
             SearchesService.fetchAll().then(function(results) {
                 if(results.length > 0) {
@@ -677,8 +684,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$ionicLoading', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $ionicLoading, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
         $scope.paths = {};
         $scope.url = "atstop";
@@ -716,6 +723,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.refresh = function() {
+            $scope.data.notifications = "";
             if($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
@@ -759,8 +767,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var getNearbyStopsAndRoutesGPS = function() {
             //console.log("getNearbyStopsAndRoutesGPS called");
 
-            var loading = $ionicLoading.show({
-                template: '<ion-spinner></ion-spinner>'
+            $ionicLoading.show({
+                template: '<ion-spinner></ion-spinner>' + '<p style="color: #000;">It may take up to 15 seconds.</p>'
             });
 
             var timeoutVal = 10000;
@@ -768,7 +776,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             var timeout = $timeout(function() {
                 $scope.data.showMap = false;
                 $scope.data.notifications = "Pull to refresh.";
-                loading.hide();
+                $ionicLoading.hide();
                 if($scope.left != true) {
                     var popup = $ionicPopup.alert({
                         content: "Cannot access your position. Check if location services are enabled."
@@ -779,16 +787,16 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 } else {
                     console.log("You left the current page! Destroying ...");
                 };
-            }, timeoutVal);
+            }, timeoutVal + 5000);
 
             // Unfortunately, this function is asynchronous. So, we cannot cancel it. However, we have a trick for this. DO NOT show the popup if a user left the page.
             $cordovaGeolocation.getCurrentPosition({
-                enableHighAccuracy: true,
+                enableHighAccuracy: false,
                 timeout: timeoutVal,
                 maximumAge: 0
             }).then(
                 function(position) {
-                    loading.hide();
+                    $ionicLoading.hide();
                     $timeout.cancel(timeout);
                     $scope.data.notifications = "";
                     $scope.data.val = true;
@@ -797,7 +805,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 function(error) {
                     $scope.data.showMap = false;
                     $scope.data.notifications = "Pull to refresh.";
-                    loading.hide();
+                    $ionicLoading.hide();
                     $timeout.cancel(timeout);
                     if($scope.left != true) {
                         var popup = $ionicPopup.alert({
@@ -810,7 +818,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         console.log("You left the current page! Destroying ...");
                     };
                 }
-            );
+            )
+            .finally(function() {
+                $scope.data.showMap = false;
+                $scope.data.notifications = "Pull to refresh.";
+                $ionicLoading.hide();
+                $timeout.cancel(timeout);
+            });
         };
 
         var showNearbyStops = function() {
