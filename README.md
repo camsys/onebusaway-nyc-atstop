@@ -5,6 +5,7 @@ A hybrid mobile app that provides information about when the next bus will arriv
 
 ### Setting up the project ###
 
+* (Wait before cloning this repo) 
 * First, install [Ionic Framework](http://ionicframework.com/getting-started/).
 * Second, start a new project using `ionic start atstop blank`.
   * Setup SASS running `ionic setup sass` in the project root.
