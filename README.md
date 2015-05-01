@@ -22,10 +22,10 @@ A hybrid mobile app that provides information about when the next bus will arriv
   * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://app.prod.obanyc.com/`)
  
 #### Required Cordova Plugins
-Using `ionic plugin add [name]`, install the following plugins:
- * org.apache.cordova.network-information
- * org.apache.cordova.geolocation
- * org.apache.cordova.inappbrowser
+In order to build app packages and install, several Cordova plugins are required. Using `cordova plugin add [name]`, install the following plugins:
+ * cordova-plugin-network-information
+ * cordova-plugin-geolocation
+ * cordova-plugin-inappbrowser
   
 ### Running and testing ###
 * Use the `ionic serve` function of [Ionic Framework](http://ionicframework.com/docs/guide/testing.html)
