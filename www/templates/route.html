@@ -5,13 +5,11 @@
             </a>
     </ion-nav-buttons>
     <ion-nav-buttons side="secondary">
-
         <button class="button button-clear {{data.favClass}}" ng-click="toggleFavorites()">
             <i class="icon ion-star"></i>
         </button>
     </ion-nav-buttons>
     <ion-content ng-show="data.loaded" has-bouncing="true">
-
         <p>Choose a direction and stop:</p>
         <div ng-repeat="group in groups">
             <ion-item class="item-stable" ng-click="toggleGroup(group)" ng-class="{active: isGroupShown(group)}">

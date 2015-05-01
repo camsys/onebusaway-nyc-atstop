@@ -2,22 +2,18 @@
     <ion-content has-bouncing="true">
         <app-header ng-show="data.showBranding"></app-header>
         <div class="card">
-
             <p ng-show="data.showBranding" ng-repeat="p in data.brandAboutText">
                 <span ng-bind-html="p|hrefToJS"></span>
             </p>
-
             <p>This app was created by the MTA Bus Time Team, using PhoneGap, Ionic, AngularJS , Leaflet, and the MTA Bus Time APIs.
             </p>
         </div>
-
+        <ion-toggle ng-model="confirmed" ng-change="change(confirmed)" toggle-class="toggle-calm">Set Nearby Page as Default</ion-toggle>
         <button class="button button-full" ng-click="toggleText()">Privacy Policy</button>
-
         <div class="card" ng-hide="data.hideText">
             <p class="longtext" ng-repeat="p in data.privText">
                 <span ng-bind-html="p"></span>
             </p>
         </div>
-
     </ion-content>
 </ion-view>

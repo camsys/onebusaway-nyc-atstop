@@ -1,5 +1,4 @@
 <ion-view view-title="">
-
     <ion-content has-bouncing="true">
         <app-header ng-show="data.showBranding"></app-header>
         <div class="">
@@ -19,7 +18,6 @@
                 </ion-item>
             </ion-list>
         </div>
-
         <div class="list" ng-show="data.showSearches">
             <p>Your Recent Searches:</p>
             <button class="button button-full button-stable" ng-repeat="recentSearch in ::data.searches track by $index" ng-click="searchesGo(recentSearch.data)" analytics-on="click" analytics-event="Recent Search">
@@ -44,8 +42,6 @@
                 </div>
             </p>
         </div>
-
         <a class="button button-full button-positive" href="#/tab/about"> About and Links</a>
-
     </ion-content>
 </ion-view>
