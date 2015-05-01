@@ -20,18 +20,39 @@
 
 angular.module('starter.services', ['ionic', 'configuration'])
 
+.factory('DefaultTabService', function($window) {
+    var setIndex = function(value) {
+        $window.localStorage.setItem('defaultTabIndex', value);
+    };
+
+    var getIndex = function() {
+        var index = $window.localStorage.getItem('defaultTabIndex') | 0;
+        return index;
+    };
+
+    var resetIndex = function(value) {
+        $window.localStorage.setItem('defaultTabIndex', 0);
+    };
+
+    return {
+        setIndex: setIndex,
+        getIndex: getIndex,
+        resetIndex: resetIndex
+    };
+})
+
 .factory('SearchesService', function($q, $window) {
     var insert = function(term, title, data) {
         var searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
 
-        if(searches.length > 0) {
+        if (searches.length > 0) {
             angular.forEach(searches, function(val, key) {
-                if(val.term == term) {
+                if (val.term == term) {
                     searches.splice(key, 1);
                 }
             });
 
-            if(searches.length >= 5) {
+            if (searches.length >= 5) {
                 searches.splice(0, 1);
             }
         }
@@ -46,7 +67,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
     };
 
     var add = function(matches) {
-        switch(matches.type) {
+        switch (matches.type) {
             case "RouteResult":
                 insert(matches.id, matches.shortName, matches);
                 break;
@@ -206,7 +227,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
             })
             .success(function(data, status, header, config) {
                 angular.forEach(data.data.references.routes, function(val, key) {
-                    if(val.id == route) {
+                    if (val.id == route) {
                         results.color = val.color;
                     }
                 });
@@ -243,15 +264,15 @@ angular.module('starter.services', ['ionic', 'configuration'])
                 timeout: httpTimeout
             })
             .success(function(data, status, header, config) {
-                if(data.data.entry.stopGroupings[0].stopGroups[0]) {
-                    if(data.data.entry.stopGroupings[0].stopGroups[0].id == "0") {
+                if (data.data.entry.stopGroupings[0].stopGroups[0]) {
+                    if (data.data.entry.stopGroupings[0].stopGroups[0].id == "0") {
                         directions[0] = {
                             directionId: 0,
                             destination: data.data.entry.stopGroupings[0].stopGroups[0].name.name
                         };
                     }
 
-                    if(data.data.entry.stopGroupings[0].stopGroups[0].id == "1") {
+                    if (data.data.entry.stopGroupings[0].stopGroups[0].id == "1") {
                         directions[1] = {
                             directionId: 1,
                             destination: data.data.entry.stopGroupings[0].stopGroups[0].name.name
@@ -259,15 +280,15 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     }
                 }
 
-                if(data.data.entry.stopGroupings[0].stopGroups[1]) {
-                    if(data.data.entry.stopGroupings[0].stopGroups[1].id == "0") {
+                if (data.data.entry.stopGroupings[0].stopGroups[1]) {
+                    if (data.data.entry.stopGroupings[0].stopGroups[1].id == "0") {
                         directions[0] = {
                             directionId: 0,
                             destination: data.data.entry.stopGroupings[0].stopGroups[1].name.name
                         };
                     }
 
-                    if(data.data.entry.stopGroupings[0].stopGroups[1].id == "1") {
+                    if (data.data.entry.stopGroupings[0].stopGroups[1].id == "1") {
                         directions[1] = {
                             directionId: 1,
                             destination: data.data.entry.stopGroupings[0].stopGroups[1].name.name
@@ -403,7 +424,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
 .factory('AtStopService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getBuses = function(params) {
         var stop;
-        if(params.hasOwnProperty('stop')) {
+        if (params.hasOwnProperty('stop')) {
             stop = params.stop;
         } else {
             stop = params;
@@ -421,7 +442,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
             OperatorRef: "MTA",
             MonitoringRef: stop
         };
-        if(params.hasOwnProperty('line')) {
+        if (params.hasOwnProperty('line')) {
             getParams.LineRef = params.line;
         }
 
@@ -432,7 +453,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
             })
             .success(function(data, status, header, config) {
                 buses.responseTimestamp = data.Siri.ServiceDelivery.ResponseTimestamp;
-                if(data.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit.length > 0) {
+                if (data.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit.length > 0) {
                     var tmp = [];
                     var grouped_tmp = [];
                     var grouped = {};
@@ -465,7 +486,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     // check for sched svc:
                 }
 
-                if(data.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {
+                if (data.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {
                     var alerts = [];
                     angular.forEach(data.Siri.ServiceDelivery.SituationExchangeDelivery[0].Situations, function(val, key) {
                         angular.forEach(val, function(v, k) {
@@ -589,9 +610,9 @@ angular.module('starter.services', ['ionic', 'configuration'])
                 timeout: httpTimeout
             })
             .success(function(data, status, header, config) {
-                if(data.searchResults.empty === false && data.searchResults.matches.length > 0) {
+                if (data.searchResults.empty === false && data.searchResults.matches.length > 0) {
                     var matchesData = data.searchResults.matches[0];
-                    switch(data.searchResults.resultType) {
+                    switch (data.searchResults.resultType) {
                         case "RouteResult":
                             matches = {
                                 type: "RouteResult",
@@ -602,8 +623,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                                 directions: {}
                             };
 
-                            if(matchesData.directions[0]) {
-                                if(matchesData.directions[0].directionId == "0") {
+                            if (matchesData.directions[0]) {
+                                if (matchesData.directions[0].directionId == "0") {
                                     matches.directions[0] = {
                                         destination: matchesData.directions[0].destination,
                                         directionId: matchesData.directions[0].directionId,
@@ -611,7 +632,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                                     };
                                 }
 
-                                if(matchesData.directions[0].directionId == "1") {
+                                if (matchesData.directions[0].directionId == "1") {
                                     matches.directions[1] = {
                                         destination: matchesData.directions[0].destination,
                                         directionId: matchesData.directions[0].directionId,
@@ -620,8 +641,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                                 }
                             }
 
-                            if(matchesData.directions[1]) {
-                                if(matchesData.directions[1].directionId == "0") {
+                            if (matchesData.directions[1]) {
+                                if (matchesData.directions[1].directionId == "0") {
                                     matches.directions[0] = {
                                         destination: matchesData.directions[1].destination,
                                         directionId: matchesData.directions[1].directionId,
@@ -629,7 +650,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                                     };
                                 }
 
-                                if(matchesData.directions[1].directionId == "1") {
+                                if (matchesData.directions[1].directionId == "1") {
                                     matches.directions[1] = {
                                         destination: matchesData.directions[1].destination,
                                         directionId: matchesData.directions[1].directionId,
@@ -726,7 +747,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     stopName: $filter('encodeStopName')(val.name)
                 };
 
-                if(stop == val.id && stop !== null) {
+                if (stop == val.id && stop !== null) {
                     markers['s' + key]['icon']['iconSize'] = [35, 35];
                     markers['s' + key]['icon']['iconUrl'] = 'img/stop_icons/stop-red.svg';
                     markers['s' + key]['layer'] = 'currentStop';

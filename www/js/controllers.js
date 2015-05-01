@@ -41,8 +41,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 })
 
 // Search
-.controller('SearchCtrl', ['$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING',
-    function($scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING) {
+.controller('SearchCtrl', ['$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING', 'DefaultTabService', '$ionicTabsDelegate',
+    function($rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING, DefaultTabService, $ionicTabsDelegate) {
 
         $scope.go = function(path) {
             $location.path(path);
@@ -68,10 +68,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.autocomplete = function() {
-            if($scope.data.searchKey.length > 0) {
+            if ($scope.data.searchKey.length > 0) {
                 SearchService.autocomplete($scope.data.searchKey).then(
                     function(matches) {
-                        if(!angular.isUndefined(matches) && matches !== null && matches.length > 0) {
+                        if (!angular.isUndefined(matches) && matches !== null && matches.length > 0) {
                             $scope.data.results = matches;
                             $scope.data.notifications = "";
                         } else {
@@ -88,7 +88,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.searchesGo = function(matches) {
             SearchesService.add(matches);
-            switch(matches.type) {
+            switch (matches.type) {
                 case "RouteResult":
                     handleRouteSearch(matches);
                     break;
@@ -108,17 +108,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         // set no sched svc message.
         var handleRouteSearch = function(matches) {
-            if(matches.directions.length > 1) {
+            if (matches.directions.length > 1) {
                 // if one direction with no service-- handle on route/stop page.
-                if(matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
+                if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
                     $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
-                } else if(!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService) {
+                } else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService) {
                     noSchedService(matches.shortName);
                 } else {
 
                 }
             } else {
-                if(matches.directions[0].hasUpcomingScheduledService) {
+                if (matches.directions[0].hasUpcomingScheduledService) {
                     $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
                 } else {
                     noSchedService(matches.shortName);
@@ -132,14 +132,14 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.searchAndGo = function(term) {
             // for search page, enter searches if only one autocomplete result is returned.
-            if($scope.data.results.length == 1) {
+            if ($scope.data.results.length === 1) {
                 term = $scope.data.results[0];
             }
 
             SearchService.search(term).then(
                 function(matches) {
                     SearchesService.add(matches);
-                    switch(matches.type) {
+                    switch (matches.type) {
                         case "RouteResult":
                             handleRouteSearch(matches);
                             break;
@@ -167,8 +167,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         var init = (function() {
+
+            var defaultTabIndex = DefaultTabService.getIndex();
+            if ($rootScope.redirected === false && defaultTabIndex !== 0) {
+                $rootScope.redirected = true;
+                $ionicTabsDelegate.select(defaultTabIndex);
+            }
+
             SearchesService.fetchAll().then(function(results) {
-                if(results.length > 0) {
+                if (results.length > 0) {
                     $scope.data.searches = results;
                     $scope.data.showSearches = true;
                     $scope.data.showDefaultTips = false;
@@ -203,13 +210,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             var favoritesDefer = $q.defer();
 
             FavoritesService.get().then(function(results) {
-                if(Object.keys(results).length === 0) {
+                if (Object.keys(results).length === 0) {
                     $scope.data.notifications = "You have not added any favorites. You can add favorites by clicking the star icon on routes, favorites, or maps.";
-                } else if(!angular.isUndefined(results) && results !== null) {
+                } else if (!angular.isUndefined(results) && results !== null) {
                     angular.forEach(results, function(value) {
-                        if(value.type == 'R') {
+                        if (value.type === 'R') {
                             $scope.data.favoriteRoutes.push(value);
-                        } else if(value.type == 'RM') {
+                        } else if (value.type === 'RM') {
                             $scope.data.favoriteRouteMaps.push(value);
                         } else {
                             $scope.data.favoriteStops.push(value);
@@ -250,7 +257,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.toggleFavorites = function() {
-            if(FavoritesService.inFavorites($scope.data.stopId)) {
+            if (FavoritesService.inFavorites($scope.data.stopId)) {
                 FavoritesService.remove($scope.data.stopId);
                 $scope.data.favClass = "";
             } else {
@@ -263,11 +270,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             angular.forEach(results['arriving'], function(val, key) {
                 //updates distances to an array of strings so that multi-line entries come out cleaner.
                 angular.forEach(val['distances'], function(v, k) {
-                    if(v['progress'] == 'prevTrip') {
+                    if (v['progress'] === 'prevTrip') {
                         v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
-                    } else if(v['progress'] == 'layover,prevTrip') {
+                    } else if (v['progress'] === 'layover,prevTrip') {
                         v['distance'] = [v['distance'], "At terminal. "];
-                        if(!$filter('isUndefinedOrEmpty')(v['departsTerminal'])) {
+                        if (!$filter('isUndefinedOrEmpty')(v['departsTerminal'])) {
                             v['distance'].push("Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime'));
                         }
                     } else {
@@ -282,7 +289,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var getBuses = function() {
             var busesDefer = $q.defer();
             AtStopService.getBuses($scope.data.stopId).then(function(results) {
-                if(!angular.isUndefined(results.arriving) && results.arriving !== null && !$filter('isEmptyObject')(results.arriving)) {
+                if (!angular.isUndefined(results.arriving) && results.arriving !== null && !$filter('isEmptyObject')(results.arriving)) {
                     $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
                     handleLayovers(results);
                     updateArrivalTimes(results.arriving);
@@ -293,7 +300,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     $scope.data.notifications = "We are not tracking any buses to this stop at this time. Check back later for an update.";
                 }
 
-                if(results.alerts.length > 0) {
+                if (results.alerts.length > 0) {
                     $scope.data.alertsHide = true;
                     $scope.data.alerts = results.alerts;
                 } else {
@@ -329,19 +336,19 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.$on('$destroy', function() {
-            if($scope.reloadTimeout) {
+            if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
         });
 
         var init = (function() {
-            if($location.$$path.indexOf("atstop-favorites") > -1) {
+            if ($location.$$path.indexOf("atstop-favorites") > -1) {
                 $scope.data.link = "map-favorites";
-            } else if($location.$$path.indexOf("atstop-gps") > -1) {
+            } else if ($location.$$path.indexOf("atstop-gps") > -1) {
                 $scope.data.link = "map-gps";
             }
 
-            if(FavoritesService.inFavorites($scope.data.stopId)) {
+            if (FavoritesService.inFavorites($scope.data.stopId)) {
                 $scope.data.favClass = "button-energized";
             } else {
                 $scope.data.favClass = "";
@@ -377,7 +384,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         $scope.toggleFavorites = function() {
             //type-R (for route) FTW
             var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
-            if(FavoritesService.inFavorites(fav[0])) {
+            if (FavoritesService.inFavorites(fav[0])) {
                 FavoritesService.remove(fav[0]);
                 $scope.data.favClass = "";
             } else {
@@ -387,7 +394,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.toggleGroup = function(group) {
-            if($scope.isGroupShown(group)) {
+            if ($scope.isGroupShown(group)) {
                 $scope.shownGroup = null;
             } else {
                 $scope.shownGroup = group;
@@ -415,15 +422,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             var stopsDefer = $q.defer();
 
             RouteService.getDirections($stateParams.routeId).then(function(results) {
-                if(Object.keys(results).length > 1) {
+                if (Object.keys(results).length > 1) {
                     oneDirection = false;
                     angular.forEach(results, function(val, key) {
-                        if(val.directionId === 0) {
+                        if (val.directionId === 0) {
                             $scope.data.directionName = val.destination;
                             $scope.groups[0].name = val.destination;
                         }
 
-                        if(val.directionId == 1) {
+                        if (val.directionId === 1) {
                             $scope.data.directionName_ = val.destination;
                             $scope.groups[1].name = val.destination;
                         }
@@ -443,7 +450,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 RouteService.getStops($stateParams.routeId, "0").then(function(results) {
                     $scope.data.direction = results;
                     $scope.groups[0].items = results;
-                    if(oneDirection === false) {
+                    if (oneDirection === false) {
                         //console.log("1D 4eva!");
                         RouteService.getStops($stateParams.routeId, "1").then(function(results2) {
                             $scope.data.direction_ = results2;
@@ -464,13 +471,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         var init = (function() {
-            if($location.$$path.indexOf("favorites") > -1) {
+            if ($location.$$path.indexOf("favorites") > -1) {
                 $scope.mapUrl = "map-favorites";
                 $scope.atStopUrl = "atstop-favorites";
             }
 
             var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
-            if(FavoritesService.inFavorites($stateParams.routeId)) {
+            if (FavoritesService.inFavorites($stateParams.routeId)) {
                 $scope.data.favClass = "button-energized";
             }
 
@@ -480,14 +487,27 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // About Controller
-.controller('AboutCtrl', ['$scope', '$ionicScrollDelegate', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
-    function($scope, $ionicScrollDelegate, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
+.controller('AboutCtrl', ['$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
+    function($scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
         $scope.data = {
             showBranding: SHOW_BRANDING,
             hideText: true,
             brandAboutText: BRAND_ABOUT_TEXT,
             privText: PRIV_POLICY_TEXT
         };
+
+        $scope.change = function(val) {
+            if (val === true) {
+                DefaultTabService.setIndex(2);
+                console.log(DefaultTabService.getIndex());
+            } else {
+                DefaultTabService.resetIndex();
+                console.log(DefaultTabService.getIndex());
+            }
+        };
+
+        $scope.confirmed = DefaultTabService.getIndex !== 0;
+
         $scope.toggleText = function() {
             // resize the content since the Privacy Policy text is too big 
             $ionicScrollDelegate.resize();
@@ -511,7 +531,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             //hack to have Favorite RouteMap ID and Favorite Route ID not collide.
             //routeId+MAP is the key, but inside the favorite object the id just routeId (see FavoritesService).
             var id = $stateParams.routeId.concat('MAP');
-            if(FavoritesService.inFavorites(id)) {
+            if (FavoritesService.inFavorites(id)) {
                 FavoritesService.remove(id);
                 $scope.data.favClass = "";
             } else {
@@ -622,7 +642,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             var latLng = [];
             var popup = L.popup();
 
-            if($filter('isUndefinedOrEmpty')(object.stopName)) {
+            if ($filter('isUndefinedOrEmpty')(object.stopName)) {
                 content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>";
                 latLng = [object.lat, object.lng];
                 popup.setContent(content).setLatLng(latLng);
@@ -646,27 +666,27 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.$on('leafletDirectiveMap.zoomend', function(event, args) {
-            if(args.leafletEvent.target._zoom > 14 && !isLayerVisible('stops')) {
+            if (args.leafletEvent.target._zoom > 14 && !isLayerVisible('stops')) {
                 toggleLayer('stops');
-            } else if(args.leafletEvent.target._zoom <= 14 && isLayerVisible('stops')) {
+            } else if (args.leafletEvent.target._zoom <= 14 && isLayerVisible('stops')) {
                 toggleLayer('stops');
             }
         });
 
         $scope.$on('$destroy', function() {
-            if($scope.reloadTimeout) {
+            if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
         });
 
         var init = (function() {
-            if($location.$$path.indexOf("map-favorites") > -1) {
+            if ($location.$$path.indexOf("map-favorites") > -1) {
                 $scope.url = "atstop-favorites";
-            } else if($location.$$path.indexOf("map-gps") > -1) {
+            } else if ($location.$$path.indexOf("map-gps") > -1) {
                 $scope.url = "atstop-gps";
             }
 
-            if(FavoritesService.inFavorites($stateParams.routeId.concat('MAP'))) {
+            if (FavoritesService.inFavorites($stateParams.routeId.concat('MAP'))) {
                 $scope.data.favClass = "button-energized";
             }
 
@@ -674,7 +694,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             showRoutePolylines($stateParams.routeId);
             showBusAndStopMarkers($stateParams.routeId, $stateParams.stopId);
 
-            if($scope.center.zoom > 14) {
+            if ($scope.center.zoom > 14) {
                 toggleLayer('stops');
             }
 
@@ -713,7 +733,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.back = function() {
             $scope.data.returnShow = false;
-            if($scope.reloadTimeout) {
+            if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
             $scope.data.stops = $scope.data.nearbyStops;
@@ -724,10 +744,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.refresh = function() {
             $scope.data.notifications = "";
-            if($scope.reloadTimeout) {
+            if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
-            if($location.$$path == "/tab/nearby-stops-and-routes") {
+            if ($location.$$path === "/tab/nearby-stops-and-routes") {
                 getNearbyStopsAndRoutesGPS();
             } else {
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
@@ -737,7 +757,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         var getNearbyStopsAndRoutes = function(lat, lon) {
             GeolocationService.getStops(lat, lon).then(function(results) {
-                if(!angular.isUndefined(results) && results !== null && results.length > 0) {
+                if (!angular.isUndefined(results) && results !== null && results.length > 0) {
                     angular.forEach(results, function(stop) {
                         stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
                     });
@@ -777,7 +797,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 $scope.data.showMap = false;
                 $scope.data.notifications = "Pull to refresh.";
                 $ionicLoading.hide();
-                if($scope.left != true) {
+                if ($scope.left != true) {
                     var popup = $ionicPopup.alert({
                         content: "Cannot access your position. Check if location services are enabled."
                     });
@@ -791,40 +811,40 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
             // Unfortunately, this function is asynchronous. So, we cannot cancel it. However, we have a trick for this. DO NOT show the popup if a user left the page.
             $cordovaGeolocation.getCurrentPosition({
-                enableHighAccuracy: false,
-                timeout: timeoutVal,
-                maximumAge: 0
-            }).then(
-                function(position) {
-                    $ionicLoading.hide();
-                    $timeout.cancel(timeout);
-                    $scope.data.notifications = "";
-                    $scope.data.val = true;
-                    getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
-                },
-                function(error) {
+                    enableHighAccuracy: false,
+                    timeout: timeoutVal,
+                    maximumAge: 0
+                }).then(
+                    function(position) {
+                        $ionicLoading.hide();
+                        $timeout.cancel(timeout);
+                        $scope.data.notifications = "";
+                        $scope.data.val = true;
+                        getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
+                    },
+                    function(error) {
+                        $scope.data.showMap = false;
+                        $scope.data.notifications = "Pull to refresh.";
+                        $ionicLoading.hide();
+                        $timeout.cancel(timeout);
+                        if ($scope.left != true) {
+                            var popup = $ionicPopup.alert({
+                                content: "Cannot access your position. Check if location services are enabled."
+                            });
+                            $timeout(function() {
+                                popup.close();
+                            }, 3000);
+                        } else {
+                            console.log("You left the current page! Destroying ...");
+                        };
+                    }
+                )
+                .finally(function() {
                     $scope.data.showMap = false;
                     $scope.data.notifications = "Pull to refresh.";
                     $ionicLoading.hide();
                     $timeout.cancel(timeout);
-                    if($scope.left != true) {
-                        var popup = $ionicPopup.alert({
-                            content: "Cannot access your position. Check if location services are enabled."
-                        });
-                        $timeout(function() {
-                            popup.close();
-                        }, 3000);
-                    } else {
-                        console.log("You left the current page! Destroying ...");
-                    };
-                }
-            )
-            .finally(function() {
-                $scope.data.showMap = false;
-                $scope.data.notifications = "Pull to refresh.";
-                $ionicLoading.hide();
-                $timeout.cancel(timeout);
-            });
+                });
         };
 
         var showNearbyStops = function() {
@@ -836,7 +856,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
             var stops = [];
             angular.forEach($scope.data.stops, function(v, k) {
-                if(v["id"] != "current_location") {
+                if (v["id"] != "current_location") {
                     stops['s' + k] = {
                         lat: v["lat"],
                         lng: v["lon"],
@@ -924,7 +944,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         $scope.$on('$destroy', function() {
             $scope.left = true;
-            if($scope.reloadTimeout) {
+            if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
         });
@@ -986,10 +1006,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             var content = '';
             var latlng = [];
             var popup = L.popup();
-            if($filter('isUndefinedOrEmpty')(object.stopName)) {
+            if ($filter('isUndefinedOrEmpty')(object.stopName)) {
                 content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>";
             } else {
-                if(object.stopName == "Current Location") {
+                if (object.stopName === "Current Location") {
                     content = "<p>Current Location</p>";
                 } else {
                     slideTo(object.stopId);
@@ -1007,7 +1027,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         var init = (function() {
             map();
-            if($location.$$path == "/tab/nearby-stops-and-routes") {
+            if ($location.$$path === "/tab/nearby-stops-and-routes") {
                 //console.log("GPS Mode");
                 $scope.data.title = "Nearby Stops";
                 $scope.url = "atstop-gps";

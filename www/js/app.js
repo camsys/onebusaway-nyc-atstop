@@ -30,23 +30,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .run(function($ionicPlatform, $ionicPopup, $cordovaNetwork) {
     $ionicPlatform.ready(function() {
-        if(window.cordova && window.cordova.plugins.Keyboard) {
+        if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 
         }
 
-        if(window.StatusBar) {
+        if (window.StatusBar) {
             StatusBar.styleDefault();
         }
 
         //checking if app is in cordova. Otherwise, don't worry about network connections.
-        if(window.cordova && $cordovaNetwork.isOffline()) {
+        if (window.cordova && $cordovaNetwork.isOffline()) {
             $ionicPopup.alert({
                     title: "Internet Disconnected",
                     content: "The internet is not available on your device."
                 })
                 .then(function(result) {
-                    if(result) {
+                    if (result) {
                         ionic.Platform.exitApp();
                     }
                 });
@@ -54,10 +54,48 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     });
 })
 
+// use Angular Cache by default
+.run(function($http, CacheFactory) {
+    $http.defaults.cache = CacheFactory('dataCache', {
+        maxAge: 15 * 60 * 1000, // Items added to this cache expire after 15 minutes
+        cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+        deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
+    });
+})
+
+.run(function($rootScope, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout, $ionicTabsDelegate) {
+    $rootScope.redirected = false;
+
+    // if 'loading:show' is broadcasted then show the loading indicator or hide if 'loading:hide' is broadcasted
+    $rootScope.$on('loading:show', function() {
+        $ionicLoading.show();
+    });
+
+    $rootScope.$on('loading:hide', function() {
+        $ionicLoading.hide();
+    });
+
+    // Do we need this?
+    $rootScope.$on('requestRejection', function(obj, data) {
+        $ionicLoading.hide();
+
+        if (data.config.url.indexOf("autocomplete") == -1) {
+            var popup = $ionicPopup.alert({
+                title: "Error",
+                content: "Something went wrong. Please check your internet connection."
+            });
+            $timeout(function() {
+                popup.close();
+            }, 3000);
+        }
+
+    });
+})
+
 .config(function($httpProvider, $ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
 
-    if(ionic.Platform.isAndroid()) {
+    if (ionic.Platform.isAndroid()) {
         $ionicConfigProvider.views.transition('none');
     }
 
@@ -83,55 +121,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     });
 })
 
-// use Angular Cache by default
-.run(function($http, CacheFactory) {
-    $http.defaults.cache = CacheFactory('dataCache', {
-        maxAge: 15 * 60 * 1000, // Items added to this cache expire after 15 minutes
-        cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
-        deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
-    });
-})
-
-.run(function($rootScope, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout, $ionicTabsDelegate) {
-    // State change events
-    /*
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-        $ionicLoading.show();
-    });
-
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-        $timeout(function() {
-            $ionicLoading.hide()
-        }, 2000);
-    });
-    */
-
-    // if 'loading:show' is broadcasted then show the loading indicator or hide if 'loading:hide' is broadcasted
-    $rootScope.$on('loading:show', function() {
-        $ionicLoading.show();
-    });
-
-    $rootScope.$on('loading:hide', function() {
-        $ionicLoading.hide();
-    });
-
-    // Do we need this?
-    $rootScope.$on('requestRejection', function(obj, data) {
-        $ionicLoading.hide();
-
-        if(data.config.url.indexOf("autocomplete") == -1) {
-            var popup = $ionicPopup.alert({
-                title: "Error",
-                content: "Something went wrong. Please check your internet connection."
-            });
-            $timeout(function() {
-                popup.close();
-            }, 3000);
-        }
-
-    });
-})
-
 .directive('ngTips', function($timeout, $rootScope) {
     $rootScope.tipCt = 0;
     return {
@@ -144,7 +133,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         link: function(scope, element, attrs) {
             $rootScope.tipCt = ++$rootScope.tipCt;
             //only show tips a few times after app load
-            if(scope.$root.tipCt < 3) {
+            if (scope.$root.tipCt < 3) {
                 var to = $timeout(function() {
                     element.remove();
                 }, 3000);
@@ -162,7 +151,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 .directive('appHeader', function() {
     return {
         restrict: 'E',
-        //I know, I know.
+        scope: {},
         template: '<div style="padding-bottom: -100%; position: relative; text-align: center"><img src="img/logo.svg" style="width: 90%; height: auto;"> </div>'
     };
 })
@@ -170,7 +159,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 .directive('ngEnter', function() {
     return function(scope, element, attrs) {
         element.bind("keydown keypress", function(event) {
-            if(event.which === 13) {
+            if (event.which === 13) {
                 scope.$apply(function() {
                     scope.$eval(attrs.ngEnter);
                 });
