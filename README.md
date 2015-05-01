@@ -14,7 +14,7 @@ A hybrid mobile app that provides information about when the next bus will arriv
   * `git init`
   * `git remote add origin PATH/TO/THIS/REPO`
   * `git fetch --all`
-  * `git reset --hard origin/ionic`
+  * `git reset --hard origin/master`
   * Remove `www/img/ionic.png` and `www/css/style.css` files.
   * Rename `www/js/config.tmpl.js` to `config.js` (in the same folder)
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one. You will receive the key within half an hour.
