@@ -506,7 +506,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             }
         };
 
-        $scope.confirmed = DefaultTabService.getIndex !== 0;
+        $scope.confirmed = DefaultTabService.getIndex() !== 0;
 
         $scope.toggleText = function() {
             // resize the content since the Privacy Policy text is too big 
