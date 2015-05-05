@@ -487,8 +487,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // About Controller
-.controller('AboutCtrl', ['$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
-    function($scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
+.controller('AboutCtrl', ['$rootScope', '$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
+    function($rootScope, $scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
         $scope.data = {
             showBranding: SHOW_BRANDING,
             hideText: true,
@@ -497,6 +497,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.change = function(val) {
+            $rootScope.redirected = true;
             if (val === true) {
                 DefaultTabService.setIndex(2);
                 console.log(DefaultTabService.getIndex());
