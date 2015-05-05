@@ -23,9 +23,9 @@ A hybrid mobile app that provides information about when the next bus will arriv
  
 #### Required Cordova Plugins
 In order to build app packages and install, several Cordova plugins are required. Using `cordova plugin add [name]`, install the following plugins:
- * cordova-plugin-network-information
- * cordova-plugin-geolocation
- * cordova-plugin-inappbrowser
+ * org.apache.cordova.network-information
+ * org.apache.cordova.geolocation
+ * org.apache.cordova.inappbrowser
   
 ### Running and testing ###
 * Use the `ionic serve` function of [Ionic Framework](http://ionicframework.com/docs/guide/testing.html)
