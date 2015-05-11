@@ -788,17 +788,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var getNearbyStopsAndRoutesGPS = function() {
             //console.log("getNearbyStopsAndRoutesGPS called");
 
-            $ionicLoading.show({
-                template: '<ion-spinner></ion-spinner>' + '<p style="color: #000;">It may take up to 15 seconds.</p>'
-            });
+            $scope.loading = true;
 
             var timeoutVal = 10000;
             var fired = false;
             var timeout = $timeout(function() {
                 $scope.data.showMap = false;
                 $scope.data.notifications = "Pull to refresh.";
-                $ionicLoading.hide();
-                if ($scope.left != true) {
+                $scope.loading = false;
+                if ($scope.left !== true) {
                     var popup = $ionicPopup.alert({
                         content: "Cannot access your position. Check if location services are enabled."
                     });
@@ -807,7 +805,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     }, 3000);
                 } else {
                     console.log("You left the current page! Destroying ...");
-                };
+                }
             }, timeoutVal + 5000);
 
             // Unfortunately, this function is asynchronous. So, we cannot cancel it. However, we have a trick for this. DO NOT show the popup if a user left the page.
@@ -817,7 +815,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     maximumAge: 0
                 }).then(
                     function(position) {
-                        $ionicLoading.hide();
+                        $scope.loading = false;
                         $timeout.cancel(timeout);
                         $scope.data.notifications = "";
                         $scope.data.val = true;
@@ -828,7 +826,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         $scope.data.notifications = "Pull to refresh.";
                         $ionicLoading.hide();
                         $timeout.cancel(timeout);
-                        if ($scope.left != true) {
+                        if ($scope.left !== true) {
                             var popup = $ionicPopup.alert({
                                 content: "Cannot access your position. Check if location services are enabled."
                             });
@@ -837,13 +835,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                             }, 3000);
                         } else {
                             console.log("You left the current page! Destroying ...");
-                        };
+                        }
                     }
                 )
                 .finally(function() {
                     $scope.data.showMap = false;
                     $scope.data.notifications = "Pull to refresh.";
-                    $ionicLoading.hide();
+                    $scope.loading = false;
                     $timeout.cancel(timeout);
                 });
         };
