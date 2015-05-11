@@ -54,18 +54,6 @@ angular.module('filters', [])
     };
 })
 
-.filter('encode', function() {
-    return function(input) {
-        return encodeURIComponent(input);
-    };
-})
-
-.filter('decode', function() {
-    return function(input) {
-        return decodeURIComponent(input);
-    };
-})
-
 // always round down to nearest min, do not show time if less than 1 minute away
 .filter('durationView', ['datetimeService',
     function(datetimeService) {
