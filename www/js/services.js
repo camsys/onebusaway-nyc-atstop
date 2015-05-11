@@ -497,66 +497,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('StopcodeService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
-    var getRoutes = function(stop) {
-        var deferred = $q.defer();
-        var routes = {};
-
-        var responsePromise = $http.jsonp(API_END_POINT + "api/where/stop/" + stop + ".json?callback=JSON_CALLBACK", {
-                params: {
-                    key: API_KEY
-                },
-                cache: true,
-                timeout: httpTimeout
-            })
-            .success(function(data, status, header, config) {
-                routes['stopId'] = data.data.id;
-                routes['stopName'] = data.data.name;
-                routes['routes'] = data.data.routes;
-            })
-            .error(function(data, status, header, config) {
-                //console.log('error');
-            });
-
-        responsePromise.then(function() {
-            deferred.resolve(routes);
-        });
-
-        return deferred.promise;
-    };
-
-    var getCoordinates = function(stop) {
-        var deferred = $q.defer();
-        var coordinates = {};
-
-        var responsePromise = $http.jsonp(API_END_POINT + "api/where/stop/" + stop + ".json?callback=JSON_CALLBACK", {
-                params: {
-                    key: API_KEY
-                },
-                cache: true,
-                timeout: httpTimeout
-            })
-            .success(function(data, status, header, config) {
-                coordinates['lat'] = data.data.lat;
-                coordinates['lon'] = data.data.lon;
-            })
-            .error(function(data, status, header, config) {
-                //console.log('error');
-            });
-
-        responsePromise.then(function() {
-            deferred.resolve(coordinates);
-        });
-
-        return deferred.promise;
-    };
-
-    return {
-        getRoutes: getRoutes,
-        getCoordinates: getCoordinates
-    };
-})
-
 .factory('SearchService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var autocomplete = function(searchKey) {
         var deferred = $q.defer();
