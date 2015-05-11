@@ -7853,6 +7853,9 @@ label.item.item-input {
 .loading-container .loading {
   background-color: white; }
 
+.loading {
+  padding: 10px; }
+
 .center {
   display: -webkit-box;
   display: -moz-box;
