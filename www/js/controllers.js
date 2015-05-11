@@ -289,7 +289,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var getBuses = function() {
             var busesDefer = $q.defer();
             AtStopService.getBuses($scope.data.stopId).then(function(results) {
-                if (!angular.isUndefined(results.arriving) && results.arriving !== null && !$filter('isEmptyObject')(results.arriving)) {
+                if (!angular.equals({}, results.arriving)) {
                     $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
                     handleLayovers(results);
                     updateArrivalTimes(results.arriving);
