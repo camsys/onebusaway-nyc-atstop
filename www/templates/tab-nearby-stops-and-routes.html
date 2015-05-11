@@ -10,7 +10,8 @@
         </div>
         <ion-scroll style="height: {{data.listHeight}}px;">
             <ng-tips ng-model="data.tips"></ng-tips>
-            <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
+            <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()" spinner="none"></ion-refresher>
+            <ion-spinner ng-if="loading" class="loading center"></ion-spinner>
             <ion-list>
                 <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15 | filter:{id: '!current_location'}" id="{{item.id}}">
                     {{item.name}}
