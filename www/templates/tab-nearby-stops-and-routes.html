@@ -8,11 +8,11 @@
         <div data-tap-disabled="true">
             <leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="{{data.mapHeight}}px" ng-show="data.showMap"></leaflet>
         </div>
-        <ion-scroll style="height: {{data.listHeight}}px;">
+        <ion-scroll style="height: {{data.listHeight}}px;" in-view-container>
             <ng-tips ng-model="data.tips"></ng-tips>
             <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
             <ion-list>
-                <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15 | filter:{id: '!current_location'}" id="{{item.id}}">
+                <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15 | filter:{id: '!current_location'}" id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)">
                     {{item.name}}
                     <div class="row">
                         <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
