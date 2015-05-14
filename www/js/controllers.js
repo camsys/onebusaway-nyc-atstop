@@ -271,7 +271,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             AtStopService.getBuses($scope.data.stopId).then(function(results) {
                 if (!angular.equals({}, results.arriving)) {
                     $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
-                    updateArrivalTimes(results.arriving);
+                    //updateArrivalTimes(results.arriving);
                     $scope.data.results = results.arriving;
                     $scope.data.notifications = "";
                 } else {
@@ -290,14 +290,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
             busesDefer.promise.then(function() {
                 $scope.data.loaded = true;
-            });
-        };
-
-        var updateArrivalTimes = function(results) {
-            angular.forEach(results, function(val, key) {
-                angular.forEach(val['distances'], function(v, k) {
-                    v.arrivingIn = datetimeService.getRemainingTime(v.expectedArrivalTime);
-                });
             });
         };
 
@@ -746,7 +738,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             })
             if (!stopInArray){
 			stopsInTimeout.push($scope.data.stops[index].id);
-           //   console.log(stopsInTimeout);
             }
             tick();
 			return false;
@@ -757,7 +748,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             angular.forEach(stopsInTimeout, function(stop){
                 var busesDefer = $q.defer();
                 AtStopService.getBuses(stop).then(function(results) {
-                    console.log(results);
+                    
                     if (!angular.equals({}, results.arriving)) {
                         
                         //updateArrivalTimes(results.arriving);
