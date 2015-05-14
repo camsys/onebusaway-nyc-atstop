@@ -266,32 +266,11 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             }
         };
 
-        var handleLayovers = function(results) {
-            angular.forEach(results['arriving'], function(val, key) {
-                //updates distances to an array of strings so that multi-line entries come out cleaner.
-                angular.forEach(val['distances'], function(v, k) {
-                    if (v['progress'] === 'prevTrip') {
-                        v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
-                    } else if (v['progress'] === 'layover,prevTrip') {
-                        v['distance'] = [v['distance'], "At terminal. "];
-                        if (!$filter('isUndefinedOrEmpty')(v['departsTerminal'])) {
-                            v['distance'].push("Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime'));
-                        }
-                    } else {
-                        v['distance'] = [v['distance']];
-                    }
-                });
-
-            });
-
-        };
-
         var getBuses = function() {
             var busesDefer = $q.defer();
             AtStopService.getBuses($scope.data.stopId).then(function(results) {
                 if (!angular.equals({}, results.arriving)) {
                     $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
-                    handleLayovers(results);
                     updateArrivalTimes(results.arriving);
                     $scope.data.results = results.arriving;
                     $scope.data.notifications = "";
@@ -705,8 +684,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'AtStopService','leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, AtStopService,leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
         $scope.paths = {};
         $scope.url = "atstop";
@@ -757,6 +736,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             }
             $scope.$broadcast('scroll.refreshComplete');
         };
+
+
         var stopsInTimeout = [];
 		$scope.lineInView = function(index, inview, inviewpart, event) {
 			//console.log($scope.data.stops[index].id);
@@ -764,11 +745,31 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 return stop === $scope.data.stops[index].id;
             })
             if (!stopInArray){
-                console.log(stopsInTimeout);
 			stopsInTimeout.push($scope.data.stops[index].id);
+           //   console.log(stopsInTimeout);
             }
+            tick();
 			return false;
 		};
+
+        var tick = function(){
+            var arrivals = {};
+            angular.forEach(stopsInTimeout, function(stop){
+                var busesDefer = $q.defer();
+                AtStopService.getBuses(stop).then(function(results) {
+                    console.log(results);
+                    if (!angular.equals({}, results.arriving)) {
+                        
+                        //updateArrivalTimes(results.arriving);
+                    } else {
+                        $scope.data.results = "";
+                        $scope.data.notifications = "We are not tracking any buses to this stop at this time. Check back later for an update.";
+                    }
+                    // console.log(results.arrivingIn);
+            });
+
+        })
+    }
 
         var getNearbyStopsAndRoutes = function(lat, lon) {
             GeolocationService.getStops(lat, lon).then(function(results) {

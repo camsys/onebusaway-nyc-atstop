@@ -405,7 +405,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('AtStopService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('AtStopService', function($q, $http, $filter, httpTimeout, API_END_POINT, API_KEY) {
     var getBuses = function(params) {
         var stop;
         if (params.hasOwnProperty('stop')) {
@@ -430,6 +430,28 @@ angular.module('starter.services', ['ionic', 'configuration'])
         if (params.hasOwnProperty('line')) {
             getParams.LineRef = params.line;
         }
+
+        var handleLayovers = function(results) {
+            angular.forEach(results['arriving'], function(val, key) {
+                console.log(key);
+                //updates distances to an array of strings so that multi-line entries come out cleaner.
+                angular.forEach(val['distances'], function(v, k) {
+
+                    if (v['progress'] === 'prevTrip') {
+                        v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
+                    } else if (v['progress'] === 'layover,prevTrip') {
+                        v['distance'] = [v['distance'], "At terminal. "];
+                        if (!$filter('isUndefinedOrEmpty')(v['departsTerminal'])) {
+                            v['distance'].push("Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime'));
+                        }
+                    } else {
+                        v['distance'] = [v['distance']];
+                    }
+                });
+
+            });
+
+        };
 
         var responsePromise = $http.jsonp(API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK", {
                 params: getParams,
@@ -466,7 +488,10 @@ angular.module('starter.services', ['ionic', 'configuration'])
                             };
                         });
                     });
+
                     buses.arriving = grouped;
+                    console.log(buses);
+                    handleLayovers(buses);
                 } else {
                     // check for sched svc:
                 }
