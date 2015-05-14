@@ -6,7 +6,7 @@
     </ion-nav-buttons>
     <ion-content ng-show="data.loaded" has-bouncing="true">
         <ng-tips ng-model="data.tips"></ng-tips>
-        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()" spinner="none"></ion-refresher>
         <ion-list>
             <button class="button button-full button-stable" ng-show="data.alertsHide" ng-click="toggleAlerts()">Tap to show Service Alerts</button>
             <p class="alerts" ng-show="data.alertsToggle" ng-repeat="a in data.alerts">{{::a}}</p>

@@ -342,21 +342,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
 })
 
 .factory('GeolocationService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
-
-    var promiseCurrentPosition = function(geolocationOptions) {
-        var deferred = $q.defer();
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                deferred.resolve(position);
-            },
-            function(error) {
-                deferred.reject(error);
-            },
-            geolocationOptions
-        );
-        return deferred.promise;
-    };
-
     var getRoutes = function(lat, lon) {
         var deferred = $q.defer();
         var routes = {};
@@ -415,7 +400,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
     };
 
     return {
-        promiseCurrentPosition: promiseCurrentPosition,
         getRoutes: getRoutes,
         getStops: getStops
     };
@@ -436,6 +420,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
             alerts: "",
             responseTimestamp: ""
         };
+
         //for single line support
         var getParams = {
             key: API_KEY,
@@ -509,66 +494,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
 
     return {
         getBuses: getBuses
-    };
-})
-
-.factory('StopcodeService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
-    var getRoutes = function(stop) {
-        var deferred = $q.defer();
-        var routes = {};
-
-        var responsePromise = $http.jsonp(API_END_POINT + "api/where/stop/" + stop + ".json?callback=JSON_CALLBACK", {
-                params: {
-                    key: API_KEY
-                },
-                cache: true,
-                timeout: httpTimeout
-            })
-            .success(function(data, status, header, config) {
-                routes['stopId'] = data.data.id;
-                routes['stopName'] = data.data.name;
-                routes['routes'] = data.data.routes;
-            })
-            .error(function(data, status, header, config) {
-                //console.log('error');
-            });
-
-        responsePromise.then(function() {
-            deferred.resolve(routes);
-        });
-
-        return deferred.promise;
-    };
-
-    var getCoordinates = function(stop) {
-        var deferred = $q.defer();
-        var coordinates = {};
-
-        var responsePromise = $http.jsonp(API_END_POINT + "api/where/stop/" + stop + ".json?callback=JSON_CALLBACK", {
-                params: {
-                    key: API_KEY
-                },
-                cache: true,
-                timeout: httpTimeout
-            })
-            .success(function(data, status, header, config) {
-                coordinates['lat'] = data.data.lat;
-                coordinates['lon'] = data.data.lon;
-            })
-            .error(function(data, status, header, config) {
-                //console.log('error');
-            });
-
-        responsePromise.then(function() {
-            deferred.resolve(coordinates);
-        });
-
-        return deferred.promise;
-    };
-
-    return {
-        getRoutes: getRoutes,
-        getCoordinates: getCoordinates
     };
 })
 
@@ -824,7 +749,7 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         var d = R * c * 1000;
-        return parseInt(d);
+        return parseInt(d, 10);
     };
 
     var deg2rad = function(deg) {
