@@ -728,8 +728,10 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             "mapHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2) - 90,
             "listHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2),
             "tips": "Pull the list to refresh",
-            "nearbyStops": []
+            "nearbyStops": [],
+            "stopArrivals": {}
         };
+        
 
         $scope.back = function() {
             $scope.data.returnShow = false;
@@ -754,6 +756,18 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             }
             $scope.$broadcast('scroll.refreshComplete');
         };
+        var stopsInTimeout = [];
+		$scope.lineInView = function(index, inview, inviewpart, event) {
+			//console.log($scope.data.stops[index].id);
+            var stopInArray = stopsInTimeout.some(function (stop){
+                return stop === $scope.data.stops[index].id;
+            })
+            if (!stopInArray){
+                console.log(stopsInTimeout);
+			stopsInTimeout.push($scope.data.stops[index].id);
+            }
+			return false;
+		};
 
         var getNearbyStopsAndRoutes = function(lat, lon) {
             GeolocationService.getStops(lat, lon).then(function(results) {
