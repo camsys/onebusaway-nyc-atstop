@@ -732,26 +732,28 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         var stopsInTimeout = [];
 		$scope.lineInView = function(index, inview, inviewpart, event) {
-			//console.log($scope.data.stops[index].id);
-            var stopInArray = stopsInTimeout.some(function (stop){
-                return stop === $scope.data.stops[index].id;
-            })
-            if (!stopInArray){
-			stopsInTimeout.push($scope.data.stops[index].id);
+			
+            if(inviewpart=='both' && inview==true){
+
+                var stopInArray = stopsInTimeout.some(function (stop){
+                    return stop === $scope.data.stops[index].id;
+                })
+                if (!stopInArray){
+    			stopsInTimeout.push($scope.data.stops[index].id);
+                }
             }
-            tick();
 			return false;
 		};
 
         var tick = function(){
             var arrivals = {};
             angular.forEach(stopsInTimeout, function(stop){
+                console.log(stop);
                 var busesDefer = $q.defer();
                 AtStopService.getBuses(stop).then(function(results) {
-                    
                     if (!angular.equals({}, results.arriving)) {
-                        
-                        //updateArrivalTimes(results.arriving);
+                        $scope.data.stopArrivals[stop] = results.arriving;
+                        console.log($scope.data.stopArrivals[stop]);
                     } else {
                         $scope.data.results = "";
                         $scope.data.notifications = "We are not tracking any buses to this stop at this time. Check back later for an update.";
@@ -778,12 +780,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     showNearbyStops();
                     $scope.data.notifications = "";
                     $scope.data.showMap = true;
-
-                    /*
-                    leafletData.getMap().then(function(map) {
-                        L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
-                    });
-                    */
                 } else {
                     $scope.data.showMap = false;
                     $scope.data.notifications = "No nearby stops found.";
@@ -995,11 +991,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         var slideTo = function(location) {
             location = $location.hash(location);
-            //console.log(location);
-            //console.log(location);
-            //console.log('scrolling to: ' + location);
-
-            // not satisfied with performance though
             $timeout(function() {
                 $ionicScrollDelegate.anchorScroll("#" + location);
             });
@@ -1042,6 +1033,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 $scope.data.title = $stateParams.address;
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
+            tick();
         })();
     }
 ]);

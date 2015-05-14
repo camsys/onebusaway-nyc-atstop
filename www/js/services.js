@@ -418,7 +418,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
         var buses = {
             arriving: {},
             alerts: "",
-            responseTimestamp: ""
+            responseTimestamp: "",
+            stopId: stop
         };
 
         //for single line support
@@ -435,7 +436,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
             angular.forEach(results['arriving'], function(val, key) {
                 //updates distances to an array of strings so that multi-line entries come out cleaner.
                 angular.forEach(val['distances'], function(v, k) {
-
                     if (v['progress'] === 'prevTrip') {
                         v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
                     } else if (v['progress'] === 'layover,prevTrip') {
@@ -453,11 +453,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
         };
 
         var updateArrivalTimes = function(results) {
-            console.log(results);
             angular.forEach(results, function(val, key) {
-                
                 angular.forEach(val['distances'], function(v, k) {
-                    // console.log(v);
                     v.arrivingIn = datetimeService.getRemainingTime(v.expectedArrivalTime);
                 });
             });
@@ -503,7 +500,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     
                     handleLayovers(buses);
                     updateArrivalTimes(buses.arriving);
-                    console.log(buses);
+
+
                 } else {
                     // check for sched svc:
                 }
