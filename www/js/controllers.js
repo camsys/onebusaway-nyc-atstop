@@ -766,11 +766,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
 
                 })
-                $scope.$apply();
             });
-            
-
-        }
+            $scope.$apply();
+        };
 
         var getNearbyStopsAndRoutes = function(lat, lon) {
             GeolocationService.getStops(lat, lon).then(function(results) {
