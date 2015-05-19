@@ -15,12 +15,12 @@
             <ion-list>
                 <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15 | filter:{id: '!current_location'}" id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" in-view-options="{ debounce: 15 }">
                     {{item.name}}
-                    <div class="row">
+                                        <div class="row">
                         <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
                     </div>
-                    <div ng-show>
-                        
-                    </div>
+                    <ion-list>
+                        <ion-item ng-repeat="s in item.arriving"><span ng-repeat="a in s">{{a.routeId}} {{a.distance}}</span></ion-item>
+                    </ion-list>
                     <!--                
                         <button class="button button-positive button-small button-clear" ng-click="modal.show();getBuses(item.id);">
                             See more

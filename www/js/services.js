@@ -413,6 +413,11 @@ angular.module('starter.services', ['ionic', 'configuration'])
         } else {
             stop = params;
         }
+        if (params.hasOwnProperty('sort')) {
+            sort = params.sort;
+        } else {
+            sort = true;
+        }
 
         var deferred = $q.defer();
         var buses = {
@@ -485,7 +490,6 @@ angular.module('starter.services', ['ionic', 'configuration'])
                     });
 
                     grouped_tmp = _.groupBy(tmp, "routeId");
-
                     angular.forEach(grouped_tmp, function(val, key) {
                         var tmp = _.groupBy(val, "name");
                         angular.forEach(tmp, function(v, k) {
@@ -495,9 +499,8 @@ angular.module('starter.services', ['ionic', 'configuration'])
                             };
                         });
                     });
-
                     buses.arriving = grouped;
-                    
+
                     handleLayovers(buses);
                     updateArrivalTimes(buses.arriving);
 

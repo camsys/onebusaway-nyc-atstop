@@ -331,7 +331,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
     }
 ])
 
-// Route Controller
+// Route Stop List Controller
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
     function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate, FavoritesService) {
         $scope.mapUrl = "map";
@@ -700,8 +700,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             "mapHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2) - 90,
             "listHeight": Math.floor(document.getElementsByTagName('html')[0].clientHeight / 2),
             "tips": "Pull the list to refresh",
-            "nearbyStops": [],
-            "stopArrivals": {}
+            "nearbyStops": []
         };
         
 
@@ -726,15 +725,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             } else {
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
+            tick();
             $scope.$broadcast('scroll.refreshComplete');
         };
 
 
         var stopsInTimeout = [];
-		$scope.lineInView = function(index, inview, inviewpart, event) {
-			
-            if(inviewpart=='both' && inview==true){
 
+		$scope.lineInView = function(index, inview, inviewpart, event) {
+            if(inviewpart=='top' && inview==true){
                 var stopInArray = stopsInTimeout.some(function (stop){
                     return stop === $scope.data.stops[index].id;
                 })
@@ -747,22 +746,31 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         var tick = function(){
             var arrivals = {};
+            var promises = [];
             angular.forEach(stopsInTimeout, function(stop){
-                console.log(stop);
-                var busesDefer = $q.defer();
-                AtStopService.getBuses(stop).then(function(results) {
-                    if (!angular.equals({}, results.arriving)) {
-                        $scope.data.stopArrivals[stop] = results.arriving;
-                        console.log($scope.data.stopArrivals[stop]);
-                    } else {
-                        $scope.data.results = "";
-                        $scope.data.notifications = "We are not tracking any buses to this stop at this time. Check back later for an update.";
-                    }
-                    // console.log(results.arrivingIn);
-            });
+                promises.push(
+                    AtStopService.getBuses(stop).then(function(results){
+                        if (!angular.equals({}, results.arriving)) {
+                            arrivals[stop] = results.arriving;
+                        } 
+                    })
+                )}
+                )
+            $q.all(promises).then(function(){
+                console.log(arrivals);
+                //There is probably a better way to do this, I would like to limit piecemeal updates to $scope
+                angular.forEach($scope.data.stops, function(s){
+                    s.arriving = arrivals[s.id]
+                    
+                    console.log(s.id, arrivals[s.id]);
 
-        })
-    }
+
+                })
+                $scope.$apply();
+            });
+            
+
+        }
 
         var getNearbyStopsAndRoutes = function(lat, lon) {
             GeolocationService.getStops(lat, lon).then(function(results) {
@@ -1028,12 +1036,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 $scope.data.title = "Nearby Stops";
                 $scope.url = "atstop-gps";
                 getNearbyStopsAndRoutesGPS();
-
+                tick();
             } else {
                 $scope.data.title = $stateParams.address;
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
-            tick();
+            
         })();
     }
 ]);
