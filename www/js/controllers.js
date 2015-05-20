@@ -760,9 +760,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 console.log(arrivals);
                 //There is probably a better way to do this, I would like to limit piecemeal updates to $scope
                 angular.forEach($scope.data.stops, function(s){
-                    s.arriving = arrivals[s.id]
+                    s.arriving = arrivals[s.id];
                     
-                    console.log(s.id, arrivals[s.id]);
+                    //console.log(s.id, arrivals[s.id]);
 
 
                 })

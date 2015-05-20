@@ -19,9 +19,9 @@
                         <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
                     </div>
                     <ion-list>
-                        <ion-item ng-repeat="s in item.arriving" class="novmargin">
-                            <span ng-repeat="a in s">{{a[0].routeId}}
-                                <span ng-repeat="d in a[0].distances"> {{d}}</span>
+                        <ion-item ng-repeat="routes in item.arriving" class="novmargin">
+                            <span ng-repeat="r in routes">{{r[0].routeId}}
+                                <span ng-repeat="d in r[0].distance">{{d}}</span>
                         </span></ion-item>
                     </ion-list>
                     <!--                
