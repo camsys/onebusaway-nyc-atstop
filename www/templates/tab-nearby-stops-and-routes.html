@@ -15,20 +15,17 @@
             <ion-list>
                 <ion-item ng-repeat="item in data.stops | orderBy:'dist' | limitTo:15 | filter:{id: '!current_location'}" id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" in-view-options="{ debounce: 15 }">
                     {{item.name}}
-                                        <div class="row">
-                        <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">{{r.shortName}}</button>
+                    <div class="row">
+                        <button class="col col-20 button button-outline button-small" ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">{{r.shortName}}
+
+                        </button>
                     </div>
                     <ion-list>
-                        <ion-item ng-repeat="routes in item.arriving" class="novmargin">
-                            <span ng-repeat="r in routes">{{r[0].routeId}}
-                                <span ng-repeat="d in r[0].distance">{{d}}</span>
-                        </span></ion-item>
+                        <div ng-repeat="routes in item.arriving" class="arrivals">
+                            <span ng-repeat="ra in routes" class="arrival">{{ra[0].name}} {{ra[0].destination}}
+                                <span ng-repeat="d in ra[0].distance">{{d}}</span>
+                        </span></div>
                     </ion-list>
-                    <!--                
-                        <button class="button button-positive button-small button-clear" ng-click="modal.show();getBuses(item.id);">
-                            See more
-                        </button>
-                        -->
                     <a class="button button-positive button-small button-clear" href="#/tab/{{url}}/{{item.id}}/{{item.name | encodeStopName}}">
                                 See more
                             </a>

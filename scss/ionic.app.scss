@@ -45,6 +45,7 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
     height: 100%;
 }
 
+
 em {
     font-weight: bolder;
     text-decoration: underline;
@@ -61,9 +62,22 @@ h1.title {
     flex-wrap: wrap;
 }
 
+span.arrival {
+    padding-right: 2em;
+    display: flex;
+    justify-content: space-between; 
+}
+
+
+
 div.route {
     font-size: 1.4em;
     padding: 0px 14px;
+}
+
+.arrivals {
+    font-size: smaller;
+    padding: 0px;
 }
 
 .stopname {
@@ -205,6 +219,8 @@ label.item.item-input {
         display: block !important;
     }
 }
+
+
 
 .leaflet-popup-close-button {
     display: none;
