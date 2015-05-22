@@ -733,13 +733,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var stopsInTimeout = [];
 
 		$scope.lineInView = function(index, inview, inviewpart, event) {
-            if(inview==true){
+            if(inview==true && (inviewpart =='top' || inviewpart =='both')){
                 var stopInArray = stopsInTimeout.some(function (stop){
                     return stop === event.inViewTarget.id;
                 })
                 if (!stopInArray){
-    			stopsInTimeout.push(event.inViewTarget.id);
+    			     stopsInTimeout.push(event.inViewTarget.id);
+                     tick();
                 }
+
             }
 			return false;
 		};
