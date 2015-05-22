@@ -733,12 +733,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var stopsInTimeout = [];
 
 		$scope.lineInView = function(index, inview, inviewpart, event) {
-            if(inviewpart=='top' && inview==true){
+            if(inview==true){
                 var stopInArray = stopsInTimeout.some(function (stop){
-                    return stop === $scope.data.stops[index].id;
+                    return stop === event.inViewTarget.id;
                 })
                 if (!stopInArray){
-    			stopsInTimeout.push($scope.data.stops[index].id);
+    			stopsInTimeout.push(event.inViewTarget.id);
                 }
             }
 			return false;
@@ -757,17 +757,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 )}
                 )
             $q.all(promises).then(function(){
-                console.log(arrivals);
                 //There is probably a better way to do this, I would like to limit piecemeal updates to $scope
                 angular.forEach($scope.data.stops, function(s){
                     s.arriving = arrivals[s.id];
-                    
                     //console.log(s.id, arrivals[s.id]);
-
-
                 })
             });
+            if(!$scope.$$phase) {
             $scope.$apply();
+            }
         };
 
         var getNearbyStopsAndRoutes = function(lat, lon) {
@@ -1039,7 +1037,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                 $scope.data.title = $stateParams.address;
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
-            
+
+            tick();
         })();
     }
 ]);

@@ -18,7 +18,7 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress','angular-inview'])
 
 // global timeout variable for HTTP requests
 .value('httpTimeout', 5000)
