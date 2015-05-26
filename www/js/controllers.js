@@ -676,8 +676,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 ])
 
 // Nearby Stops and Routes
-.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'AtStopService','leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, AtStopService,leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'AtStopService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, AtStopService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
         $scope.paths = {};
         $scope.url = "atstop";
@@ -702,7 +702,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             "tips": "Pull the list to refresh",
             "nearbyStops": []
         };
-        
+
 
         $scope.back = function() {
             $scope.data.returnShow = false;
@@ -716,55 +716,64 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         };
 
         $scope.refresh = function() {
+
             $scope.data.notifications = "";
             if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
+
             if ($location.$$path === "/tab/nearby-stops-and-routes") {
                 getNearbyStopsAndRoutesGPS();
             } else {
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
+
             tick();
+
             $scope.$broadcast('scroll.refreshComplete');
         };
 
 
         var stopsInTimeout = [];
 
-		$scope.lineInView = function(index, inview, inviewpart, event) {
-            if(inview==true){
-                var stopInArray = stopsInTimeout.some(function (stop){
+        $scope.lineInView = function(index, inview, inviewpart, event) {
+            if (inview == true) {
+                var stopInArray = stopsInTimeout.some(function(stop) {
                     return stop === event.inViewTarget.id;
-                })
-                if (!stopInArray){
-    			stopsInTimeout.push(event.inViewTarget.id);
+                });
+
+                if (!stopInArray) {
+                    stopsInTimeout.push(event.inViewTarget.id);
+                    tick();
                 }
             }
-			return false;
-		};
 
-        var tick = function(){
+            return false;
+        };
+
+        var tick = function() {
             var arrivals = {};
             var promises = [];
-            angular.forEach(stopsInTimeout, function(stop){
+            angular.forEach(stopsInTimeout, function(stop) {
                 promises.push(
-                    AtStopService.getBuses(stop).then(function(results){
+                    AtStopService.getBuses(stop).then(function(results) {
                         if (!angular.equals({}, results.arriving)) {
                             arrivals[stop] = results.arriving;
-                        } 
+                        }
                     })
-                )}
-                )
-            $q.all(promises).then(function(){
+                );
+            });
+            
+            $q.all(promises).then(function() {
                 //There is probably a better way to do this, I would like to limit piecemeal updates to $scope
-                angular.forEach($scope.data.stops, function(s){
+                angular.forEach($scope.data.stops, function(s) {
                     s.arriving = arrivals[s.id];
                     //console.log(s.id, arrivals[s.id]);
-                })
+                });
             });
-            if(!$scope.$$phase) {
-            $scope.$apply();
+
+            if (!$scope.$$phase) {
+                $scope.$apply();
             }
         };
 
