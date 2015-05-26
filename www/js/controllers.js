@@ -989,11 +989,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         var slideTo = function(location) {
             location = $location.hash(location);
-            //console.log(location);
-            //console.log(location);
             //console.log('scrolling to: ' + location);
-
-            // not satisfied with performance though
+            
             $timeout(function() {
                 $ionicScrollDelegate.anchorScroll("#" + location);
             });
