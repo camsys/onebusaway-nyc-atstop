@@ -7713,6 +7713,15 @@ h1.title {
   -webkit-flex-wrap: wrap;
   flex-wrap: wrap; }
 
+span.arrival {
+  padding-right: 2em;
+  display: flex;
+  justify-content: space-between; }
+
+button.arrivals {
+  font-size: smaller;
+  padding: 0px; }
+
 div.route {
   font-size: 1.4em;
   padding: 0px 14px; }
