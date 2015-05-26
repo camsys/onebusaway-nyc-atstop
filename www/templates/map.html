@@ -1,8 +1,8 @@
 <ion-view view-title="Map">
     <ion-nav-buttons side="secondary">
-        <button class="button button-clear" ng-click="refresh()">
+        <button class="button button-clear refresh" ng-click="refresh()">
             <timer interval="1000" countdown="35">
-                <div round-progress max="35" current="countdown" color="#387ef5" radius="11" clockwise="true" stroke="5" animation="easeInOutQuart"></div>
+                <div round-progress max="35" current="countdown" color="#387ef5" radius="13" clockwise="true" stroke="5" animation="easeInOutQuart"></div>
             </timer>
         </button>
         <button class="button button-clear {{data.favClass}}" ng-click="toggleFavorites()">
