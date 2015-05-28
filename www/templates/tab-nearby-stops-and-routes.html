@@ -15,17 +15,22 @@
             <ion-list>
                 <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}" id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" in-view-options="{ debounce: 15 }" class="card" style="margin: 0; padding: 0; border-bottom: none;">
                     <div class="item item-divider">{{item.name}}</div>
-                    <div class="item item-text-wrap" ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">
-                        <div class="row" style="font-size: 13px;">
+                    <div class="item item-text-wrap " ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">
+                        <div class="row row-center" style="font-size: 13px;">
                             <div class="col">
                                 {{r.shortName}}
-                                <span ng-repeat="routes in item.arriving">
-                                    <span ng-repeat="ra in routes" ng-if="r.id == ra[0].routeId"> 
-                                        <span style="color: #999;">{{ra[0].destination}}</span>
+                                <div ng-repeat="routes in item.arriving" style="display:inline-block;">
+                                    <div ng-repeat="ra in routes" ng-if="r.id == ra[0].routeId" style="display:inline-block;" > 
+                                        <div style="color: #999; display:inline-block;" class="col">{{ra[0].destination}}</div>
+                                        <span ng-hide="!ra[0].expectedArrivalTime">
+                                                <strong>{{ra[0].arrivingIn|durationView}}</strong>
+                                        </span>
+                                        <div ng-repeat="d in ra[0].distance" class="col" style="display:inline-block;">
 
-                                        <span ng-repeat="d in ra[0].distance">{{d}}</span>
-                                    </span>
-                                </span>
+                                        {{d}}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
