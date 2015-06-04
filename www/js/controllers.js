@@ -20,7 +20,9 @@
 
 angular.module('atstop.controllers', ['configuration', 'filters'])
 
-// Controller that makes tabs go to root (for search and favs)
+/**
+ * Controller that makes tabs go to the root (cleaning Tab Histories)
+ */
 .controller('GoHomeCtrl', function($scope, $rootScope, $state, $ionicHistory) {
     var clearHistory = function() {
         $ionicHistory.clearHistory();
@@ -40,7 +42,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     };
 })
 
-// Search
+/**
+ * Controller that used for searching using autocomplete API.
+ */
 .controller('SearchCtrl', ['$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING', 'DefaultTabService', '$ionicTabsDelegate',
     function($rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING, DefaultTabService, $ionicTabsDelegate) {
 
@@ -188,7 +192,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-// Favorites Controller
+/**
+ * Controller that used for showing the favorites.
+ */
 .controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
     function($scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
         $scope.data = {
@@ -238,7 +244,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-// At Stop Controller
+/**
+ * Controller that used for showing upcoming buses for specific stop.
+ */
 .controller('AtStopCtrl', ['$ionicScrollDelegate', '$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
     function($ionicScrollDelegate, $scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval, $location) {
         $scope.data = {
@@ -360,7 +368,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-// Route Controller
+/**
+ * Controller that used for showing the routes and stops of routes.
+ */
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
     function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate, FavoritesService) {
 
@@ -488,7 +498,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-// About Controller
+/**
+ * Controller that used for showing About Information from config.js
+ */
 .controller('AboutCtrl', ['$rootScope', '$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
     function($rootScope, $scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
         $scope.data = {
@@ -518,7 +530,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-// Map Controller
+/**
+ * Controller that used for showing stops and routes on Maps
+ */
 .controller('MapCtrl', ['MapService', 'FavoritesService', '$scope', '$location', '$stateParams', '$timeout', 'leafletData', '$filter', '$q', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
     function(MapService, FavoritesService, $scope, $location, $stateParams, $timeout, leafletData, $filter, $q, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
@@ -705,7 +719,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-// Nearby Stops and Routes
+/**
+ * Controller that used for showing the nearby stops for specific location from geolocarions.
+ */
 .controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
     function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
