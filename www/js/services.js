@@ -405,7 +405,14 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('AtStopService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('AtStopService', function($q, $http, httpTimeout, CacheFactory, API_END_POINT, API_KEY) {
+
+    CacheFactory('atStopCache', {
+        maxAge: 10000, // Items added to this cache expire after 15 minutes
+        cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+        deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
+    });
+
     var getBuses = function(params) {
         var stop;
         if (params.hasOwnProperty('stop')) {
@@ -433,8 +440,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
 
         var responsePromise = $http.jsonp(API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK", {
                 params: getParams,
-                cache: false,
-                timeout: httpTimeout
+                timeout: httpTimeout,
+                cache: CacheFactory.get('atStopCache')
             })
             .success(function(data, status, header, config) {
                 buses.responseTimestamp = data.Siri.ServiceDelivery.ResponseTimestamp;
