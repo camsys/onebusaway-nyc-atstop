@@ -363,19 +363,31 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 // Route Controller
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
     function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate, FavoritesService) {
-        $scope.mapUrl = "map";
-        $scope.atStopUrl = "atstop";
-        $scope.routeId = $stateParams.routeId;
-        $scope.routeName = $stateParams.routeName;
+
+        $scope.data = {
+            "loaded": false,
+            "routeName": $stateParams.routeName,
+            "favClass": "",
+            "direction": [],
+            "directionName": "",
+            "direction_": [],
+            "directionName_": "",
+            "mapUrl": "map",
+            "atStopUrl": "atstop",
+            "routeId": $stateParams.routeId,
+            "routeName": $stateParams.routeName,
+            "groups": []
+        };
+
         var oneDirection = false;
-        $scope.groups = [];
-        $scope.groups[0] = {
+        $scope.data.groups = [];
+        $scope.data.groups[0] = {
             name: "",
             items: [],
             shown: false
         };
 
-        $scope.groups[1] = {
+        $scope.data.groups[1] = {
             name: "",
             items: [],
             shown: false
@@ -407,16 +419,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             return $scope.shownGroup === group;
         };
 
-        $scope.data = {
-            "loaded": false,
-            "routeName": $stateParams.routeName,
-            "favClass": "",
-            "direction": [],
-            "directionName": "",
-            "direction_": [],
-            "directionName_": ""
-        };
-
         var getDirectionsAndStops = function() {
             var directionsDefer = $q.defer();
             var stopsDefer = $q.defer();
@@ -427,21 +429,21 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     angular.forEach(results, function(val, key) {
                         if (val.directionId === 0) {
                             $scope.data.directionName = val.destination;
-                            $scope.groups[0].name = val.destination;
+                            $scope.data.groups[0].name = val.destination;
                         }
 
                         if (val.directionId === 1) {
                             $scope.data.directionName_ = val.destination;
-                            $scope.groups[1].name = val.destination;
+                            $scope.data.groups[1].name = val.destination;
                         }
                     });
                 } else {
                     // with one direction, set destination and remove second group.
                     oneDirection = true;
                     $scope.data.directionName = results[0].destination;
-                    $scope.groups[0].name = results[0].destination;
-                    $scope.groups.splice(1);
-                    $scope.toggleGroup($scope.groups[0]);
+                    $scope.data.groups[0].name = results[0].destination;
+                    $scope.data.groups.splice(1);
+                    $scope.toggleGroup($scope.data.groups[0]);
                 }
                 directionsDefer.resolve();
             });
@@ -449,12 +451,12 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             directionsDefer.promise.then(function() {
                 RouteService.getStops($stateParams.routeId, "0").then(function(results) {
                     $scope.data.direction = results;
-                    $scope.groups[0].items = results;
+                    $scope.data.groups[0].items = results;
                     if (oneDirection === false) {
                         //console.log("1D 4eva!");
                         RouteService.getStops($stateParams.routeId, "1").then(function(results2) {
                             $scope.data.direction_ = results2;
-                            $scope.groups[1].items = results2;
+                            $scope.data.groups[1].items = results2;
                         });
                     }
                     stopsDefer.resolve();
@@ -472,8 +474,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         var init = (function() {
             if ($location.$$path.indexOf("favorites") > -1) {
-                $scope.mapUrl = "map-favorites";
-                $scope.atStopUrl = "atstop-favorites";
+                $scope.data.mapUrl = "map-favorites";
+                $scope.data.atStopUrl = "atstop-favorites";
             }
 
             var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
