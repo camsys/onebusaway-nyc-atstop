@@ -18,7 +18,7 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('starter.controllers', ['configuration', 'filters'])
+angular.module('atstop.controllers', ['configuration', 'filters'])
 
 // Controller that makes tabs go to root (for search and favs)
 .controller('GoHomeCtrl', function($scope, $rootScope, $state, $ionicHistory) {
@@ -510,7 +510,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         $scope.confirmed = DefaultTabService.getIndex() !== 0;
 
         $scope.toggleText = function() {
-            // resize the content since the Privacy Policy text is too big 
+            // resize the content since the Privacy Policy text is too big
             $ionicScrollDelegate.resize();
             $scope.data.hideText = !$scope.data.hideText;
         };
@@ -948,7 +948,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             }
         });
 
-        // refresh specific route 
+        // refresh specific route
         $scope.showCurrentStop = function(route, stop, lat, lon, name) {
             $scope.data.returnShow = true;
             $interval.cancel($scope.reloadTimeout);
@@ -990,7 +990,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var slideTo = function(location) {
             location = $location.hash(location);
             //console.log('scrolling to: ' + location);
-            
+
             $timeout(function() {
                 $ionicScrollDelegate.anchorScroll("#" + location);
             });

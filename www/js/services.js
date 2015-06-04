@@ -18,7 +18,7 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('starter.services', ['ionic', 'configuration'])
+angular.module('atstop.services', ['ionic', 'configuration'])
 
 .factory('DefaultTabService', function($window) {
     var setIndex = function(value) {

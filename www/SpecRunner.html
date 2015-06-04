@@ -46,7 +46,7 @@
 
             beforeEach(function() {
 
-                module('starter');
+                module('atstop');
                 var mock = (function() {
                     var store = {};
                     return {
@@ -97,7 +97,7 @@
 
         describe('AtStopService Tests (note: server/data dependent)', function () {
             var ctrl, scope;
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
 
             it('should return results for a stop', function () {
                 var stop = 'MTA_400861';
@@ -131,7 +131,7 @@
 
         describe('Geolocation Tests', function () {
             var ctrl, scope;
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
 
 
             it('should return nearby stops', function () {
@@ -148,7 +148,7 @@
         describe('Filter: encodeStopName', function () {
             var encodeStopName;
 
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
             beforeEach(inject(function ($filter) {
                 encodeStopName = $filter('encodeStopName');
             }));
@@ -161,7 +161,7 @@
         });
 
         describe('Countdown filter tests', function () {
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
             beforeEach(inject(function ($filter) {
                 durationView = $filter('durationView');
             }));
@@ -181,7 +181,7 @@
         describe('No Scheduled Service Tests', function () {
             var ctrl, scope;
 
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
             beforeEach(inject(function ($rootScope, $controller) {
                 scope = $rootScope;
                 ctrl = $controller('SearchCtrl', {
@@ -227,7 +227,7 @@
 /*        describe('Test SearchCtrl', function () {
             var scope, newSearchCtrl, results = [];
 
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
 
             beforeEach(inject(function ($rootScope, $controller) {
                 scope = $rootScope;
