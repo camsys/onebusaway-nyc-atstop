@@ -93,6 +93,7 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
 })
 
 .config(function($httpProvider, $ionicConfigProvider) {
+    $ionicConfigProvider.views.swipeBackEnabled(false);
     $ionicConfigProvider.tabs.position('bottom');
 
     if (ionic.Platform.isAndroid()) {
