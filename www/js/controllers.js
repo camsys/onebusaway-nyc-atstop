@@ -495,7 +495,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             showBranding: SHOW_BRANDING,
             hideText: true,
             brandAboutText: BRAND_ABOUT_TEXT,
-            privText: PRIV_POLICY_TEXT
+            privText: PRIV_POLICY_TEXT,
+            confirmed: DefaultTabService.getIndex() !== 0
         };
 
         $scope.change = function(val) {
@@ -508,8 +509,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 console.log(DefaultTabService.getIndex());
             }
         };
-
-        $scope.confirmed = DefaultTabService.getIndex() !== 0;
 
         $scope.toggleText = function() {
             // resize the content since the Privacy Policy text is too big
