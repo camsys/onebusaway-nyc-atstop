@@ -929,7 +929,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         attribution: $filter('hrefToJS')(MAP_ATTRS)
                     },
                     scrollWheelZoom: false,
-                    key: MAPBOX_KEY
+                    key: MAPBOX_KEY,
+                    zoomControl: false
                 },
                 markers: {},
                 paths: {}
