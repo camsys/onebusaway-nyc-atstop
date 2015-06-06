@@ -190,34 +190,77 @@
             }));
 
             it('should not return the nssm if only one direction', function () {
-                var matches = {
-                    "directions": [{
-                        "hasUpcomingScheduledService": true
-                    }]
+                var matches =     
+                    { "directions": [
+                        {
+                            "destination": "ANNADALE RD",
+                            "directionId": "1",
+                            "hasUpcomingScheduledService": false,
+                            "stops": null
+                        }]
                 };
                 scope.searchAndGo(matches);
                 expect(scope.data.notifications).toEqual('');
             });
 
             it('should display nssm if no service', function () {
-                var matches = {
-                    "directions": [{
-                        "hasUpcomingScheduledService": false
-                    }, {
-                        "hasUpcomingScheduledService": false
-                    }]
+                var matches =     
+                { "directions": [
+                    {
+                        "destination": "ANNADALE RD",
+                        "directionId": "1",
+                        "hasUpcomingScheduledService": false,
+                        "stops": null
+                    },
+                    {
+                        "destination": "DOWNTOWN WORTH ST",
+                        "directionId": "0",
+                        "hasUpcomingScheduledService": false,
+                        "stops": null
+                    }
+                    ]
                 };
                 scope.searchAndGo(matches);
                 expect(scope.data.notifications).toEqual('');
             });
 
             it('should not display nssm if active service in one direction', function () {
-                var matches = {
-                    "directions": [{
-                        "hasUpcomingScheduledService": false
-                    }, {
-                        "hasUpcomingScheduledService": true
-                    }]
+                var matches =     
+                { "directions": [
+                    {
+                        "destination": "ANNADALE RD",
+                        "directionId": "1",
+                        "hasUpcomingScheduledService": true,
+                        "stops": null
+                    },
+                    {
+                        "destination": "DOWNTOWN WORTH ST",
+                        "directionId": "0",
+                        "hasUpcomingScheduledService": false,
+                        "stops": null
+                    }
+                    ]
+                };
+                scope.searchAndGo(matches);
+                expect(scope.data.notifications).toEqual('');
+            });
+
+            it('should not display nssm if active service in both directions', function () {
+                var matches =     
+                { "directions": [
+                    {
+                        "destination": "ANNADALE RD",
+                        "directionId": "1",
+                        "hasUpcomingScheduledService": true,
+                        "stops": null
+                    },
+                    {
+                        "destination": "DOWNTOWN WORTH ST",
+                        "directionId": "0",
+                        "hasUpcomingScheduledService": true,
+                        "stops": null
+                    }
+                    ]
                 };
                 scope.searchAndGo(matches);
                 expect(scope.data.notifications).toEqual('');
