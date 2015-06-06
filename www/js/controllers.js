@@ -18,9 +18,11 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('starter.controllers', ['configuration', 'filters'])
+angular.module('atstop.controllers', ['configuration', 'filters'])
 
-// Controller that makes tabs go to root (for search and favs)
+/**
+ * Controller that makes tabs go to the root (cleaning Tab Histories)
+ */
 .controller('GoHomeCtrl', function($scope, $rootScope, $state, $ionicHistory) {
     var clearHistory = function() {
         $ionicHistory.clearHistory();
@@ -40,7 +42,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
     };
 })
 
-// Search
+/**
+ * Controller that used for searching using autocomplete API.
+ */
 .controller('SearchCtrl', ['$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING', 'DefaultTabService', '$ionicTabsDelegate',
     function($rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING, DefaultTabService, $ionicTabsDelegate) {
 
@@ -189,7 +193,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
     }
 ])
 
-// Favorites Controller
+/**
+ * Controller that used for showing the favorites.
+ */
 .controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
     function($scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
         $scope.data = {
@@ -239,7 +245,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
     }
 ])
 
-// At Stop Controller
+/**
+ * Controller that used for showing upcoming buses for specific stop.
+ */
 .controller('AtStopCtrl', ['$ionicScrollDelegate', '$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
     function($ionicScrollDelegate, $scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval, $location) {
         $scope.data = {
@@ -290,7 +298,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var getBuses = function() {
             var busesDefer = $q.defer();
             AtStopService.getBuses($scope.data.stopId).then(function(results) {
-                if (!angular.isUndefined(results.arriving) && results.arriving !== null && !$filter('isEmptyObject')(results.arriving)) {
+                if (!angular.equals({}, results.arriving)) {
                     $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
                     handleLayovers(results);
                     updateArrivalTimes(results.arriving);
@@ -361,22 +369,36 @@ angular.module('starter.controllers', ['configuration', 'filters'])
     }
 ])
 
-// Route Controller
+/**
+ * Controller that used for showing the routes and stops of routes.
+ */
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
     function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate, FavoritesService) {
-        $scope.mapUrl = "map";
-        $scope.atStopUrl = "atstop";
-        $scope.routeId = $stateParams.routeId;
-        $scope.routeName = $stateParams.routeName;
+
+        $scope.data = {
+            "loaded": false,
+            "routeName": $stateParams.routeName,
+            "favClass": "",
+            "direction": [],
+            "directionName": "",
+            "direction_": [],
+            "directionName_": "",
+            "mapUrl": "map",
+            "atStopUrl": "atstop",
+            "routeId": $stateParams.routeId,
+            "routeName": $stateParams.routeName,
+            "groups": []
+        };
+
         var oneDirection = false;
-        $scope.groups = [];
-        $scope.groups[0] = {
+        $scope.data.groups = [];
+        $scope.data.groups[0] = {
             name: "",
             items: [],
             shown: false
         };
 
-        $scope.groups[1] = {
+        $scope.data.groups[1] = {
             name: "",
             items: [],
             shown: false
@@ -408,16 +430,6 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             return $scope.shownGroup === group;
         };
 
-        $scope.data = {
-            "loaded": false,
-            "routeName": $stateParams.routeName,
-            "favClass": "",
-            "direction": [],
-            "directionName": "",
-            "direction_": [],
-            "directionName_": ""
-        };
-
         var getDirectionsAndStops = function() {
             var directionsDefer = $q.defer();
             var stopsDefer = $q.defer();
@@ -428,21 +440,21 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     angular.forEach(results, function(val, key) {
                         if (val.directionId === 0) {
                             $scope.data.directionName = val.destination;
-                            $scope.groups[0].name = val.destination;
+                            $scope.data.groups[0].name = val.destination;
                         }
 
                         if (val.directionId === 1) {
                             $scope.data.directionName_ = val.destination;
-                            $scope.groups[1].name = val.destination;
+                            $scope.data.groups[1].name = val.destination;
                         }
                     });
                 } else {
                     // with one direction, set destination and remove second group.
                     oneDirection = true;
                     $scope.data.directionName = results[0].destination;
-                    $scope.groups[0].name = results[0].destination;
-                    $scope.groups.splice(1);
-                    $scope.toggleGroup($scope.groups[0]);
+                    $scope.data.groups[0].name = results[0].destination;
+                    $scope.data.groups.splice(1);
+                    $scope.toggleGroup($scope.data.groups[0]);
                 }
                 directionsDefer.resolve();
             });
@@ -450,12 +462,12 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             directionsDefer.promise.then(function() {
                 RouteService.getStops($stateParams.routeId, "0").then(function(results) {
                     $scope.data.direction = results;
-                    $scope.groups[0].items = results;
+                    $scope.data.groups[0].items = results;
                     if (oneDirection === false) {
                         //console.log("1D 4eva!");
                         RouteService.getStops($stateParams.routeId, "1").then(function(results2) {
                             $scope.data.direction_ = results2;
-                            $scope.groups[1].items = results2;
+                            $scope.data.groups[1].items = results2;
                         });
                     }
                     stopsDefer.resolve();
@@ -473,8 +485,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         var init = (function() {
             if ($location.$$path.indexOf("favorites") > -1) {
-                $scope.mapUrl = "map-favorites";
-                $scope.atStopUrl = "atstop-favorites";
+                $scope.data.mapUrl = "map-favorites";
+                $scope.data.atStopUrl = "atstop-favorites";
             }
 
             var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
@@ -487,17 +499,21 @@ angular.module('starter.controllers', ['configuration', 'filters'])
     }
 ])
 
-// About Controller
-.controller('AboutCtrl', ['$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
-    function($scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
+/**
+ * Controller that used for showing About Information from config.js
+ */
+.controller('AboutCtrl', ['$rootScope', '$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
+    function($rootScope, $scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
         $scope.data = {
             showBranding: SHOW_BRANDING,
             hideText: true,
             brandAboutText: BRAND_ABOUT_TEXT,
-            privText: PRIV_POLICY_TEXT
+            privText: PRIV_POLICY_TEXT,
+            confirmed: DefaultTabService.getIndex() !== 0
         };
 
         $scope.change = function(val) {
+            $rootScope.redirected = true;
             if (val === true) {
                 DefaultTabService.setIndex(2);
                 console.log(DefaultTabService.getIndex());
@@ -507,17 +523,17 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             }
         };
 
-        $scope.confirmed = DefaultTabService.getIndex() !== 0;
-
         $scope.toggleText = function() {
-            // resize the content since the Privacy Policy text is too big 
+            // resize the content since the Privacy Policy text is too big
             $ionicScrollDelegate.resize();
             $scope.data.hideText = !$scope.data.hideText;
         };
     }
 ])
 
-// Map Controller
+/**
+ * Controller that used for showing stops and routes on Maps
+ */
 .controller('MapCtrl', ['MapService', 'FavoritesService', '$scope', '$location', '$stateParams', '$timeout', 'leafletData', '$filter', '$q', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
     function(MapService, FavoritesService, $scope, $location, $stateParams, $timeout, leafletData, $filter, $q, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
@@ -704,7 +720,9 @@ angular.module('starter.controllers', ['configuration', 'filters'])
     }
 ])
 
-// Nearby Stops and Routes
+/**
+ * Controller that used for showing the nearby stops for specific location from geolocarions.
+ */
 .controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
     function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
@@ -788,17 +806,15 @@ angular.module('starter.controllers', ['configuration', 'filters'])
         var getNearbyStopsAndRoutesGPS = function() {
             //console.log("getNearbyStopsAndRoutesGPS called");
 
-            $ionicLoading.show({
-                template: '<ion-spinner></ion-spinner>' + '<p style="color: #000;">It may take up to 15 seconds.</p>'
-            });
+            $scope.loading = true;
 
             var timeoutVal = 10000;
             var fired = false;
             var timeout = $timeout(function() {
                 $scope.data.showMap = false;
                 $scope.data.notifications = "Pull to refresh.";
-                $ionicLoading.hide();
-                if ($scope.left != true) {
+                $scope.loading = false;
+                if ($scope.left !== true) {
                     var popup = $ionicPopup.alert({
                         content: "Cannot access your position. Check if location services are enabled."
                     });
@@ -807,7 +823,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     }, 3000);
                 } else {
                     console.log("You left the current page! Destroying ...");
-                };
+                }
             }, timeoutVal + 5000);
 
             // Unfortunately, this function is asynchronous. So, we cannot cancel it. However, we have a trick for this. DO NOT show the popup if a user left the page.
@@ -817,7 +833,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                     maximumAge: 0
                 }).then(
                     function(position) {
-                        $ionicLoading.hide();
+                        $scope.loading = false;
                         $timeout.cancel(timeout);
                         $scope.data.notifications = "";
                         $scope.data.val = true;
@@ -828,7 +844,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         $scope.data.notifications = "Pull to refresh.";
                         $ionicLoading.hide();
                         $timeout.cancel(timeout);
-                        if ($scope.left != true) {
+                        if ($scope.left !== true) {
                             var popup = $ionicPopup.alert({
                                 content: "Cannot access your position. Check if location services are enabled."
                             });
@@ -837,13 +853,13 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                             }, 3000);
                         } else {
                             console.log("You left the current page! Destroying ...");
-                        };
+                        }
                     }
                 )
                 .finally(function() {
                     $scope.data.showMap = false;
                     $scope.data.notifications = "Pull to refresh.";
-                    $ionicLoading.hide();
+                    $scope.loading = false;
                     $timeout.cancel(timeout);
                 });
         };
@@ -914,7 +930,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
                         attribution: $filter('hrefToJS')(MAP_ATTRS)
                     },
                     scrollWheelZoom: false,
-                    key: MAPBOX_KEY
+                    key: MAPBOX_KEY,
+                    zoomControl: false
                 },
                 markers: {},
                 paths: {}
@@ -950,7 +967,7 @@ angular.module('starter.controllers', ['configuration', 'filters'])
             }
         });
 
-        // refresh specific route 
+        // refresh specific route
         $scope.showCurrentStop = function(route, stop, lat, lon, name) {
             $scope.data.returnShow = true;
             $interval.cancel($scope.reloadTimeout);
@@ -991,11 +1008,8 @@ angular.module('starter.controllers', ['configuration', 'filters'])
 
         var slideTo = function(location) {
             location = $location.hash(location);
-            //console.log(location);
-            //console.log(location);
             //console.log('scrolling to: ' + location);
 
-            // not satisfied with performance though
             $timeout(function() {
                 $ionicScrollDelegate.anchorScroll("#" + location);
             });

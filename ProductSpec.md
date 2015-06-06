@@ -5,7 +5,7 @@ Hybrid apps can do everything we want with reasonable performance.
 
 ##Goals
 Implement features already in the OBANYC Mobile Site (Search, Stop Selection, Stop Page, Nearby)
-Make use of 2014-era (vs 2011-era) S technology.
+Make use of 2014-era (vs 2011-era) technology.
 Improve on nearby functionality
 Include maps
 Include an obvious favorites page.
@@ -13,7 +13,7 @@ Include an obvious favorites page.
 
 
 ##Some thoughts on Experience
-Including buses on the route view is a lie when there are multiple patterns of service (i.e. when buses don't make every stop). This kills it for someone who is waiting on a limited bus or a bus on a "Y-Pattern."
+Including buses on the route view is a lie when there are multiple patterns of service (i.e. when buses don't make every stop). This kills it for someone who is waiting on a limited bus or a bus on a "Y-Pattern" that splits at several points.
 
 It should perform well across a variety of devices, with a variety of screen sizes.
 

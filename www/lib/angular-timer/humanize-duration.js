@@ -14,6 +14,16 @@
   };
 
   var languages = {
+    ar: {
+      year: function(c) { return ((c === 1) ? "سنة" : "سنوات"); },
+      month: function(c) { return ((c === 1) ? "شهر" : "أشهر"); },
+      week: function(c) { return ((c === 1) ? "أسبوع" : "أسابيع"); },
+      day: function(c) { return ((c === 1) ? "يوم" : "أيام"); },
+      hour: function(c) { return ((c === 1) ? "ساعة" : "ساعات"); },
+      minute: function(c) { return ((c === 1) ? "دقيقة" : "دقائق"); },
+      second: function(c) { return ((c === 1) ? "ثانية" : "ثواني"); },
+      millisecond: function(c) { return ((c === 1) ? "جزء من الثانية" : "أجزاء من الثانية"); }
+    },
     ca: {
       year: function(c) { return "any" + ((c !== 1) ? "s" : ""); },
       month: function(c) { return "mes" + ((c !== 1) ? "os" : ""); },
@@ -35,14 +45,14 @@
       millisecond: function(c) { return "millisekund" + ((c !== 1) ? "er" : ""); }
     },
     de: {
-      year: function(c) { return "jahr" + ((c !== 1) ? "e" : ""); },
-      month: function(c) { return "monat" + ((c !== 1) ? "e" : ""); },
-      week: function(c) { return "woche" + ((c !== 1) ? "n" : ""); },
-      day: function(c) { return "tag" + ((c !== 1) ? "e" : ""); },
-      hour: function(c) { return "stunde" + ((c !== 1) ? "n" : ""); },
-      minute: function(c) { return "minute" + ((c !== 1) ? "n" : ""); },
-      second: function(c) { return "sekunde" + ((c !== 1) ? "n" : ""); },
-      millisecond: function(c) { return "millisekunde" + ((c !== 1) ? "n" : ""); }
+      year: function(c) { return "Jahr" + ((c !== 1) ? "e" : ""); },
+      month: function(c) { return "Monat" + ((c !== 1) ? "e" : ""); },
+      week: function(c) { return "Woche" + ((c !== 1) ? "n" : ""); },
+      day: function(c) { return "Tag" + ((c !== 1) ? "e" : ""); },
+      hour: function(c) { return "Stunde" + ((c !== 1) ? "n" : ""); },
+      minute: function(c) { return "Minute" + ((c !== 1) ? "n" : ""); },
+      second: function(c) { return "Sekunde" + ((c !== 1) ? "n" : ""); },
+      millisecond: function(c) { return "Millisekunde" + ((c !== 1) ? "n" : ""); }
     },
     en: {
       year: function(c) { return "year" + ((c !== 1) ? "s" : ""); },
@@ -53,16 +63,6 @@
       minute: function(c) { return "minute" + ((c !== 1) ? "s" : ""); },
       second: function(c) { return "second" + ((c !== 1) ? "s" : ""); },
       millisecond: function(c) { return "millisecond" + ((c !== 1) ? "s" : ""); }
-    },
-    nl: {
-      year: "jaar",
-      month: function(c) { return (c === 1) ? "maand" : "maanden"; },
-      week: function(c) { return (c === 1) ? "week" : "weken"; },
-      day: function(c) { return (c === 1) ? "dag" : "dagen"; },
-      hour: "uur",
-      minute: function(c) { return (c === 1) ? "minuut" : "minuten"; },
-      second: function(c) { return (c === 1) ? "seconde" : "seconden"; },
-      millisecond: function(c) { return (c === 1) ? "milliseconde" : "milliseconden"; }
     },
     es: {
       year: function(c) { return "año" + ((c !== 1) ? "s" : ""); },
@@ -94,6 +94,16 @@
       second: "másodperc",
       millisecond: "ezredmásodperc"
     },
+    it: {
+      year: function(c) { return "ann" + ((c !== 1) ? "i" : "o"); },
+      month: function(c) { return "mes" + ((c !== 1) ? "i" : "e"); },
+      week: function(c) { return "settiman" + ((c !== 1) ? "e" : "a"); },
+      day: function(c) { return "giorn" + ((c !== 1) ? "i" : "o"); },
+      hour: function(c) { return "or" + ((c !== 1) ? "e" : "a"); },
+      minute: function(c) { return "minut" + ((c !== 1) ? "i" : "o"); },
+      second: function(c) { return "second" + ((c !== 1) ? "i" : "o"); },
+      millisecond: function(c) { return "millisecond" + ((c !== 1) ? "i" : "o" ); }
+    },
     ja: {
       year: "年",
       month: "月",
@@ -113,6 +123,16 @@
       minute: "분",
       second: "초",
       millisecond: "밀리 초"
+    },
+    nl: {
+      year: "jaar",
+      month: function(c) { return (c === 1) ? "maand" : "maanden"; },
+      week: function(c) { return (c === 1) ? "week" : "weken"; },
+      day: function(c) { return (c === 1) ? "dag" : "dagen"; },
+      hour: "uur",
+      minute: function(c) { return (c === 1) ? "minuut" : "minuten"; },
+      second: function(c) { return (c === 1) ? "seconde" : "seconden"; },
+      millisecond: function(c) { return (c === 1) ? "milliseconde" : "milliseconden"; }
     },
     nob: {
       year: "år",
@@ -299,7 +319,9 @@
     for (var i = 1; i < arguments.length; i ++) {
       source = arguments[i];
       for (var prop in source) {
-        destination[prop] = source[prop];
+        if (source.hasOwnProperty(prop)) {
+          destination[prop] = source[prop];
+        }
       }
     }
     return destination;
@@ -333,7 +355,19 @@
     }
   }
 
+  function getSupportedLanguages() {
+    var result = [];
+    for (var language in languages) {
+      if (languages.hasOwnProperty(language)) {
+        result.push(language);
+      }
+    }
+    return result;
+  }
+
   humanizeDuration.humanizer = humanizer;
+  humanizeDuration.getSupportedLanguages = getSupportedLanguages;
+
   if (typeof define === "function" && define.amd) {
     define(function() {
       return humanizeDuration;
