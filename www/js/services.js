@@ -680,7 +680,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 };
 
                 if (stop == val.id && stop !== null) {
-                    markers['s' + key]['icon']['iconSize'] = [35, 35];
+                    markers['s' + key]['icon']['iconSize'] = [20, 20];
                     markers['s' + key]['icon']['iconUrl'] = 'img/stop_icons/stop-red.svg';
                     markers['s' + key]['layer'] = 'currentStop';
                 }
