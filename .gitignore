@@ -9,7 +9,6 @@
 !scss/ionic.app.scss
 !www/SpecRunner.html
 !www/index.html
-!www/css/*
 !www/img/bus_icons/*
 !www/img/stop_icons/*
 !www/js/app.js
