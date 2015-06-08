@@ -405,10 +405,10 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('AtStopService', function($q, $http, httpTimeout, CacheFactory, API_END_POINT, API_KEY) {
+.factory('AtStopService', function($q, $http, $filter, httpTimeout, CacheFactory, datetimeService, API_END_POINT, API_KEY) {
 
     CacheFactory('atStopCache', {
-        maxAge: 10000, // Items added to this cache expire after 15 minutes
+        maxAge: 10000, // Items added to this cache expire after 10s
         cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
         deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
     });
@@ -420,12 +420,18 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         } else {
             stop = params;
         }
+        if (params.hasOwnProperty('sort')) {
+            sort = params.sort;
+        } else {
+            sort = true;
+        }
 
         var deferred = $q.defer();
         var buses = {
             arriving: {},
             alerts: "",
-            responseTimestamp: ""
+            responseTimestamp: "",
+            stopId: stop
         };
 
         //for single line support
@@ -437,6 +443,34 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         if (params.hasOwnProperty('line')) {
             getParams.LineRef = params.line;
         }
+
+        var handleLayovers = function(results) {
+            angular.forEach(results['arriving'], function(val, key) {
+                //updates distances to an array of strings so that multi-line entries come out cleaner.
+                angular.forEach(val['distances'], function(v, k) {
+                    if (v['progress'] === 'prevTrip') {
+                        v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
+                    } else if (v['progress'] === 'layover,prevTrip') {
+                        v['distance'] = [v['distance'], "At terminal. "];
+                        if (!$filter('isUndefinedOrEmpty')(v['departsTerminal'])) {
+                            v['distance'].push("Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime'));
+                        }
+                    } else {
+                        v['distance'] = [v['distance']];
+                    }
+                });
+
+            });
+
+        };
+
+        var updateArrivalTimes = function(results) {
+            angular.forEach(results, function(val, key) {
+                angular.forEach(val['distances'], function(v, k) {
+                    v.arrivingIn = datetimeService.getRemainingTime(v.expectedArrivalTime);
+                });
+            });
+        };
 
         var responsePromise = $http.jsonp(API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK", {
                 params: getParams,
@@ -463,7 +497,6 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     });
 
                     grouped_tmp = _.groupBy(tmp, "routeId");
-
                     angular.forEach(grouped_tmp, function(val, key) {
                         var tmp = _.groupBy(val, "name");
                         angular.forEach(tmp, function(v, k) {
@@ -474,6 +507,11 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                         });
                     });
                     buses.arriving = grouped;
+
+                    handleLayovers(buses);
+                    updateArrivalTimes(buses.arriving);
+
+
                 } else {
                     // check for sched svc:
                 }
