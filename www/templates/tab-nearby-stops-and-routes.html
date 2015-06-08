@@ -13,7 +13,8 @@
             <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()" spinner="none"></ion-refresher>
             <ion-spinner ng-if="loading" class="loading center"></ion-spinner>
             <ion-list>
-                <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}" id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" in-view-options="{ debounce: 15 }" class="card" style="margin: 0; padding: 0; border-bottom: none;">
+                <ion-item ng-repeat="item in data.stops | orderBy:'dist' |
+                 filter:{id: '!current_location'}" id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" in-view-options="{ debounce: 15 }" class="card" style="margin: 0; padding: 0; border-bottom: none;">
                     <div class="item item-divider">{{item.name}}</div>
                     <div class="item item-text-wrap " ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">
                         <div class="row row-center" style="font-size: 13px;">
