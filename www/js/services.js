@@ -405,10 +405,10 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('AtStopService', function($q, $http, httpTimeout, CacheFactory, API_END_POINT, API_KEY) {
+.factory('AtStopService', function($q, $http, $filter, httpTimeout, CacheFactory, datetimeService, API_END_POINT, API_KEY) {
 
     CacheFactory('atStopCache', {
-        maxAge: 10000, // Items added to this cache expire after 15 minutes
+        maxAge: 10000, // Items added to this cache expire after 10s
         cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
         deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
     });

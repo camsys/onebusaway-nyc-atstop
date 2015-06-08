@@ -246,7 +246,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 ])
 
 /**
- * Controller that used for showing upcoming buses for specific stop.
+ * Controller used for showing upcoming buses for specific stop.
  */
 .controller('AtStopCtrl', ['$ionicScrollDelegate', '$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
     function($ionicScrollDelegate, $scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval, $location) {
@@ -275,32 +275,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             }
         };
 
-        var handleLayovers = function(results) {
-            angular.forEach(results['arriving'], function(val, key) {
-                //updates distances to an array of strings so that multi-line entries come out cleaner.
-                angular.forEach(val['distances'], function(v, k) {
-                    if (v['progress'] === 'prevTrip') {
-                        v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
-                    } else if (v['progress'] === 'layover,prevTrip') {
-                        v['distance'] = [v['distance'], "At terminal. "];
-                        if (!$filter('isUndefinedOrEmpty')(v['departsTerminal'])) {
-                            v['distance'].push("Scheduled to depart at " + $filter('date')(v['departsTerminal'], 'shortTime'));
-                        }
-                    } else {
-                        v['distance'] = [v['distance']];
-                    }
-                });
-
-            });
-
-        };
-
         var getBuses = function() {
             var busesDefer = $q.defer();
             AtStopService.getBuses($scope.data.stopId).then(function(results) {
                 if (!angular.equals({}, results.arriving)) {
                     $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
-                    handleLayovers(results);
                     updateArrivalTimes(results.arriving);
                     $scope.data.results = results.arriving;
                     $scope.data.notifications = "";
@@ -391,6 +370,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         var oneDirection = false;
+        // groups of stops by direction in order to enable accordeon list
         $scope.data.groups = [];
         $scope.data.groups[0] = {
             name: "",
@@ -501,6 +481,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
 /**
  * Controller that used for showing About Information from config.js
+ * Also has morphed into a settings page
  */
 .controller('AboutCtrl', ['$rootScope', '$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
     function($rootScope, $scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
