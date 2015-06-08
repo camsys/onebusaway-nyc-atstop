@@ -18,7 +18,7 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'leaflet-directive', 'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress', 'angular-inview'])
+angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'atstop.directives', 'leaflet-directive', 'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress'])
 
 // global timeout variable for HTTP requests
 .value('httpTimeout', 5000)
@@ -93,6 +93,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .config(function($httpProvider, $ionicConfigProvider) {
+    $ionicConfigProvider.views.swipeBackEnabled(false);
     $ionicConfigProvider.tabs.position('bottom');
 
     if (ionic.Platform.isAndroid()) {
@@ -119,54 +120,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             }
         };
     });
-})
-
-.directive('ngTips', function($timeout, $rootScope) {
-    $rootScope.tipCt = 0;
-    return {
-        restrict: 'E',
-        replace: true,
-        scope: {
-            ngModel: '='
-        },
-        template: '<div class="tips">{{ngModel}}</div>',
-        link: function(scope, element, attrs) {
-            $rootScope.tipCt = ++$rootScope.tipCt;
-            //only show tips a few times after app load
-            if (scope.$root.tipCt < 3) {
-                var to = $timeout(function() {
-                    element.remove();
-                }, 3000);
-
-                scope.$on("$destroy", function() {
-                    $timeout.cancel(to);
-                });
-            } else {
-                element.remove();
-            }
-        }
-    };
-})
-
-.directive('appHeader', function() {
-    return {
-        restrict: 'E',
-        scope: {},
-        template: '<div style="padding-bottom: -100%; position: relative; text-align: center"><img src="img/logo.svg" style="width: 90%; height: auto;"> </div>'
-    };
-})
-
-.directive('ngEnter', function() {
-    return function(scope, element, attrs) {
-        element.bind("keydown keypress", function(event) {
-            if (event.which === 13) {
-                scope.$apply(function() {
-                    scope.$eval(attrs.ngEnter);
-                });
-                event.preventDefault();
-            }
-        });
-    };
 })
 
 .config(function($stateProvider, $urlRouterProvider) {

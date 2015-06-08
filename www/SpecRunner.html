@@ -33,6 +33,7 @@
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
+    <script src="js/directives.js"></script>
     <script src="js/services.js"></script>
     <script src="js/filters.js"></script>
 
@@ -46,7 +47,7 @@
 
             beforeEach(function() {
 
-                module('starter');
+                module('atstop');
                 var mock = (function() {
                     var store = {};
                     return {
@@ -97,7 +98,7 @@
 
         describe('AtStopService Tests (note: server/data dependent)', function () {
             var ctrl, scope;
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
 
             it('should return results for a stop', function () {
                 var stop = 'MTA_400861';
@@ -131,7 +132,7 @@
 
         describe('Geolocation Tests', function () {
             var ctrl, scope;
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
 
 
             it('should return nearby stops', function () {
@@ -148,7 +149,7 @@
         describe('Filter: encodeStopName', function () {
             var encodeStopName;
 
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
             beforeEach(inject(function ($filter) {
                 encodeStopName = $filter('encodeStopName');
             }));
@@ -161,7 +162,7 @@
         });
 
         describe('Countdown filter tests', function () {
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
             beforeEach(inject(function ($filter) {
                 durationView = $filter('durationView');
             }));
@@ -181,7 +182,7 @@
         describe('No Scheduled Service Tests', function () {
             var ctrl, scope;
 
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
             beforeEach(inject(function ($rootScope, $controller) {
                 scope = $rootScope;
                 ctrl = $controller('SearchCtrl', {
@@ -190,34 +191,77 @@
             }));
 
             it('should not return the nssm if only one direction', function () {
-                var matches = {
-                    "directions": [{
-                        "hasUpcomingScheduledService": true
-                    }]
+                var matches =     
+                    { "directions": [
+                        {
+                            "destination": "ANNADALE RD",
+                            "directionId": "1",
+                            "hasUpcomingScheduledService": false,
+                            "stops": null
+                        }]
                 };
                 scope.searchAndGo(matches);
                 expect(scope.data.notifications).toEqual('');
             });
 
             it('should display nssm if no service', function () {
-                var matches = {
-                    "directions": [{
-                        "hasUpcomingScheduledService": false
-                    }, {
-                        "hasUpcomingScheduledService": false
-                    }]
+                var matches =     
+                { "directions": [
+                    {
+                        "destination": "ANNADALE RD",
+                        "directionId": "1",
+                        "hasUpcomingScheduledService": false,
+                        "stops": null
+                    },
+                    {
+                        "destination": "DOWNTOWN WORTH ST",
+                        "directionId": "0",
+                        "hasUpcomingScheduledService": false,
+                        "stops": null
+                    }
+                    ]
                 };
                 scope.searchAndGo(matches);
                 expect(scope.data.notifications).toEqual('');
             });
 
             it('should not display nssm if active service in one direction', function () {
-                var matches = {
-                    "directions": [{
-                        "hasUpcomingScheduledService": false
-                    }, {
-                        "hasUpcomingScheduledService": true
-                    }]
+                var matches =     
+                { "directions": [
+                    {
+                        "destination": "ANNADALE RD",
+                        "directionId": "1",
+                        "hasUpcomingScheduledService": true,
+                        "stops": null
+                    },
+                    {
+                        "destination": "DOWNTOWN WORTH ST",
+                        "directionId": "0",
+                        "hasUpcomingScheduledService": false,
+                        "stops": null
+                    }
+                    ]
+                };
+                scope.searchAndGo(matches);
+                expect(scope.data.notifications).toEqual('');
+            });
+
+            it('should not display nssm if active service in both directions', function () {
+                var matches =     
+                { "directions": [
+                    {
+                        "destination": "ANNADALE RD",
+                        "directionId": "1",
+                        "hasUpcomingScheduledService": true,
+                        "stops": null
+                    },
+                    {
+                        "destination": "DOWNTOWN WORTH ST",
+                        "directionId": "0",
+                        "hasUpcomingScheduledService": true,
+                        "stops": null
+                    }
+                    ]
                 };
                 scope.searchAndGo(matches);
                 expect(scope.data.notifications).toEqual('');
@@ -227,7 +271,7 @@
 /*        describe('Test SearchCtrl', function () {
             var scope, newSearchCtrl, results = [];
 
-            beforeEach(module('starter'));
+            beforeEach(module('atstop'));
 
             beforeEach(inject(function ($rootScope, $controller) {
                 scope = $rootScope;

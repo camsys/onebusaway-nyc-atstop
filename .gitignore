@@ -15,6 +15,7 @@
 !www/js/config.tmpl.js
 !www/js/controllers.js
 !www/js/filters.js
+!www/js/directives.js
 !www/js/services.js
 !www/lib/angular-cache/*
 !www/lib/angular-leaflet/*
