@@ -8,20 +8,20 @@ A hybrid mobile app that provides information about when the next bus will arriv
 * (Wait before cloning this repo) 
 * First, install [Ionic Framework](http://ionicframework.com/getting-started/).
 * Second, start a new project using `ionic start atstop blank`.
-* Then, in the project root:
+* Then, in the project root (`cd atstop`):
   * Setup SASS running `ionic setup sass`.
   * Install ngCordova running `bower install ngCordova`.
   * `git init`
   * `git remote add origin PATH/TO/THIS/REPO`
   * `git fetch --all`
   * `git reset --hard origin/master`
-  * Remove `www/img/ionic.png` and `www/css/style.css` files.
-  * Rename `www/js/config.tmpl.js` to `config.js` (in the same folder)
+  * `rm www/img/ionic.png www/css/style.css` files.
+  * `mv www/js/config.tmpl.js` www/js/config.js`
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one. You will receive the key within half an hour.
   * Insert your key into the `API_KEY` field of `config.js`.
-  * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://app.prod.obanyc.com/`)
+  * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://bustime.mta.info/`)
  
-#### Required Cordova Plugins
+#### Required Cordova Plugins for Building
 In order to build app packages and install, several Cordova plugins are required. Using `cordova plugin add [name]`, install the following plugins:
  * org.apache.cordova.network-information
  * org.apache.cordova.geolocation
