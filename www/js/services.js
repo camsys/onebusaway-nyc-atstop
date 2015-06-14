@@ -405,12 +405,12 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('AtStopService', function($q, $http, httpTimeout, CacheFactory, API_END_POINT, API_KEY) {
+.factory('AtStopService', function($q, $http, $filter, datetimeService, httpTimeout, CacheFactory, API_END_POINT, API_KEY) {
 
     CacheFactory('atStopCache', {
-        maxAge: 10000, // Items added to this cache expire after 15 minutes
-        cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
-        deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
+        maxAge: 10000, 
+        cacheFlushInterval: 60 * 60 * 1000,
+        deleteOnExpire: 'aggressive' 
     });
 
     var getBuses = function(params) {
@@ -445,9 +445,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         }
 
         var handleLayovers = function(results) {
-            angular.forEach(results['arriving'], function(val, key) {
+            angular.forEach(results, function(v, k) {
                 //updates distances to an array of strings so that multi-line entries come out cleaner.
-                angular.forEach(val['distances'], function(v, k) {
                     if (v['progress'] === 'prevTrip') {
                         v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
                     } else if (v['progress'] === 'layover,prevTrip') {
@@ -458,17 +457,13 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     } else {
                         v['distance'] = [v['distance']];
                     }
-                });
-
             });
 
         };
 
         var updateArrivalTimes = function(results) {
-            angular.forEach(results, function(val, key) {
-                angular.forEach(val['distances'], function(v, k) {
+            angular.forEach(results, function(v, k) {
                     v.arrivingIn = datetimeService.getRemainingTime(v.expectedArrivalTime);
-                });
             });
         };
 
@@ -495,22 +490,25 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                             expectedArrivalTime: value.MonitoredVehicleJourney.MonitoredCall.ExpectedArrivalTime
                         });
                     });
+                    handleLayovers(tmp);
+                    updateArrivalTimes(tmp);
 
-                    grouped_tmp = _.groupBy(tmp, "routeId");
-                    angular.forEach(grouped_tmp, function(val, key) {
-                        var tmp = _.groupBy(val, "name");
-                        angular.forEach(tmp, function(v, k) {
-                            grouped[key] = {
-                                name: k,
-                                distances: v
-                            };
+                    if (sort==true){
+                        grouped_tmp = _.groupBy(tmp, "routeId");
+                        angular.forEach(grouped_tmp, function(val, key) {
+                            var tmp = _.groupBy(val, "name");
+                            angular.forEach(tmp, function(v, k) {
+                                grouped[key] = {
+                                    name: k,
+                                    distances: v
+                                };
+                            });
                         });
-                    });
-                    buses.arriving = grouped;
-
-                    handleLayovers(buses);
-                    updateArrivalTimes(buses.arriving);
-
+                        buses.arriving = grouped;
+                    }
+                    else{
+                        buses.arriving = tmp;
+                    }
 
                 } else {
                     // check for sched svc:

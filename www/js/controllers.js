@@ -280,7 +280,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             AtStopService.getBuses($scope.data.stopId).then(function(results) {
                 if (!angular.equals({}, results.arriving)) {
                     $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
-                    //updateArrivalTimes(results.arriving);
                     $scope.data.results = results.arriving;
                     $scope.data.notifications = "";
                 } else {
@@ -340,7 +339,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-// Route Stop List Controller
+/* Route Stop List Controller
  * Controller that used for showing the routes and stops of routes.
  */
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
@@ -691,7 +690,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-/**
+
 .controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'AtStopService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
     function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, AtStopService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
@@ -732,7 +731,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         $scope.refresh = function() {
-
             $scope.data.notifications = "";
             if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
@@ -743,9 +741,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             } else {
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
-
             tick();
-
             $scope.$broadcast('scroll.refreshComplete');
         };
 
@@ -757,7 +753,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 var stopInArray = stopsInTimeout.some(function(stop) {
                     return stop === event.inViewTarget.id;
                 });
-
                 if (!stopInArray) {
                     stopsInTimeout.push(event.inViewTarget.id);
                     tick();
@@ -772,7 +767,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             var promises = [];
             angular.forEach(stopsInTimeout, function(stop) {
                 promises.push(
-                    AtStopService.getBuses(stop).then(function(results) {
+                    AtStopService.getBuses({'stop':stop, 'sort':false}).then(function(results) {
+                        console.log(results);
                         if (!angular.equals({}, results.arriving)) {
                             arrivals[stop] = results.arriving;
                         }
