@@ -112,20 +112,24 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         // set no sched svc message.
         var handleRouteSearch = function(matches) {
-            // console.log(Object.keys(matches.directions).length);
+            // console.log(matches);
             if (Object.keys(matches.directions).length > 1) {
                 // if one direction with no service-- handle on route/stop page.
                 if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
+                  // console.log('service in both directions');
                     $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
                 } else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService) {
+                  // console.log('no service in both directions');
                     noSchedService(matches.shortName);
                 } else {
 
                 }
             } else {
                 if (matches.directions[0].hasUpcomingScheduledService) {
+                  // console.log('1direction with service');
                     $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
                 } else {
+                  // console.log('1direction with no service');
                     noSchedService(matches.shortName);
                 }
             }
@@ -172,7 +176,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         var init = (function() {
-
+            //for redirecting to nearby if set by user preference
             var defaultTabIndex = DefaultTabService.getIndex();
             if ($rootScope.redirected === false && defaultTabIndex !== 0) {
                 $rootScope.redirected = true;

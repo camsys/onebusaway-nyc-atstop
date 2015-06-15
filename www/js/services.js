@@ -434,7 +434,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
             stopId: stop
         };
 
-        //for single line support
+        //for supporting queries of a single line (route) from the StopMonitoring API
+        //TODO: abstract OperatorRef to config
         var getParams = {
             key: API_KEY,
             OperatorRef: "MTA",
@@ -592,7 +593,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                                 description: matchesData.description,
                                 directions: {}
                             };
-
+                            //might be able to simplify this with an angular.sort on what is returned.
                             if (matchesData.directions[0]) {
                                 if (matchesData.directions[0].directionId == "0") {
                                     matches.directions[0] = {
