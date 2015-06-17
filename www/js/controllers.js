@@ -472,9 +472,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 /**
  * Controller that used for showing About Information from config.js
  */
-.controller('AboutCtrl', ['$rootScope', '$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
-    function($rootScope, $scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
+.controller('AboutCtrl', ['$cordovaAppVersion', '$rootScope', '$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
+    function($cordovaAppVersion, $rootScope, $scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
+
         $scope.data = {
+            version: "0.0.0",
             showBranding: SHOW_BRANDING,
             hideText: true,
             brandAboutText: BRAND_ABOUT_TEXT,
@@ -498,6 +500,16 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             $ionicScrollDelegate.resize();
             $scope.data.hideText = !$scope.data.hideText;
         };
+
+        var init = (function() {
+            // get app version
+            document.addEventListener("deviceready", function() {
+
+                $cordovaAppVersion.getAppVersion().then(function(version) {
+                    $scope.data.version = version;
+                });
+            }, false);
+        })();
     }
 ])
 
@@ -767,7 +779,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             var promises = [];
             angular.forEach(stopsInTimeout, function(stop) {
                 promises.push(
-                    AtStopService.getBuses({'stop':stop, 'sort':false}).then(function(results) {
+                    AtStopService.getBuses({
+                        'stop': stop,
+                        'sort': false
+                    }).then(function(results) {
                         console.log(results);
                         if (!angular.equals({}, results.arriving)) {
                             arrivals[stop] = results.arriving;
@@ -775,7 +790,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     })
                 );
             });
-            
+
             $q.all(promises).then(function() {
                 //There is probably a better way to do this, I would like to limit piecemeal updates to $scope
                 angular.forEach($scope.data.stops, function(s) {
