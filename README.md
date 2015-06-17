@@ -16,7 +16,8 @@ A hybrid mobile app that provides information about when the next bus will arriv
   * `git fetch --all`
   * `git reset --hard origin/master`
   * `rm www/img/ionic.png www/css/style.css` files.
-  * `mv www/js/config.tmpl.js` www/js/config.js`
+  * `mv www/js/config.tmpl.js  www/js/config.js`
+  * run `gulp sass` to generate CSS
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one. You will receive the key within half an hour.
   * Insert your key into the `API_KEY` field of `config.js`.
   * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://bustime.mta.info/`)
