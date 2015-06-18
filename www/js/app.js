@@ -98,7 +98,7 @@ angular.module('atstop', ['ionic', 'pascalprecht.translate', 'atstop.controllers
         suffix: '.json'
     });
 
-    $translateProvider.preferredLanguage('ru');
+    $translateProvider.preferredLanguage('en');
 })
 
 .config(function($httpProvider, $ionicConfigProvider) {
