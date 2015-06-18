@@ -17,6 +17,7 @@
 !www/js/filters.js
 !www/js/directives.js
 !www/js/services.js
+!www/js/languages/*
 !www/lib/angular-cache/*
 !www/lib/angular-leaflet/*
 !www/lib/leaflet/*
@@ -27,6 +28,7 @@
 !www/lib/angular-timer/*
 !www/lib/round-progress/*
 !www/lib/angular-translate/angular-translate.min.js
+!www/lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js
 !www/templates/about.html
 !www/templates/atstop.html
 !www/templates/geolocation.html

@@ -93,14 +93,12 @@ angular.module('atstop', ['ionic', 'pascalprecht.translate', 'atstop.controllers
 })
 
 .config(function($translateProvider) {
-    $translateProvider.translations('en', {
-        TABS_SEARCH: 'Search'
-    }).translations('ru', {
-        TABS_SEARCH: 'Найти'
+    $translateProvider.useStaticFilesLoader({
+        prefix: 'js/languages/',
+        suffix: '.json'
     });
 
-    $translateProvider.preferredLanguage('en');
-    //$translateProvider.preferredLanguage('ru');
+    $translateProvider.preferredLanguage('ru');
 })
 
 .config(function($httpProvider, $ionicConfigProvider) {
