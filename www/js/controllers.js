@@ -577,6 +577,17 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
             MapService.getStopMarkers(route, stop).then(function(res) {
                 angular.extend($scope.markers, res);
+
+                //set zoom around current stop
+                angular.forEach($scope.markers, function(val, key) {
+                    if (val.layer == 'currentStop') {
+                        leafletData.getMap().then(function(map) {
+                            map.setView(val, 15, {
+                                animate: true
+                            });
+                        });
+                    }
+                });
             });
         };
 
