@@ -768,7 +768,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             angular.forEach(stopsInTimeout, function(stop) {
                 promises.push(
                     AtStopService.getBuses({'stop':stop, 'sort':false}).then(function(results) {
-                        console.log(results);
+                        // console.log(results);
                         if (!angular.equals({}, results.arriving)) {
                             arrivals[stop] = results.arriving;
                         }
