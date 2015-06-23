@@ -405,12 +405,12 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('AtStopService', function($q, $http, $filter, datetimeService, httpTimeout, CacheFactory, API_END_POINT, API_KEY) {
+.factory('AtStopService', function($q, $http, $filter, httpTimeout, CacheFactory, datetimeService, API_END_POINT, API_KEY) {
 
     CacheFactory('atStopCache', {
-        maxAge: 10000, 
-        cacheFlushInterval: 60 * 60 * 1000,
-        deleteOnExpire: 'aggressive' 
+        maxAge: 10000, // Items added to this cache expire after 10s
+        cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+        deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
     });
 
     var getBuses = function(params) {
@@ -434,7 +434,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
             stopId: stop
         };
 
-        //for single line support
+        //for supporting queries of a single line (route) from the StopMonitoring API
+        //TODO: abstract OperatorRef to config
         var getParams = {
             key: API_KEY,
             OperatorRef: "MTA",
@@ -445,8 +446,9 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         }
 
         var handleLayovers = function(results) {
-            angular.forEach(results, function(v, k) {
+            angular.forEach(results['arriving'], function(val, key) {
                 //updates distances to an array of strings so that multi-line entries come out cleaner.
+                angular.forEach(val['distances'], function(v, k) {
                     if (v['progress'] === 'prevTrip') {
                         v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
                     } else if (v['progress'] === 'layover,prevTrip') {
@@ -457,13 +459,17 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     } else {
                         v['distance'] = [v['distance']];
                     }
+                });
+
             });
 
         };
 
         var updateArrivalTimes = function(results) {
-            angular.forEach(results, function(v, k) {
+            angular.forEach(results, function(val, key) {
+                angular.forEach(val['distances'], function(v, k) {
                     v.arrivingIn = datetimeService.getRemainingTime(v.expectedArrivalTime);
+                });
             });
         };
 
@@ -490,25 +496,22 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                             expectedArrivalTime: value.MonitoredVehicleJourney.MonitoredCall.ExpectedArrivalTime
                         });
                     });
-                    handleLayovers(tmp);
-                    updateArrivalTimes(tmp);
 
-                    if (sort==true){
-                        grouped_tmp = _.groupBy(tmp, "routeId");
-                        angular.forEach(grouped_tmp, function(val, key) {
-                            var tmp = _.groupBy(val, "name");
-                            angular.forEach(tmp, function(v, k) {
-                                grouped[key] = {
-                                    name: k,
-                                    distances: v
-                                };
-                            });
+                    grouped_tmp = _.groupBy(tmp, "routeId");
+                    angular.forEach(grouped_tmp, function(val, key) {
+                        var tmp = _.groupBy(val, "name");
+                        angular.forEach(tmp, function(v, k) {
+                            grouped[key] = {
+                                name: k,
+                                distances: v
+                            };
                         });
-                        buses.arriving = grouped;
-                    }
-                    else{
-                        buses.arriving = tmp;
-                    }
+                    });
+                    buses.arriving = grouped;
+
+                    handleLayovers(buses);
+                    updateArrivalTimes(buses.arriving);
+
 
                 } else {
                     // check for sched svc:
@@ -590,7 +593,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                                 description: matchesData.description,
                                 directions: {}
                             };
-
+                            //might be able to simplify this with an angular.sort on what is returned.
                             if (matchesData.directions[0]) {
                                 if (matchesData.directions[0].directionId == "0") {
                                     matches.directions[0] = {
@@ -716,7 +719,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 };
 
                 if (stop == val.id && stop !== null) {
-                    markers['s' + key]['icon']['iconSize'] = [35, 35];
+                    markers['s' + key]['icon']['iconSize'] = [20, 20];
                     markers['s' + key]['icon']['iconUrl'] = 'img/stop_icons/stop-red.svg';
                     markers['s' + key]['layer'] = 'currentStop';
                 }

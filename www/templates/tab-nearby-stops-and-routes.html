@@ -13,31 +13,19 @@
             <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()" spinner="none"></ion-refresher>
             <ion-spinner ng-if="loading" class="loading center"></ion-spinner>
             <ion-list>
-                <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}"
-                 id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" 
-                 in-view-options="{ debounce: 15 }" class="card" style="margin: 0; padding: 0; border-bottom: none;">
-                    <div class="item item-divider">{{item.name}}</div>
-                    <div class="item item-text-wrap " ng-repeat="r in item.routes" style="margin: 0; padding: 0; border-bottom: none;"o
-                    ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">
-                        <div class="row row-center" style="font-size: 13px;">
-                            <div class="col">
-                                {{r.shortName}}
-                                <div ng-repeat="i in item.arriving | limitTo:3" ng-if="r.id == i.routeId" style="display:inline-block;">  
-                                        <div style="color: #999; display:inline-block;" class="col">{{i.destination}}</div>
-                                        <span ng-show="i.expectedArrivalTime" class="col" >
-                                                <strong>{{i.arrivingIn|durationView}}</strong>
-                                        </span>
-                                        <span ng-repeat="d in i.distance" class="col" >
-                                            {{d}}
-                                        </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <a class="button button-positive button-small button-clear" 
-                        href="#/tab/{{url}}/{{item.id}}/{{item.name | encodeStopName}}">See more</a>
-                    </div>
+                <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}" id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" in-view-options="{ debounce: 15 }" class="card" style="padding: 0">
+                    <span class="item item-divider">{{item.name}}</span>
+                    <span class="item item-text-wrap" ng-repeat="r in item.routes" ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">{{r.shortName}}
+                        <span ng-repeat="routes in item.arriving">
+                            <span ng-repeat="ra in routes" ng-if="r.id == ra[0].routeId"> 
+                            {{ra[0].destination}} 
+                                <span ng-repeat="d in ra[0].distance">{{d}}</span>
+                            </span>
+                        </span>
+                    </span>
+                    <div class="item item-divider"><a class="button button-positive button-small button-clear" href="#/tab/{{url}}/{{item.id}}/{{item.name | encodeStopName}}">
+                                See more
+                            </a></div>
                 </ion-item>
             </ion-list>
             <p>{{data.notifications}}</p>

@@ -112,20 +112,24 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         // set no sched svc message.
         var handleRouteSearch = function(matches) {
-            // console.log(Object.keys(matches.directions).length);
+            // console.log(matches);
             if (Object.keys(matches.directions).length > 1) {
                 // if one direction with no service-- handle on route/stop page.
                 if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
+                  // console.log('service in both directions');
                     $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
                 } else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService) {
+                  // console.log('no service in both directions');
                     noSchedService(matches.shortName);
                 } else {
 
                 }
             } else {
                 if (matches.directions[0].hasUpcomingScheduledService) {
+                  // console.log('1direction with service');
                     $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
                 } else {
+                  // console.log('1direction with no service');
                     noSchedService(matches.shortName);
                 }
             }
@@ -172,7 +176,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         var init = (function() {
-
+            //for redirecting to nearby if set by user preference
             var defaultTabIndex = DefaultTabService.getIndex();
             if ($rootScope.redirected === false && defaultTabIndex !== 0) {
                 $rootScope.redirected = true;
@@ -246,7 +250,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 ])
 
 /**
- * Controller that used for showing upcoming buses for specific stop.
+ * Controller used for showing upcoming buses for specific stop.
  */
 .controller('AtStopCtrl', ['$ionicScrollDelegate', '$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
     function($ionicScrollDelegate, $scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval, $location) {
@@ -280,6 +284,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             AtStopService.getBuses($scope.data.stopId).then(function(results) {
                 if (!angular.equals({}, results.arriving)) {
                     $scope.data.responseTime = $filter('date')(results.responseTimestamp, 'shortTime');
+                    updateArrivalTimes(results.arriving);
                     $scope.data.results = results.arriving;
                     $scope.data.notifications = "";
                 } else {
@@ -298,6 +303,14 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
             busesDefer.promise.then(function() {
                 $scope.data.loaded = true;
+            });
+        };
+
+        var updateArrivalTimes = function(results) {
+            angular.forEach(results, function(val, key) {
+                angular.forEach(val['distances'], function(v, k) {
+                    v.arrivingIn = datetimeService.getRemainingTime(v.expectedArrivalTime);
+                });
             });
         };
 
@@ -339,7 +352,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-/* Route Stop List Controller
+/**
  * Controller that used for showing the routes and stops of routes.
  */
 .controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
@@ -361,6 +374,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         var oneDirection = false;
+        // groups of stops by direction in order to enable accordeon list
         $scope.data.groups = [];
         $scope.data.groups[0] = {
             name: "",
@@ -471,6 +485,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
 /**
  * Controller that used for showing About Information from config.js
+ * Also has morphed into a settings page
  */
 .controller('AboutCtrl', ['$rootScope', '$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
     function($rootScope, $scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
@@ -690,9 +705,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-
-.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'AtStopService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, AtStopService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+/**
+ * Controller that used for showing the nearby stops for specific location from geolocarions.
+ */
+.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
         $scope.paths = {};
         $scope.url = "atstop";
@@ -718,7 +735,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             "nearbyStops": []
         };
 
-
         $scope.back = function() {
             $scope.data.returnShow = false;
             if ($scope.reloadTimeout) {
@@ -735,58 +751,12 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
-
             if ($location.$$path === "/tab/nearby-stops-and-routes") {
                 getNearbyStopsAndRoutesGPS();
             } else {
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
-            tick();
             $scope.$broadcast('scroll.refreshComplete');
-        };
-
-
-        var stopsInTimeout = [];
-
-        $scope.lineInView = function(index, inview, inviewpart, event) {
-            if (inview == true) {
-                var stopInArray = stopsInTimeout.some(function(stop) {
-                    return stop === event.inViewTarget.id;
-                });
-                if (!stopInArray) {
-                    stopsInTimeout.push(event.inViewTarget.id);
-                    tick();
-                }
-            }
-
-            return false;
-        };
-
-        var tick = function() {
-            var arrivals = {};
-            var promises = [];
-            angular.forEach(stopsInTimeout, function(stop) {
-                promises.push(
-                    AtStopService.getBuses({'stop':stop, 'sort':false}).then(function(results) {
-                        console.log(results);
-                        if (!angular.equals({}, results.arriving)) {
-                            arrivals[stop] = results.arriving;
-                        }
-                    })
-                );
-            });
-            
-            $q.all(promises).then(function() {
-                //There is probably a better way to do this, I would like to limit piecemeal updates to $scope
-                angular.forEach($scope.data.stops, function(s) {
-                    s.arriving = arrivals[s.id];
-                    //console.log(s.id, arrivals[s.id]);
-                });
-            });
-
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
         };
 
         var getNearbyStopsAndRoutes = function(lat, lon) {
@@ -805,6 +775,12 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     showNearbyStops();
                     $scope.data.notifications = "";
                     $scope.data.showMap = true;
+
+                    /*
+                    leafletData.getMap().then(function(map) {
+                        L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
+                    });
+                    */
                 } else {
                     $scope.data.showMap = false;
                     $scope.data.notifications = "No nearby stops found.";
@@ -1017,6 +993,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         var slideTo = function(location) {
             location = $location.hash(location);
+            //console.log('scrolling to: ' + location);
+
             $timeout(function() {
                 $ionicScrollDelegate.anchorScroll("#" + location);
             });
@@ -1054,13 +1032,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 $scope.data.title = "Nearby Stops";
                 $scope.url = "atstop-gps";
                 getNearbyStopsAndRoutesGPS();
-                tick();
+
             } else {
                 $scope.data.title = $stateParams.address;
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
-
-            tick();
         })();
     }
 ]);
