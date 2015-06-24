@@ -177,11 +177,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         var init = (function() {
             //for redirecting to nearby if set by user preference
-            var defaultTabIndex = DefaultTabService.getIndex();
-            if ($rootScope.redirected === false && defaultTabIndex !== 0) {
-                $rootScope.redirected = true;
-                $ionicTabsDelegate.select(defaultTabIndex);
-            }
+            //var defaultTabIndex = DefaultTabService.getIndex();
+            //if ($rootScope.redirected === false && defaultTabIndex !== 0) {
+            //    $rootScope.redirected = true;
+            //    $ionicTabsDelegate.select(defaultTabIndex);
+            //}
 
             SearchesService.fetchAll().then(function(results) {
                 if (results.length > 0) {
@@ -360,7 +360,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         $scope.data = {
             "loaded": false,
-            "routeName": $stateParams.routeName,
             "favClass": "",
             "direction": [],
             "directionName": "",
@@ -487,9 +486,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
  * Controller that used for showing About Information from config.js
  * Also has morphed into a settings page
  */
-.controller('AboutCtrl', ['$rootScope', '$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
-    function($rootScope, $scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
+.controller('AboutCtrl', ['$cordovaAppVersion', '$rootScope', '$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
+    function($cordovaAppVersion, $rootScope, $scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
+
         $scope.data = {
+            version: "1.0.1",
             showBranding: SHOW_BRANDING,
             hideText: true,
             brandAboutText: BRAND_ABOUT_TEXT,
@@ -513,6 +514,16 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             $ionicScrollDelegate.resize();
             $scope.data.hideText = !$scope.data.hideText;
         };
+
+        var init = (function() {
+            // get app version
+            document.addEventListener("deviceready", function() {
+
+                $cordovaAppVersion.getAppVersion().then(function(version) {
+                    $scope.data.version = version;
+                });
+            }, false);
+        })();
     }
 ])
 
@@ -580,6 +591,17 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
             MapService.getStopMarkers(route, stop).then(function(res) {
                 angular.extend($scope.markers, res);
+
+                //set zoom around current stop
+                angular.forEach($scope.markers, function(val, key) {
+                    if (val.layer == 'currentStop') {
+                        leafletData.getMap().then(function(map) {
+                            map.setView(val, 15, {
+                                animate: true
+                            });
+                        });
+                    }
+                });
             });
         };
 
