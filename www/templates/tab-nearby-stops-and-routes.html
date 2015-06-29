@@ -1,4 +1,4 @@
-<ion-view view-title="{{data.title}}">
+<ion-view view-title="{{data.title}}" class="nearyby">
     <ion-nav-buttons side="secondary">
         <button class="button button-clear" ng-click="back()" ng-show="data.returnShow">
             <i class="icon ion-arrow-return-left"></i>
@@ -6,30 +6,28 @@
     </ion-nav-buttons>
     <ion-content ng-show="data.loaded" has-bouncing="true" scroll="false">
         <div data-tap-disabled="true">
-            <leaflet center="center" markers="markers" defaults="defaults" paths="paths" height="{{data.mapHeight}}px" ng-show="data.showMap"></leaflet>
+            <leaflet center="center" markers="markers" defaults="defaults" paths="paths" 
+            height="{{data.mapHeight}}px" ng-show="data.showMap"></leaflet>
         </div>
         <ion-scroll style="height: {{data.listHeight}}px;" in-view-container>
             <ng-tips ng-model="data.tips"></ng-tips>
             <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()" spinner="none"></ion-refresher>
             <ion-spinner ng-if="loading" class="loading center"></ion-spinner>
             <ion-list>
-                <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}"
+                <ion-item collection-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}"
                  id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" 
                  in-view-options="{ debounce: 15 }" class="card" style="margin: 0; padding: 0; border-bottom: none;">
                     <div class="item item-divider">{{item.name}}</div>
-                    <div class="item item-text-wrap " ng-repeat="r in item.routes" style="margin: 0; padding: 0; border-bottom: none;"
+                    <div class="item"  ng-repeat="r in item.routes" style="margin: 0; padding: 0; border-bottom: none;"
                     ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">
-                        <div class="row row-center" style="font-size: 13px;">
-                            <div class="col">
-                                <strong> {{r.shortName}}<br></strong>
+                        <div class="row" style="font-size: 13px;">
+                            <div class="col col-center"> <strong> {{r.shortName}}<br></strong></div>
                                 <div ng-repeat="i in item.arriving | limitTo:6" ng-if="r.id == i.routeId">  
-                                        <div style="color: #999; display:inline-block;" class="col nopadding">{{i.destination}}</div>
+                                        <div class="col">{{i.destination}}</div>
                                         <span ng-show="i.expectedArrivalTime" class="col" >
                                                 {{i.arrivingIn|durationView}
                                         </span>
-                                        <span ng-repeat="d in i.distance" class="col nopadding" >
-                                            {{d}}
-                                        </span>
+                                        <span ng-repeat="d in i.distance" class="col" >{{d}}</span>
                                 </div>
                             </div>
                         </div>

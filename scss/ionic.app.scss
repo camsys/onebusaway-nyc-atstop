@@ -32,10 +32,10 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
-// The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: "../lib/ionic/fonts" !default;
-// Include all of Ionic
-@import "www/lib/ionic/scss/ionic";
+.nopadding {
+    padding: 0px !important;
+}
+
 .leaflet-control-layers.leaflet-control {
     display: none;
 }
@@ -292,3 +292,9 @@ label.item.item-input {
 .refresh {
     margin: 5px;
 }
+
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+// Include all of Ionic
+@import "www/lib/ionic/scss/ionic";
