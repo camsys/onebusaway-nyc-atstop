@@ -13,24 +13,31 @@
             <ng-tips ng-model="data.tips"></ng-tips>
             <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()" spinner="none"></ion-refresher>
             <ion-spinner ng-if="loading" class="loading center"></ion-spinner>
+
             <ion-list>
-                <ion-item collection-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}"
+                <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}"
                  id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" 
                  in-view-options="{ debounce: 15 }" class="card" style="margin: 0; padding: 0; border-bottom: none;">
                     <div class="item item-divider">{{item.name}}</div>
-                    <div class="item"  ng-repeat="r in item.routes" style="margin: 0; padding: 0; border-bottom: none;"
-                    ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">
-                        <div class="row" style="font-size: 13px;">
-                            <div class="col col-center"> <strong> {{r.shortName}}<br></strong></div>
-                                <div ng-repeat="i in item.arriving | limitTo:6" ng-if="r.id == i.routeId">  
-                                        <div class="col">{{i.destination}}</div>
-                                        <span ng-show="i.expectedArrivalTime" class="col" >
-                                                {{i.arrivingIn|durationView}
+
+                    <div class="item" ng-repeat="r in item.arriving" 
+                        ng-click="showRoutePolylines(r.id); showCurrentStop(r.id, item.id, item.lat, item.lon, item.name);">
+                        
+                        <div class="row row-center" >
+                            <div class="col"> <strong> {{r.name}}</strong></div>
+                            <div ng-repeat="i in r.distances" class="col col-75">  
+                            <div class="row">
+                                        <div >{{i.destination}}</div>
+                                        <span ng-show="i.expectedArrivalTime" >
+                                                {{i.arrivingIn|durationView}}
                                         </span>
-                                        <span ng-repeat="d in i.distance" class="col" >{{d}}</span>
+                                        <span ng-repeat="d in i.distance">{{d}}</span>
+                                        
+                                        </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="item nopadding">
                         <a class="button button-positive button-small button-clear" 

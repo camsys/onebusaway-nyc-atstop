@@ -493,7 +493,6 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     handleLayovers(tmp);
                     updateArrivalTimes(tmp);
 
-                    if (sort==true){
                         grouped_tmp = _.groupBy(tmp, "routeId");
                         angular.forEach(grouped_tmp, function(val, key) {
                             var tmp = _.groupBy(val, "name");
@@ -504,11 +503,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                                 };
                             });
                         });
+                        console.log(grouped)
                         buses.arriving = grouped;
-                    }
-                    else{
-                        buses.arriving = tmp;
-                    }
 
                 } else {
                     // check for sched svc:

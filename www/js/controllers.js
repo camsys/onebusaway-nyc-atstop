@@ -766,9 +766,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             var arrivals = {};
             var promises = [];
             angular.forEach(stopsInTimeout, function(stop) {
+                // add the stop to the list of promises to query below, building an object along the way
                 promises.push(
-                    AtStopService.getBuses({'stop':stop, 'sort':false}).then(function(results) {
-                        // console.log(results);
+                    AtStopService.getBuses(stop).then(function(results) {
                         if (!angular.equals({}, results.arriving)) {
                             arrivals[stop] = results.arriving;
                         }
@@ -777,10 +777,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
             
             $q.all(promises).then(function() {
+                //loop through stops adding arrival info if there is some
                 //There is probably a better way to do this, I would like to limit piecemeal updates to $scope
                 angular.forEach($scope.data.stops, function(s) {
                     s.arriving = arrivals[s.id];
-                    //console.log(s.id, arrivals[s.id]);
                 });
             });
 
