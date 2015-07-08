@@ -978,6 +978,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         // refresh specific route
         $scope.showCurrentStop = function(route, stop, lat, lon, name) {
+            console.log(route, stop, lat, lon, name)
             $scope.data.returnShow = true;
             $interval.cancel($scope.reloadTimeout);
             drawCurrentStop(route, stop, lat, lon, name);
