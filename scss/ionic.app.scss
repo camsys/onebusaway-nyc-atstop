@@ -34,6 +34,12 @@ $dark:                            #444 !default;
 
 .nopadding {
     padding: 0px !important;
+    display: inline-block;
+}
+
+.gallery {
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
 }
 
 .leaflet-control-layers.leaflet-control {

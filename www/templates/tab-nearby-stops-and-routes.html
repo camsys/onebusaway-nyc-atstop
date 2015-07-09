@@ -21,14 +21,14 @@
                     <div class="item item-divider">{{item.name}}</div>
 
                     <div class="item" ng-repeat="r in item.arriving" 
-                        ng-click="showRoutePolylines(r.distances[0].routeId); showCurrentStop(r.name, item.id, item.lat, item.lon, item.name);">
-                        <div class="row" >
-                            <div class="col"> <strong> {{r.name}}</strong></div>
-                            <div ng-repeat="i in r.distances" class="col col-75">  
+                        ng-click="showRoutePolylines(r.distances[0].routeId); showCurrentStop(r.distances[0].routeId, item.id, item.lat, item.lon, item.name);">
+                        <div class="row gallery" >
+                            <div class="row"> <strong> {{r.name}}</strong></div>
+                            <div ng-repeat="i in r.distances | limitTo: 3" class="nopadding">  
                             <div>
                                         <div class="col col-25">{{i.destination}}</div>
                                         <span ng-show="i.expectedArrivalTime" >
-                                                {{i.arrivingIn|durationView}}
+                                                <strong>{{i.arrivingIn|durationView}}</strong>
                                         </span>
                                         <span ng-repeat="d in i.distance">{{d}}</span>
                                         
