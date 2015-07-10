@@ -748,6 +748,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         var stopsInTimeout = [];
 
+    // once a line comes into view check if that stop is in the array to query for. If not, add it.
         $scope.lineInView = function(index, inview, inviewpart, event) {
             if (inview == true) {
                 var stopInArray = stopsInTimeout.some(function(stop) {
@@ -764,6 +765,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         var tick = function() {
             var arrivals = {};
+            var alerts = {};
             var promises = [];
             angular.forEach(stopsInTimeout, function(stop) {
                 // add the stop to the list of promises to query below, building an object along the way
@@ -771,6 +773,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     AtStopService.getBuses(stop).then(function(results) {
                         if (!angular.equals({}, results.arriving)) {
                             arrivals[stop] = results.arriving;
+                        }
+                        if (!angular.equals({}, results.alerts)) {
+                            alerts[stop] = results.alerts;
                         }
                     })
                 );
@@ -781,6 +786,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 //There is probably a better way to do this, I would like to limit piecemeal updates to $scope
                 angular.forEach($scope.data.stops, function(s) {
                     s.arriving = arrivals[s.id];
+                    s.alerts = alerts[s.id];
                 });
             });
 
