@@ -21,7 +21,7 @@
 angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'atstop.directives', 'leaflet-directive', 'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress', 'angular-inview'])
 
 // global timeout variable for HTTP requests
-.value('httpTimeout', 5000)
+.value('httpTimeout', 10000)
 
 .constant('$ionicLoadingConfig', {
     template: '<ion-spinner></ion-spinner>',
