@@ -503,7 +503,6 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                                 };
                             });
                         });
-                        console.log(grouped)
                         buses.arriving = grouped;
 
                 } else {

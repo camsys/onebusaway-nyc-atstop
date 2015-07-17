@@ -22,14 +22,15 @@
                         {{item.name}}
 
                     </div>
+                    <div class="stop-container stop-flex" >
                     <span ng-show="item.alerts" ng-repeat="a in item.alerts">{{a}}</span>
+
                     <div class="item" ng-repeat="r in item.arriving" 
                         ng-click="showRoutePolylines(r.distances[0].routeId); showCurrentStop(r.distances[0].routeId, item.id, item.lat, item.lon, item.name);">
-                        <div class="row gallery" >
-                            <div class="row"> <strong> {{r.name}}</strong></div>
-                            <div ng-repeat="i in r.distances | limitTo: 3" class="nopadding">  
+                            <div class="stop-route stop-flex"> <strong> {{r.name}}</strong></div>
+                            <div ng-repeat="i in r.distances | limitTo: 3">
                             <div>
-                                        <div class="col col-25">{{i.destination}}</div>
+                                        <div class="stop-arrival stop-flex">{{i.destination}}</div>
                                         <span ng-show="i.expectedArrivalTime" >
                                                 <strong>{{i.arrivingIn|durationView}}</strong>
                                         </span>
