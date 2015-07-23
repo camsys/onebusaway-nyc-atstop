@@ -16,11 +16,12 @@
 
             <ion-list>
                 <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}"
+
                  id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" 
                  in-view-options="{ debounce: 15 }" class="card" style="margin: 0; padding: 0; border-bottom: none;">
-                    <div class="item item-divider">
+                    <div class="item item-divider vcenter">
                         {{item.name}}
-
+                        <span ng-show="item.alerts" style="float: right; display: inline !important;" ><button class="button button-small ion-alert"> </button> </span>
                     </div>
                     <div class="stop-container stop-flex" >
                     <span ng-show="item.alerts" ng-repeat="a in item.alerts">{{a}}</span>
@@ -28,7 +29,7 @@
                     <div class="item" ng-repeat="r in item.arriving" 
                         ng-click="showRoutePolylines(r.distances[0].routeId); showCurrentStop(r.distances[0].routeId, item.id, item.lat, item.lon, item.name);">
                             <div class="stop-route stop-flex"> <strong> {{r.name}}</strong></div>
-                            <div ng-repeat="i in r.distances | limitTo: 3">
+                            <div ng-repeat="i in r.distances | limitTo: 2">
                             <div>
                                         <div class="stop-arrival stop-flex">{{i.destination}}</div>
                                         <span ng-show="i.expectedArrivalTime" >
