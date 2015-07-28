@@ -408,9 +408,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
 .factory('AtStopService', function($q, $http, $filter, datetimeService, httpTimeout, CacheFactory, API_END_POINT, API_KEY) {
 
     CacheFactory('atStopCache', {
-        maxAge: 10000, 
-        cacheFlushInterval: 60 * 60 * 1000,
-        deleteOnExpire: 'aggressive' 
+        maxAge: 10000
     });
 
     var getBuses = function(params) {
