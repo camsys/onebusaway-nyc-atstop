@@ -745,7 +745,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             $scope.$broadcast('scroll.refreshComplete');
         };
 
-
+    // this array holds stops we want to query arrivals from.
         var stopsInTimeout = [];
 
     // once a line comes into view check if that stop is in the array to query for. If not, add it.
@@ -763,6 +763,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             return false;
         };
 
+        // runs on every reload.
         var tick = function() {
             var arrivals = {};
             var alerts = {};
@@ -798,6 +799,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         var getNearbyStopsAndRoutes = function(lat, lon) {
             GeolocationService.getStops(lat, lon).then(function(results) {
                 if (!angular.isUndefined(results) && results !== null && results.length > 0) {
+                    stopsInTimeout = [];
                     angular.forEach(results, function(stop) {
                         stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
                     });
@@ -934,7 +936,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             angular.extend($scope, {
                 events: {
                     markers: {
-                        enable: ['click'],
+                        enable: ['click', 'dragend'],
                         logic: 'emit'
                     }
                 },
@@ -974,13 +976,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 angular.extend($scope.markers, res);
             });
         };
-
-        $scope.$on('$destroy', function() {
-            $scope.left = true;
-            if ($scope.reloadTimeout) {
-                $interval.cancel($scope.reloadTimeout);
-            }
-        });
 
         // refresh specific route
         $scope.showCurrentStop = function(route, stop, lat, lon, name) {
@@ -1029,6 +1024,15 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
         };
 
+        //when the map is dragged, get the stops in view
+        $scope.$on('leafletDirectiveMap.dragend', function(event){
+            $scope.eventDetected = "Drag";
+            console.log('dragged', $scope.center.lat);
+
+            getNearbyStopsAndRoutes($scope.center.lat, $scope.center.lng);
+
+        });
+
         // map click event
         $scope.$on('leafletDirectiveMarker.click', function(event, args) {
             var object = $scope.markers[args.modelName];
@@ -1052,6 +1056,13 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             leafletData.getMap().then(function(map) {
                 popup.openOn(map);
             });
+        });
+
+        $scope.$on('$destroy', function() {
+            $scope.left = true;
+            if ($scope.reloadTimeout) {
+                $interval.cancel($scope.reloadTimeout);
+            }
         });
 
         var init = (function() {
