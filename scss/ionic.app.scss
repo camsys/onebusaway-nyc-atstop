@@ -65,7 +65,7 @@ $dark:                            #444 !default;
 }
 
 .nopadding{
-    padding: 0; !important;
+    padding: 0 !important;
 }
 
 /*
@@ -130,17 +130,17 @@ h1.title {
 span.arrival {
     padding-right: 2em;
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
 }
 
 button.arrivals {
     font-size: smaller;
-    padding: 0px;
+    padding: 0;
 }
 
 div.route {
     font-size: 1.4em;
-    padding: 0px 14px;
+    padding: 0 14px;
 }
 
 
@@ -253,10 +253,10 @@ select,
 textarea {
     color: inherit;
     /* 1 */
-    
+
     font: inherit;
     /* 2 */
-    
+
     margin: 0;
     /* 3 */
 }
@@ -275,9 +275,9 @@ label.item.item-input {
     line-height: 38px;
     padding-top: 0;
     padding-bottom: 0;
-    transition: 0.01s all linear;
+    transition: .01s all linear;
     &.ng-hide {
-        line-height: 0px;
+        line-height: 0;
     }
     &.ng-hide-add,
     &.ng-hide-remove {
@@ -304,7 +304,7 @@ label.item.item-input {
 
 .tips {
     font-size: smaller;
-    background-color: rgba(102, 204, 51, 0.85);
+    background-color: rgba(102, 204, 51, .85);
     color: #fff;
     height: 30px;
     padding: 4px;
@@ -360,6 +360,6 @@ label.item.item-input {
 
 
 // The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: "../lib/ionic/fonts" !default;
+$ionicons-font-path: '../lib/ionic/fonts' !default;
 // Include all of Ionic
-@import "www/lib/ionic/scss/ionic";
+@import '../www/lib/ionic/scss/ionic';
