@@ -697,6 +697,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         $scope.paths = {};
         $scope.url = "atstop";
         $scope.left = false;
+        $scope.center = {};
         $scope.data = {
             "returnShow": false,
             "title": "Nearby Stops",
@@ -763,7 +764,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             return false;
         };
 
-        // runs on every reload.
+        // runs on when stops are added to timeouts and on refresh
         var tick = function() {
             var arrivals = {};
             var alerts = {};
@@ -799,6 +800,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         var getNearbyStopsAndRoutes = function(lat, lon) {
             GeolocationService.getStops(lat, lon).then(function(results) {
                 if (!angular.isUndefined(results) && results !== null && results.length > 0) {
+                    console.log('loading')
                     stopsInTimeout = [];
                     angular.forEach(results, function(stop) {
                         stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
@@ -809,10 +811,13 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         lat: lat,
                         lon: lon
                     });
-                    $scope.data.nearbyStops = results;
+                    //$scope.data.nearbyStops = results;
                     showNearbyStops();
                     $scope.data.notifications = "";
                     $scope.data.showMap = true;
+                    $timeout(function() {
+                        $ionicScrollDelegate.scrollTop();
+                    });
                 } else {
                     $scope.data.showMap = false;
                     $scope.data.notifications = "No nearby stops found.";
@@ -920,18 +925,19 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
 
             //set zoom around nearest stop
-            leafletData.getMap().then(function(map) {
-                map.setView(stops['s0'], 15, {
-                    animate: true
+                leafletData.getMap().then(function (map) {
+                    map.setView(stops['s0'], 15, {
+                        animate: true
+                    });
                 });
-            });
+
 
             $scope.markers = stops;
         };
 
         // map
         var map = function() {
-            var mapCenter = {};
+            //var mapCenter = {};
 
             angular.extend($scope, {
                 events: {
@@ -940,7 +946,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         logic: 'emit'
                     }
                 },
-                center: mapCenter,
+                center: $scope.center,
                 defaults: {
                     tileLayer: MAP_TILES,
                     tileLayerOptions: {
@@ -1027,8 +1033,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         //when the map is dragged, get the stops in view
         $scope.$on('leafletDirectiveMap.dragend', function(event){
             $scope.eventDetected = "Drag";
-            console.log('dragged', $scope.center.lat);
+            console.log('angular-leaflet center', $scope.center.lat, $scope.center.lng);
 
+            leafletData.getMap().then(function(map) {
+                console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
+            });
             getNearbyStopsAndRoutes($scope.center.lat, $scope.center.lng);
 
         });
