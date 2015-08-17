@@ -702,7 +702,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             "returnShow": false,
             "title": "Nearby Stops",
             "loaded": true,
-            "showMap": false,
+            "showMap": true,
             "stops": [],
             "routes": [],
             "markers": {},
@@ -800,8 +800,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         var getNearbyStopsAndRoutes = function(lat, lon) {
             GeolocationService.getStops(lat, lon).then(function(results) {
                 if (!angular.isUndefined(results) && results !== null && results.length > 0) {
-                    console.log('loading')
+
+                    //reset the list of stops we're interested in.
                     stopsInTimeout = [];
+
                     angular.forEach(results, function(stop) {
                         stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
                     });
@@ -889,12 +891,12 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         var showNearbyStops = function() {
             $scope.markers = {};
             $scope.paths = {};
-            leafletData.getMap().then(function(map) {
+            leafletData.getMap().then(function (map) {
                 map.closePopup();
             });
 
             var stops = [];
-            angular.forEach($scope.data.stops, function(v, k) {
+            angular.forEach($scope.data.stops, function (v, k) {
                 if (v["id"] != "current_location") {
                     stops['s' + k] = {
                         lat: v["lat"],
@@ -923,16 +925,18 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     };
                 }
             });
-
             //set zoom around nearest stop
+            console.log($scope.data.loaded);
+            if (!$scope.data.loaded) {
                 leafletData.getMap().then(function (map) {
-                    map.setView(stops['s0'], 15, {
+                    console.log('moving', $scope.markers['s0']);
+                    map.setView($scope.markers['s0'], 15, {
                         animate: true
                     });
                 });
-
-
+            }
             $scope.markers = stops;
+            console.log($scope.markers);
         };
 
         // map
@@ -1013,13 +1017,12 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 stopName: $filter('encodeStopName')(name)
             };
 
-            leafletData.getMap().then(function(map) {
-                map.closePopup();
-                map.setView($scope.markers['currentStop'], 13, {
-                    animate: true
+                leafletData.getMap().then(function (map) {
+                    map.closePopup();
+                    map.setView($scope.markers['currentStop'], 13, {
+                        animate: true
+                    });
                 });
-            });
-
             showBusMarkers(route);
         };
 
@@ -1031,16 +1034,16 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         //when the map is dragged, get the stops in view
-        $scope.$on('leafletDirectiveMap.dragend', function(event){
-            $scope.eventDetected = "Drag";
-            console.log('angular-leaflet center', $scope.center.lat, $scope.center.lng);
-
-            leafletData.getMap().then(function(map) {
-                console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
-            });
-            getNearbyStopsAndRoutes($scope.center.lat, $scope.center.lng);
-
-        });
+        //$scope.$on('leafletDirectiveMap.dragend', function(event){
+        //    $scope.eventDetected = "Drag";
+        //    console.log('angular-leaflet center', $scope.center.lat, $scope.center.lng);
+        //
+        //    leafletData.getMap().then(function(map) {
+        //        console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
+        //    });
+        //    getNearbyStopsAndRoutes($scope.center.lat, $scope.center.lng);
+        //
+        //});
 
         // map click event
         $scope.$on('leafletDirectiveMarker.click', function(event, args) {
