@@ -45,8 +45,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 /**
  * Controller that used for searching using autocomplete API.
  */
-.controller('SearchCtrl', ['$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING', 'DefaultTabService', '$ionicTabsDelegate',
-    function($rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING, DefaultTabService, $ionicTabsDelegate) {
+.controller('SearchCtrl', ['$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING',
+    function($rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING) {
 
         $scope.go = function(path) {
             $location.path(path);
@@ -176,13 +176,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         var init = (function() {
-            //for redirecting to nearby if set by user preference
-            //var defaultTabIndex = DefaultTabService.getIndex();
-            //if ($rootScope.redirected === false && defaultTabIndex !== 0) {
-            //    $rootScope.redirected = true;
-            //    $ionicTabsDelegate.select(defaultTabIndex);
-            //}
-
             SearchesService.fetchAll().then(function(results) {
                 if (results.length > 0) {
                     $scope.data.searches = results;
@@ -486,27 +479,15 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
  * Controller that used for showing About Information from config.js
  * Also has morphed into a settings page
  */
-.controller('AboutCtrl', ['$cordovaAppVersion', '$rootScope', '$scope', '$ionicScrollDelegate', 'DefaultTabService', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
-    function($cordovaAppVersion, $rootScope, $scope, $ionicScrollDelegate, DefaultTabService, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
+.controller('AboutCtrl', ['$cordovaAppVersion', '$rootScope', '$scope', '$ionicScrollDelegate', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
+    function($cordovaAppVersion, $rootScope, $scope, $ionicScrollDelegate, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
 
         $scope.data = {
             version: "1.0.1",
             showBranding: SHOW_BRANDING,
             hideText: true,
             brandAboutText: BRAND_ABOUT_TEXT,
-            privText: PRIV_POLICY_TEXT,
-            confirmed: DefaultTabService.getIndex() !== 0
-        };
-
-        $scope.change = function(val) {
-            $rootScope.redirected = true;
-            if (val === true) {
-                DefaultTabService.setIndex(2);
-                console.log(DefaultTabService.getIndex());
-            } else {
-                DefaultTabService.resetIndex();
-                console.log(DefaultTabService.getIndex());
-            }
+            privText: PRIV_POLICY_TEXT
         };
 
         $scope.toggleText = function() {

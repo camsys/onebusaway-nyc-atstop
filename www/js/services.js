@@ -20,27 +20,6 @@
 
 angular.module('atstop.services', ['ionic', 'configuration'])
 
-.factory('DefaultTabService', function($window) {
-    var setIndex = function(value) {
-        $window.localStorage.setItem('defaultTabIndex', value);
-    };
-
-    var getIndex = function() {
-        var index = $window.localStorage.getItem('defaultTabIndex') | 0;
-        return index;
-    };
-
-    var resetIndex = function(value) {
-        $window.localStorage.setItem('defaultTabIndex', 0);
-    };
-
-    return {
-        setIndex: setIndex,
-        getIndex: getIndex,
-        resetIndex: resetIndex
-    };
-})
-
 .factory('SearchesService', function($q, $window) {
     var insert = function(term, title, data) {
         var searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));

@@ -1,7 +1,6 @@
 <ion-view view-title="Settings / About">
     <ion-content has-bouncing="true">
         <app-header ng-show="data.showBranding"></app-header>
-        <!--<ion-toggle ng-model="data.confirmed" ng-change="change(data.confirmed)" toggle-class="toggle-calm">Set Nearby Page as Default</ion-toggle>-->
         <div class="card">
             <p ng-show="data.showBranding" ng-repeat="p in data.brandAboutText">
                 <span ng-bind-html="p|hrefToJS"></span>
