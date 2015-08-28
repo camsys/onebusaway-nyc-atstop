@@ -64,7 +64,6 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
 })
 
 .run(function($rootScope, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout, $ionicTabsDelegate) {
-    $rootScope.redirected = false;
 
     // if 'loading:show' is broadcasted then show the loading indicator or hide if 'loading:hide' is broadcasted
     $rootScope.$on('loading:show', function() {
