@@ -498,12 +498,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         var init = (function() {
             // get app version
-            document.addEventListener("deviceready", function() {
-
-                $cordovaAppVersion.getAppVersion().then(function(version) {
-                    $scope.data.version = version;
-                });
-            }, false);
+            $cordovaAppVersion.getVersionNumber().then(function(version) {
+                $scope.data.version = version;
+            });
         })();
     }
 ])
