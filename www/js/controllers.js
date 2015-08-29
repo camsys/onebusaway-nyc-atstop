@@ -479,8 +479,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
  * Controller that used for showing About Information from config.js
  * Also has morphed into a settings page
  */
-.controller('AboutCtrl', ['$cordovaAppVersion', '$ionicPlatform', '$rootScope', '$scope', '$ionicScrollDelegate', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
-    function($cordovaAppVersion, $ionicPlatform, $rootScope, $scope, $ionicScrollDelegate, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
+.controller('AboutCtrl', ['$cordovaAppVersion', '$rootScope', '$scope', '$ionicScrollDelegate', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
+    function($cordovaAppVersion, $rootScope, $scope, $ionicScrollDelegate, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
 
         $scope.data = {
             version: "1.0.1",
