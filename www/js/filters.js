@@ -49,11 +49,17 @@ angular.module('filters', [])
             var duration = datetimeService.duration(input);
             var minutes = duration.minutes;
             var displayTime = '';
-            if (duration.hours > 0) {
+            // if time expires and goes negative, hours goes a little screwy
+            if (duration.hours > 0 && duration.hours < 2) {
                 minutes = minutes + duration.hours * 60;
             }
+
             if (duration.minutes > 0) {
                 displayTime = minutes + " min";
+                console.log(input, duration.hours, duration.minutes);
+            }
+            else{
+                displayTime = '';
             }
             return displayTime;
         };

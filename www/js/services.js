@@ -677,7 +677,9 @@ angular.module('atstop.services', ['ionic', 'configuration'])
 
         function getRemainingTime(referenceTime) {
             var now = moment().utc();
-            return moment(referenceTime) - now;
+            time = moment(referenceTime) - now;
+            if (time < 0 ){ time = 0;};
+            return time;
         }
 
         return {
