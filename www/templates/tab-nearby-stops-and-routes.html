@@ -11,7 +11,7 @@
         </div>
         <ion-scroll style="height: {{data.listHeight}}px;" in-view-container>
             <ng-tips ng-model="data.tips"></ng-tips>
-            <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()" spinner="none"></ion-refresher>
+            <ion-refresher pulling-text="Pull to refresh..." on-refresh="reinitialize()" spinner="none"></ion-refresher>
             <ion-spinner ng-if="loading" class="loading center"></ion-spinner>
 
             <ion-list>
@@ -21,10 +21,9 @@
                  in-view-options="{ debounce: 15 }" class="card" style="margin: 0; padding: 0; border-bottom: none;">
                     <div class="item item-divider vcenter">
                         {{item.name}}
-                        <span ng-show="item.alerts" style="float: right; display: inline !important;" ><button class="button button-small ion-alert"> </button> </span>
                     </div>
                     <div class="stop-container stop-flex" >
-                    <span ng-show="item.alerts" ng-repeat="a in item.alerts">{{a}}</span>
+                    <div ng-show="item.alerts" ng-repeat="a in item.alerts" class="stop-alerts stop-flex">{{a}}</div>
 
                     <div class="item" ng-repeat="r in item.arriving" 
                         ng-click="showRoutePolylines(r.distances[0].routeId); showCurrentStop(r.distances[0].routeId, item.id, item.lat, item.lon, item.name);">

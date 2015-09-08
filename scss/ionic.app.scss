@@ -34,6 +34,7 @@ $dark:                            #444 !default;
 
 .stop-container{
     display: flex;
+    //could be changed to column, but this makes landscape work better
     flex-direction: row;
     flex-wrap: wrap;
 }
@@ -42,7 +43,7 @@ $dark:                            #444 !default;
     -webkit-box-flex: 1;
     -webkit-flex: 1;
     -ms-flex: 1;
-    flex: 1;
+    flex: 1 1 auto;
     -webkit-align-self: auto;
     -ms-flex-item-align: auto;
     align-self: auto;
@@ -61,7 +62,14 @@ $dark:                            #444 !default;
 
 .stop-arrival{
     justify-content: flex-start;
+}
 
+.stop-alerts{
+    align-self:flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    min-width: 0;
 }
 
 .nopadding{

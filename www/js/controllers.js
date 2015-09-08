@@ -719,23 +719,29 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             "nearbyStops": []
         };
 
+        var cancelReloadTimeout = function(){
+            if ($scope.reloadTimeout) {
+                $interval.cancel($scope.reloadTimeout);
+            }
+        }
+        var setReloadTimeout = function(){
+            $scope.reloadTimeout = $interval(tick, 30000);
+        }
+
+        var resetReloadTimeout = function() {
+            cancelReloadTimeout();
+        }
 
         $scope.back = function() {
             $scope.data.returnShow = false;
-            if ($scope.reloadTimeout) {
-                $interval.cancel($scope.reloadTimeout);
-            }
-            $scope.data.stops = $scope.data.nearbyStops;
-            showNearbyStops();
-            $scope.data.notifications = "";
-            $scope.data.showMap = true;
+            resetReloadTimeout();
+
+            $scope.reinitialize();
         };
 
-        $scope.refresh = function() {
+        $scope.reinitialize = function() {
             $scope.data.notifications = "";
-            if ($scope.reloadTimeout) {
-                $interval.cancel($scope.reloadTimeout);
-            }
+            resetReloadTimeout();
 
             if ($location.$$path === "/tab/nearby-stops-and-routes") {
                 getNearbyStopsAndRoutesGPS();
@@ -795,6 +801,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
+            console.log('tick');
         };
 
         var getNearbyStopsAndRoutes = function(lat, lon) {
@@ -813,7 +820,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         lat: lat,
                         lon: lon
                     });
-                    //$scope.data.nearbyStops = results;
+
                     showNearbyStops();
                     $scope.data.notifications = "";
                     $scope.data.showMap = true;
@@ -927,16 +934,15 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
             //set zoom around nearest stop
             console.log($scope.data.loaded);
-            if (!$scope.data.loaded) {
-                leafletData.getMap().then(function (map) {
+            $scope.markers = stops;
+            leafletData.getMap().then(function (map) {
                     console.log('moving', $scope.markers['s0']);
                     map.setView($scope.markers['s0'], 15, {
                         animate: true
-                    });
                 });
-            }
-            $scope.markers = stops;
-            console.log($scope.markers);
+            })
+
+
         };
 
         // map
@@ -1089,7 +1095,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 $scope.data.title = $stateParams.address;
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
-
+            setReloadTimeout();
             tick();
         })();
     }
