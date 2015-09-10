@@ -2,7 +2,7 @@
 
 A hybrid mobile app that provides information about when the next bus will arrive at your stop. The app uses free [MTA Bus Time Developer API](http://bustime.mta.info/wiki/Developers/Index)'s to get the real-time location of the buses serving a particular stop. The app is built on top of [Ionic Framework](http://ionicframework.com/).
 
-Comments/contributions are welcome. 
+Comments/contributions are welcome.
 
 
 ### Setting up the project ###
@@ -32,9 +32,46 @@ In order to build app packages and install, several Cordova plugins are required
  * org.apache.cordova.inappbrowser
  * https://github.com/whiteoctober/cordova-plugin-app-version.git
 
-### Running and testing ###
+### Running
 * Use the `ionic serve` function of [Ionic Framework](http://ionicframework.com/docs/guide/testing.html)
 * In order to build the native mobile app, use `ionic build [platform]`
+
+### Testing
+
+Now, we are using [ng-describe](https://github.com/kensho/ng-describe). **Note:** `SpecRunner.html` will be deleted when all test cases are transformed to the *ngDescribe* method (For example, `www/js/filters-spec.js`).
+
+* First, install (in the root of the project):
+  * `npm install -g karma`
+  * `npm install --save-dev karma`
+  * `npm install --save-dev karma-jasmine`
+  * `npm install --save-dev karma-chrome-launcher`
+  * `npm install --save-dev karma-coverage`
+  * `npm install --save-dev angular-mocks`
+  * `npm install --save-dev ng-describe`
+* Create `karma.conf.js` file and add:
+
+```javascript
+module.exports = function(config) {
+  config.set({
+    frameworks: ['jasmine'],
+    files: [
+      'www/lib/ionic/js/ionic.bundle.min.js',
+      'node_modules/angular-mocks/angular-mocks.js',
+      'node_modules/ng-describe/dist/ng-describe.js',
+      'www/js/*.js'
+    ],
+    port: 9876,
+    browsers: ['Chrome'],
+    singleRun: true,
+    reporters: ['progress', 'coverage'],
+    preprocessors: {
+      'www/js/*.js': ['coverage']
+    }
+  });
+};
+```
+* Run `karma start`
+* To open the coverage report page in the browser, run `open coverage/Chrome<...>/index.html`
 
 ### Project License ###
 The project uses the [Apache License, version 2.0](http://opensource.org/licenses/Apache-2.0).
