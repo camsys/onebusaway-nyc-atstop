@@ -48,7 +48,11 @@ Now, we are using [ng-describe](https://github.com/kensho/ng-describe). **Note:*
   * `npm install --save-dev karma-coverage`
   * `npm install --save-dev angular-mocks`
   * `npm install --save-dev ng-describe`
+
+If this fails on Linux with a node-gyp error, you may need to install the build-essential package 
+
 * Create `karma.conf.js` file and add:
+ 
 
 ```javascript
 module.exports = function(config) {
