@@ -23,7 +23,9 @@
                         {{item.name}}
                     </div>
                     <div class="stop-container stop-flex" >
-                    <div ng-show="item.alerts" ng-repeat="a in item.alerts" class="stop-alerts stop-flex">{{a}}</div>
+                    <div ng-show="item.alerts" ng-repeat="a in item.alerts" class="stop-alerts stop-flex">
+                        <p class="alerts">{{a}}</p>
+                    </div>
 
                     <div class="item" ng-repeat="r in item.arriving" 
                         ng-click="showRoutePolylines(r.distances[0].routeId); showCurrentStop(r.distances[0].routeId, item.id, item.lat, item.lon, item.name);">

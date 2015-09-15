@@ -31,6 +31,10 @@ $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: '../lib/ionic/fonts' !default;
+// Include all of Ionic
+@import '../www/lib/ionic/scss/ionic';
 
 .stop-container{
     display: flex;
@@ -215,8 +219,8 @@ p {
 .alerts {
     font-size: 12px;
     color: #B21212;
-    margin-bottom: 8px;
-    margin-top: 8px;
+    margin: 1em 1em 10px;
+    white-space: pre-wrap !important;
 }
 
 .bus {
@@ -367,7 +371,3 @@ label.item.item-input {
 }
 
 
-// The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: '../lib/ionic/fonts' !default;
-// Include all of Ionic
-@import '../www/lib/ionic/scss/ionic';
