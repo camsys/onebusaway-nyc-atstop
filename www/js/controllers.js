@@ -356,7 +356,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             "mapUrl": "map",
             "atStopUrl": "atstop",
             "routeId": $stateParams.routeId,
-            "routeName": $stateParams.routeName,
             "groups": []
         };
 
@@ -719,18 +718,22 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             "nearbyStops": []
         };
 
-        var cancelReloadTimeout = function(){
+        var cancelReloadTimeout = function() {
             if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
             }
-        }
-        var setReloadTimeout = function(){
-            $scope.reloadTimeout = $interval(tick, 30000);
-        }
+        };
+        var setReloadTimeout = function() {
+            $scope.reloadTimeout = $interval(
+                function () {
+                    tick() }, 30000
+            );
+        };
 
         var resetReloadTimeout = function() {
             cancelReloadTimeout();
-        }
+            setReloadTimeout();
+        };
 
         $scope.back = function() {
             $scope.data.returnShow = false;
@@ -781,6 +784,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     AtStopService.getBuses(stop).then(function(results) {
                         if (!angular.equals({}, results.arriving)) {
                             arrivals[stop] = results.arriving;
+                            console.log("updated", stop)
                         }
                         if (!angular.equals({}, results.alerts)) {
                             alerts[stop] = results.alerts;
@@ -797,7 +801,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     s.alerts = alerts[s.id];
                 });
             });
-
+            //avoid apply() if it is already going on.
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
@@ -857,7 +861,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 }
             }, timeoutVal + 5000);
 
-            // Unfortunately, this function is asynchronous. So, we cannot cancel it. However, we have a trick for this. DO NOT show the popup if a user left the page.
+            // Unfortunately, this function is asynchronous. So, we cannot cancel it.
+            // However, we have a trick for this. DO NOT show the popup if a user left the page.
             $cordovaGeolocation.getCurrentPosition({
                     enableHighAccuracy: false,
                     timeout: timeoutVal,

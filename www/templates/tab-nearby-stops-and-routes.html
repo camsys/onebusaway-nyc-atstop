@@ -16,15 +16,14 @@
 
             <ion-list>
                 <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}"
-
-                 id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)" 
-                 in-view-options="{ debounce: 15 }" class="card" style="margin: 0; padding: 0; border-bottom: none;">
+                 id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)"
+                 in-view-options="{ debounce: 20 }" class="card cardwithnomargin" >
                     <div class="item item-divider vcenter">
                         {{item.name}}
                     </div>
                     <div class="stop-container stop-flex" >
                     <div ng-show="item.alerts" ng-repeat="a in item.alerts" class="stop-alerts stop-flex">
-                        <p class="alerts">{{a}}</p>
+                        <p class="alerts">{{a}} {{item.id}}</p>
                     </div>
 
                     <div class="item" ng-repeat="r in item.arriving" 

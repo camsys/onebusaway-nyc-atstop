@@ -80,6 +80,12 @@ $ionicons-font-path: '../lib/ionic/fonts' !default;
     padding: 0 !important;
 }
 
+.cardwithnomargin {
+    margin: 0;
+    padding: 0;
+    border-bottom: none;
+}
+
 /*
 .bar .title {
     overflow: hidden;
