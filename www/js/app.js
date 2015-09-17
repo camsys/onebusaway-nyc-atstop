@@ -18,10 +18,11 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'atstop.directives', 'leaflet-directive', 'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress'])
+angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'atstop.directives', 'leaflet-directive',
+    'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress', 'ngIOS9UIWebViewPatch'])
 
 // global timeout variable for HTTP requests
-.value('httpTimeout', 5000)
+.value('httpTimeout', 10000)
 
 .constant('$ionicLoadingConfig', {
     template: '<ion-spinner></ion-spinner>',

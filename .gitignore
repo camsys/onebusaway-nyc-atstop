@@ -20,6 +20,7 @@
 !www/js/services.js
 !www/js/services-spec.js
 !www/lib/angular-cache/*
+!www/lib/angular-ios9-patch/*
 !www/lib/angular-leaflet/*
 !www/lib/leaflet/*
 !www/lib/leaflet/images/*
