@@ -18,6 +18,7 @@
 !www/js/filters-spec.js
 !www/js/directives.js
 !www/js/services.js
+!www/js/services-spec.js
 !www/lib/angular-cache/*
 !www/lib/angular-leaflet/*
 !www/lib/leaflet/*
