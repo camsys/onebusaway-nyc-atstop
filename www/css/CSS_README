@@ -1,0 +1,3 @@
+This project uses SCSS to compile final CSS files.
+
+run 'gulp sass' or 'ionic setup sass' to compile SCSS into CSS.
