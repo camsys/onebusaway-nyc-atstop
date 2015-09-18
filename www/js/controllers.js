@@ -483,7 +483,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     function($cordovaAppVersion, $rootScope, $scope, $ionicScrollDelegate, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
 
         $scope.data = {
-            version: "1.0.1",
+            version: "1.0.2",
             showBranding: SHOW_BRANDING,
             hideText: true,
             brandAboutText: BRAND_ABOUT_TEXT,
@@ -498,11 +498,12 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         var init = (function() {
             // get app version
-            document.addEventListener("deviceready", function () {
+            // Disabled because this causes unpredictable behaviour in iOS9
+/*            document.addEventListener("deviceready", function () {
                 $cordovaAppVersion.getVersionNumber().then(function(version) {
                     $scope.data.version = version;
                 });
-            });
+            });*/
         })();
     }
 ])
