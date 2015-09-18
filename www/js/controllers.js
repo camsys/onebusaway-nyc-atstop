@@ -196,7 +196,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 .controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
     function($scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
         $scope.data = {
-            "loaded": false,
             "notifications": '',
             "showBranding": SHOW_BRANDING
         };
@@ -232,7 +231,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
 
             favoritesDefer.promise.then(function() {
-                $scope.data.loaded = true;
+                // code goes here...
             });
         };
 
