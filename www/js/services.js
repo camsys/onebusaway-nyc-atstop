@@ -20,7 +20,7 @@
 
 angular.module('atstop.services', ['ionic', 'configuration'])
 
-.factory('SearchesService', function($q, $window) {
+.factory('SearchesService', function($log, $q, $window) {
     var insert = function(term, title, data) {
         var searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
 
@@ -57,7 +57,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 insert(matches.formattedAddress, matches.formattedAddress, matches);
                 break;
             default:
-                //console.log("undefined type");
+                $log.debug("undefined type");
                 break;
         }
     };
@@ -79,8 +79,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('$localstorage', ['$window',
-    function($window) {
+.factory('$localstorage', ['$log', '$window',
+    function($log, $window) {
         return {
             set: function(key, value) {
                 $window.localStorage[key] = value;
@@ -98,7 +98,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     }
 ])
 
-.factory('FavoritesService', function($q, $window) {
+.factory('FavoritesService', function($log, $q, $window) {
     var add = function(id, name, type) {
         type = type || 'S';
         var data = JSON.parse($window.localStorage['favorites'] || '{}');
@@ -147,7 +147,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('VehicleMonitoringService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('VehicleMonitoringService', function($log, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getLocations = function(route) {
         var deferred = $q.defer();
         var locations = {};
@@ -175,7 +175,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 return deferred.resolve(locations);
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         return deferred.promise;
@@ -186,7 +186,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('RouteService', function($filter, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('RouteService', function($log, $filter, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getPolylines = function(route) {
         var deferred = $q.defer();
         var results = {
@@ -222,7 +222,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 return deferred.resolve(results);
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         return deferred.promise;
@@ -276,7 +276,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 }
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -303,7 +303,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 stops = data.stops;
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -320,7 +320,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('GeolocationService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('GeolocationService', function($log, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getRoutes = function(lat, lon) {
         var deferred = $q.defer();
         var routes = {};
@@ -340,7 +340,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 routes = data.data.routes;
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -368,7 +368,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 stops = data.data.stops;
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -384,7 +384,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('AtStopService', function($q, $http, $filter, httpTimeout, CacheFactory, datetimeService, API_END_POINT, API_KEY) {
+.factory('AtStopService', function($log, $q, $http, $filter, httpTimeout, CacheFactory, datetimeService, API_END_POINT, API_KEY) {
 
     if (!CacheFactory.get('atStopCache')) {
         CacheFactory('atStopCache', {
@@ -509,7 +509,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 }
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -524,7 +524,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('SearchService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('SearchService', function($log, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var autocomplete = function(searchKey) {
         var deferred = $q.defer();
         var matches = [];
@@ -540,7 +540,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 matches = data;
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -627,12 +627,12 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                             };
                             break;
                         default:
-                            //console.log("undefined type");
+                            $log.debug("undefined type");
                     }
                 }
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -648,8 +648,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('datetimeService', ['$timeout',
-    function($timeout) {
+.factory('datetimeService', ['$log', '$timeout',
+    function($log, $timeout) {
         var duration = function(timeSpan) {
             var days = Math.floor(timeSpan / 86400000);
             var diff = timeSpan - days * 86400000;
@@ -680,7 +680,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     }
 ])
 
-.factory('MapService', function(RouteService, VehicleMonitoringService, $filter, $q) {
+.factory('MapService', function($log, RouteService, VehicleMonitoringService, $filter, $q) {
     var getStopMarkers = function(route, stop) {
         stop = stop || null;
         var deferred = $q.defer();
@@ -708,7 +708,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 }
             });
 
-            //console.log(markers);
+            $log.debug(markers);
             deferred.resolve(markers);
         });
 
@@ -735,7 +735,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     });
                 });
             });
-            //console.log(paths);
+            $log.debug(paths);
             deferred.resolve(paths);
         });
 
@@ -764,7 +764,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     zIndexOffset: 800
                 };
             });
-            //console.log(markers);
+            $log.debug(markers);
             deferred.resolve(markers);
         });
 

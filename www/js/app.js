@@ -124,6 +124,11 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
     });
 })
 
+// use the logProvider instead of console.log
+.config(function($logProvider){
+  $logProvider.debugEnabled(true);
+})
+
 .config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
 

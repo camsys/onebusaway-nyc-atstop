@@ -43,8 +43,8 @@ angular.module('filters', [])
 })
 
 // always round down to nearest min, do not show time if less than 1 minute away
-.filter('durationView', ['datetimeService',
-    function(datetimeService) {
+.filter('durationView', ['$log', 'datetimeService',
+    function($log, datetimeService) {
         return function(input) {
             var duration = datetimeService.duration(input);
             var minutes = duration.minutes;
@@ -56,7 +56,7 @@ angular.module('filters', [])
 
             if (duration.minutes > 0) {
                 displayTime = minutes + " min";
-                console.log(input, duration.hours, duration.minutes);
+                $log.debug(input, duration.hours, duration.minutes);
             }
             else{
                 displayTime = '';

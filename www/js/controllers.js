@@ -45,8 +45,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 /**
  * Controller that used for searching using autocomplete API.
  */
-.controller('SearchCtrl', ['$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING',
-    function($rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING) {
+.controller('SearchCtrl', ['$log', '$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING',
+    function($log, $rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING) {
 
         $scope.go = function(path) {
             $location.path(path);
@@ -105,31 +105,31 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 default:
                     $scope.data.results = [];
                     $scope.data.notifications = "No matches";
-                    //console.log("undefined type");
+                    $log.debug("undefined type");
                     break;
             }
         };
 
         // set no sched svc message.
         var handleRouteSearch = function(matches) {
-            // console.log(matches);
+              $log.debug(matches);
             if (Object.keys(matches.directions).length > 1) {
                 // if one direction with no service-- handle on route/stop page.
                 if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
-                  // console.log('service in both directions');
+                    $log.debug('service in both directions');
                     $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
                 } else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService) {
-                  // console.log('no service in both directions');
+                    $log.debug('no service in both directions');
                     noSchedService(matches.shortName);
                 } else {
 
                 }
             } else {
                 if (matches.directions[0].hasUpcomingScheduledService) {
-                  // console.log('1direction with service');
+                    $log.debug('1direction with service');
                     $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
                 } else {
-                  // console.log('1direction with no service');
+                    $log.debug('1direction with no service');
                     noSchedService(matches.shortName);
                 }
             }
@@ -161,7 +161,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         default:
                             $scope.data.results = [];
                             $scope.data.notifications = "No matches";
-                            //console.log("undefined type");
+                            $log.debug("undefined type");
                             break;
                     }
                 }
@@ -193,15 +193,15 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 /**
  * Controller that used for showing the favorites.
  */
-.controller('FavoritesCtrl', ['$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
-    function($scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
+.controller('FavoritesCtrl', ['$log', '$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
+    function($log, $scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
         $scope.data = {
             "notifications": '',
             "showBranding": SHOW_BRANDING
         };
 
         $scope.remove = function(id) {
-            console.log(id);
+            $log.debug(id);
             FavoritesService.remove(id);
             get();
         };
@@ -244,8 +244,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 /**
  * Controller used for showing upcoming buses for specific stop.
  */
-.controller('AtStopCtrl', ['$ionicScrollDelegate', '$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
-    function($ionicScrollDelegate, $scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval, $location) {
+.controller('AtStopCtrl', ['$log', '$ionicScrollDelegate', '$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
+    function($log, $ionicScrollDelegate, $scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval, $location) {
         $scope.data = {
             "link": "map",
             "alerts": "",
@@ -307,7 +307,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         $scope.refresh = function() {
-            // restart 'refresh' timer
+            $log.debug('refresh');
             $interval.cancel($scope.reloadTimeout);
             getBuses();
             $scope.reloadTimeout = $interval(getBuses, 35000);
@@ -347,8 +347,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 /**
  * Controller that used for showing the routes and stops of routes.
  */
-.controller('RouteCtrl', ['$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
-    function($scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate, FavoritesService) {
+.controller('RouteCtrl', ['$log', '$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
+    function($log, $scope, RouteService, $stateParams, $location, $q, $ionicLoading, $ionicScrollDelegate, FavoritesService) {
 
         $scope.data = {
             "loaded": false,
@@ -439,7 +439,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     $scope.data.direction = results;
                     $scope.data.groups[0].items = results;
                     if (oneDirection === false) {
-                        //console.log("1D 4eva!");
+                        $log.debug("1D 4eva!");
                         RouteService.getStops($stateParams.routeId, "1").then(function(results2) {
                             $scope.data.direction_ = results2;
                             $scope.data.groups[1].items = results2;
@@ -450,9 +450,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
 
             $q.all([directionsDefer.promise.then(function() {
-                // console.log("resolved");
+                $log.debug("resolved");
             }), stopsDefer.promise.then(function() {
-                // console.log("resolved");
+                $log.debug("resolved");
             })]).then(function() {
                 $scope.data.loaded = true;
             });
@@ -478,8 +478,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
  * Controller that used for showing About Information from config.js
  * Also has morphed into a settings page
  */
-.controller('AboutCtrl', ['$cordovaAppVersion', '$rootScope', '$scope', '$ionicScrollDelegate', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
-    function($cordovaAppVersion, $rootScope, $scope, $ionicScrollDelegate, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
+.controller('AboutCtrl', ['$log', '$cordovaAppVersion', '$rootScope', '$scope', '$ionicScrollDelegate', 'PRIV_POLICY_TEXT', 'SHOW_BRANDING', 'BRAND_ABOUT_TEXT',
+    function($log, $cordovaAppVersion, $rootScope, $scope, $ionicScrollDelegate, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
 
         $scope.data = {
             version: "1.0.2",
@@ -510,8 +510,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 /**
  * Controller that used for showing stops and routes on Maps
  */
-.controller('MapCtrl', ['MapService', 'FavoritesService', '$scope', '$location', '$stateParams', '$timeout', 'leafletData', '$filter', '$q', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-    function(MapService, FavoritesService, $scope, $location, $stateParams, $timeout, leafletData, $filter, $q, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('MapCtrl', ['$log', 'MapService', 'FavoritesService', '$scope', '$location', '$stateParams', '$timeout', 'leafletData', '$filter', '$q', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+    function($log, MapService, FavoritesService, $scope, $location, $stateParams, $timeout, leafletData, $filter, $q, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
         $scope.paths = {};
         $scope.url = "atstop";
@@ -534,7 +534,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         $scope.refresh = function() {
-            //console.log("refresh");
+            $log.debug("refresh");
 
             leafletData.getMap().then(function(map) {
                 map.closePopup();
@@ -710,8 +710,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 /**
  * Controller that used for showing the nearby stops for specific location from geolocarions.
  */
-.controller('NearbyStopsAndRoutesCtrl', ['$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-    function($ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('NearbyStopsAndRoutesCtrl', ['$log', '$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+    function($log, $ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
         $scope.paths = {};
         $scope.url = "atstop";
@@ -791,7 +791,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         var getNearbyStopsAndRoutesGPS = function() {
-            //console.log("getNearbyStopsAndRoutesGPS called");
+            $log.debug("getNearbyStopsAndRoutesGPS called");
 
             $scope.loading = true;
 
@@ -809,7 +809,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         popup.close();
                     }, 3000);
                 } else {
-                    console.log("You left the current page! Destroying ...");
+                    $log.debug("You left the current page! Destroying ...");
                 }
             }, timeoutVal + 5000);
 
@@ -839,7 +839,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                                 popup.close();
                             }, 3000);
                         } else {
-                            console.log("You left the current page! Destroying ...");
+                            $log.debug("You left the current page! Destroying ...");
                         }
                     }
                 )
@@ -873,7 +873,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         focus: false
                     };
                 } else {
-                    //console.log(v["lat"], v["lon"]);
+                    $log.debug(v["lat"], v["lon"]);
                     stops['currentLocation'] = {
                         lat: parseFloat(v["lat"]),
                         lng: parseFloat(v["lon"]),
@@ -995,7 +995,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         var slideTo = function(location) {
             location = $location.hash(location);
-            //console.log('scrolling to: ' + location);
+            $log.debug('scrolling to: ' + location);
 
             $timeout(function() {
                 $ionicScrollDelegate.anchorScroll("#" + location);
@@ -1030,7 +1030,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         var init = (function() {
             map();
             if ($location.$$path === "/tab/nearby-stops-and-routes") {
-                //console.log("GPS Mode");
+                $log.debug("GPS Mode");
                 $scope.data.title = "Nearby Stops";
                 $scope.url = "atstop-gps";
                 getNearbyStopsAndRoutesGPS();
