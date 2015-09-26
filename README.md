@@ -49,44 +49,9 @@ Now, we are using [ng-describe](https://github.com/kensho/ng-describe). **Note:*
   * `npm install --save-dev angular-mocks`
   * `npm install --save-dev ng-describe`
 
-If this fails on Linux with a node-gyp error, you may need to install the build-essential package 
+If this fails on Linux with a node-gyp error, you may need to install the build-essential package
 
-* Create `karma.conf.js` file and add:
- 
-
-```javascript
-module.exports = function(config) {
-  config.set({
-    frameworks: ['jasmine'],
-    files: [
-      'www/lib/ionic/js/ionic.bundle.min.js',
-      'www/lib/angular-ios9-patch/angular-ios9-uiwebview.patch.js',
-      'node_modules/angular-mocks/angular-mocks.js',
-      'node_modules/ng-describe/dist/ng-describe.js',
-      'www/lib/ngCordova/dist/ng-cordova.min.js',
-      'www/lib/underscore/underscore-min.js',
-      'www/lib/moment/moment.min.js',
-      'www/lib/angular-cache/angular-cache.min.js',
-      'www/lib/leaflet/leaflet.js',
-      'www/lib/leaflet/plugins/Polyline.encoded.js',
-      'www/lib/leaflet/plugins/Marker.Rotate.js',
-      'www/lib/angular-timer/angular-timer.min.js',
-      'www/lib/angular-timer/humanize-duration.js',
-      'www/lib/angular-leaflet/angular-leaflet-directive.min.js',
-      'www/lib/round-progress/roundProgress.min.js',
-      'www/lib/angular-inview/angular-inview.js',
-      'www/js/*.js'
-    ],
-    port: 9876,
-    browsers: ['Chrome'],
-    singleRun: true,
-    reporters: ['progress', 'coverage'],
-    preprocessors: {
-      'www/js/*.js': ['coverage']
-    }
-  });
-};
-```
+* Default Karma Config (`karma.conf.js`) file located in the root directory of the project
 * Run `karma start`
 * To open the coverage report page in the browser, run `open coverage/Chrome<...>/index.html`
 
