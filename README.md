@@ -41,8 +41,8 @@ In order to build app packages and install, several Cordova plugins are required
 Now, we are using [ng-describe](https://github.com/kensho/ng-describe). **Note:** `SpecRunner.html` will be deleted when all test cases are transformed to the *ngDescribe* method (For example, `www/js/filters-spec.js`).
 
 * First, install (in the root of the project):
-  * `npm install -g karma`
   * `npm install --save-dev karma`
+  * `npm install -g karma-cli`
   * `npm install --save-dev karma-jasmine`
   * `npm install --save-dev karma-chrome-launcher`
   * `npm install --save-dev karma-coverage`
