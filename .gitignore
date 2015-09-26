@@ -6,6 +6,7 @@
 !apache-license-2.0.md
 !civic.json
 !ProductSpec.md
+!/karma.conf.js
 !scss/ionic.app.scss
 !www/SpecRunner.html
 !www/index.html
