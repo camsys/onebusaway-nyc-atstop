@@ -60,6 +60,7 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     files: [
       'www/lib/ionic/js/ionic.bundle.min.js',
+      'www/lib/angular-ios9-patch/angular-ios9-uiwebview.patch.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'node_modules/ng-describe/dist/ng-describe.js',
       'www/lib/ngCordova/dist/ng-cordova.min.js',
