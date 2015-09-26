@@ -27,9 +27,9 @@ Comments/contributions are welcome.
 
 #### Required Cordova Plugins for Building
 In order to build app packages and install, several Cordova plugins are required. Using `cordova plugin add [name]`, install the following plugins:
- * org.apache.cordova.network-information
- * org.apache.cordova.geolocation
- * org.apache.cordova.inappbrowser
+ * cordova-plugin-network-information
+ * cordova-plugin-geolocation
+ * cordova-plugin-inappbrowser
  * https://github.com/whiteoctober/cordova-plugin-app-version.git
 
 ### Running
