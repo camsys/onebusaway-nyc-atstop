@@ -126,7 +126,14 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
 
 // use the logProvider instead of console.log
 .config(function($logProvider){
-  $logProvider.debugEnabled(true);
+  // you are developing on a mac, right?? otherwise add some || here with your platforms
+  if (ionic.Platform.platform() === 'macintel'){
+    $logProvider.debugEnabled(true);
+  }
+  else {
+    $logProvider.debugEnabled(false);
+  }
+
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
