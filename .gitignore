@@ -4,6 +4,7 @@
 # But not these files…
 !.gitignore
 !/gulpfile.js
+!/package.json
 !apache-license-2.0.md
 !civic.json
 !ProductSpec.md

@@ -24,9 +24,9 @@ gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
     .pipe(sass())
     .pipe(gulp.dest('./www/css/'))
-    .pipe(uncss({
-            html: ['./www/index.html', './www/templates/*.html']
-        }))
+    // .pipe(uncss({
+    //         html: ['./www/**/*.html']
+    //     }))
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))

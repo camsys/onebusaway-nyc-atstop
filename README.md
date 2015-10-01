@@ -19,11 +19,8 @@ Comments/contributions are welcome.
   * `git reset --hard origin/master`
   * `rm www/img/ionic.png www/css/style.css` files.
   * `mv www/js/config.tmpl.js  www/js/config.js`
-  * run `gulp sass` to generate CSS from SCSS. Before running `gulp sass`, be sure to install all dependencies. Examples:
-      * `npm install gulp-jshint --save-dev`
-      * `npm install --save-dev gulp-uglify`
-      * `npm install --save-dev gulp-ng-annotate`
-      * `npm install gulp-uncss --save-dev`
+  * `npm install` to grab dependencies
+  * run `gulp sass` to generate CSS from SCSS.
   * run `bower install angular-inview`
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one. You will receive the key within half an hour.
   * Insert your key into the `API_KEY` field of `config.js`.
@@ -45,13 +42,8 @@ In order to build app packages and install, several Cordova plugins are required
 Now, we are using [ng-describe](https://github.com/kensho/ng-describe). **Note:** `SpecRunner.html` will be deleted when all test cases are transformed to the *ngDescribe* method (For example, `www/js/filters-spec.js`).
 
 * First, install (in the root of the project):
-  * `npm install --save-dev karma`
   * `npm install -g karma-cli`
-  * `npm install --save-dev karma-jasmine`
-  * `npm install --save-dev karma-chrome-launcher`
-  * `npm install --save-dev karma-coverage`
-  * `npm install --save-dev angular-mocks`
-  * `npm install --save-dev ng-describe`
+
 
 If this fails on Linux with a node-gyp error, you may need to install the build-essential package
 
