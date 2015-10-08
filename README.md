@@ -19,7 +19,7 @@ Comments/contributions are welcome.
   * `git reset --hard origin/master`
   * `rm www/img/ionic.png www/css/style.css` files.
   * `mv www/js/config.tmpl.js  www/js/config.js`
-  * `npm install` to grab dependencies
+  * `npm install` to grab the dependencies defined in the *package.json*.
   * run `gulp sass` to generate CSS from SCSS.
   * run `bower install angular-inview`
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one. You will receive the key within half an hour.
