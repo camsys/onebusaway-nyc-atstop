@@ -9,7 +9,7 @@ var sh = require('shelljs');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var ngAnnotate = require('gulp-ng-annotate');
-var uncss = require('gulp-uncss');
+//var uncss = require('gulp-uncss');
 //var optipng = require('gulp-optipng');
 //var pngquant = require('imagemin-pngquant');
 
