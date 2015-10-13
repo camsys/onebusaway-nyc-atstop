@@ -32,6 +32,7 @@
 !www/lib/underscore/*
 !www/lib/angular-timer/*
 !www/lib/round-progress/*
+!www/lib/angular-simple-logger/*
 !www/templates/about.html
 !www/templates/atstop.html
 !www/templates/geolocation.html

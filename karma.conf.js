@@ -34,6 +34,7 @@ module.exports = function(config) {
       'www/lib/angular-leaflet/angular-leaflet-directive.min.js',
       'www/lib/round-progress/roundProgress.min.js',
       'www/lib/angular-inview/angular-inview.js',
+      'www/lib/angular-simple-logger/angular-simple-logger.light.min.js',
       'www/js/*.js'
     ],
     port: 9876,
