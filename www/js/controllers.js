@@ -72,19 +72,25 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         $scope.autocomplete = function() {
+            var timeout;
             if ($scope.data.searchKey.length > 0) {
-                SearchService.autocomplete($scope.data.searchKey).then(
-                    function(matches) {
-                        if (!angular.isUndefined(matches) && matches !== null && matches.length > 0) {
-                            $scope.data.results = matches;
-                            $scope.data.notifications = "";
-                        } else {
-                            $scope.data.results = [];
-                            $scope.data.notifications = "No matches";
+                clearTimeout(timeout);
+                timeout = setTimeout(function() {
+                    $log.debug("You stopped typing.");
+                    SearchService.autocomplete($scope.data.searchKey).then(
+                        function(matches) {
+                            if (!angular.isUndefined(matches) && matches !== null && matches.length > 0) {
+                                $scope.data.results = matches;
+                                $scope.data.notifications = "";
+                            } else {
+                                $scope.data.results = [];
+                                $scope.data.notifications = "No matches";
+                            }
                         }
-                    }
-                );
+                    );
+                }, 500);
             } else {
+                clearTimeout(timeout);
                 $scope.data.results = [];
                 $scope.data.notifications = "";
             }
