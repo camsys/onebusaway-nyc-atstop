@@ -22,7 +22,7 @@ Comments/contributions are welcome.
   * `npm install` to grab dependencies
   * run `gulp sass` to generate CSS from SCSS.
   * run `bower install angular-inview`
-  * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one. You will receive the key within half an hour.
+  * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one.
   * Insert your key into the `API_KEY` field of `config.js`.
   * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://bustime.mta.info/`)
 
@@ -41,11 +41,9 @@ In order to build app packages and install, several Cordova plugins are required
 
 Now, we are using [ng-describe](https://github.com/kensho/ng-describe). **Note:** `SpecRunner.html` will be deleted when all test cases are transformed to the *ngDescribe* method (For example, `www/js/filters-spec.js`).
 
-* First, install (in the root of the project):
-  * `npm install -g karma-cli`
-
-
-If this fails on Linux with a node-gyp error, you may need to install the build-essential package
+* First, install:
+  * `sudo npm install -g karma-cli`
+(If this fails on Linux with a node-gyp error, you may need to install the build-essential package)
 
 * Default Karma Config (`karma.conf.js`) file located in the root directory of the project
 * Run `karma start`

@@ -21,6 +21,8 @@
 angular.module('atstop.controllers', ['configuration', 'filters'])
 
 /**
+ * @ngdoc controller
+ * @description
  * Controller that makes tabs go to the root (cleaning Tab Histories)
  */
 .controller('GoHomeCtrl', function($scope, $rootScope, $state, $ionicHistory) {
@@ -43,6 +45,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 })
 
 /**
+* @ngdoc controller
+ * @description
  * Controller that used for searching using autocomplete API.
  */
 .controller('SearchCtrl', ['$log', '$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING',
@@ -71,6 +75,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             "showBranding": SHOW_BRANDING
         };
 
+        /**
+        * @function autocomplete
+        * @
+        **/
+
         $scope.autocomplete = function() {
             if ($scope.data.searchKey.length > 0) {
                 SearchService.autocomplete($scope.data.searchKey).then(
@@ -89,7 +98,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 $scope.data.notifications = "";
             }
         };
+/**
+ * run when user triggers enter on a search. Then gets search results and opens appropriate route based on type of response.
+ * @param  {String} matches [description]
 
+ */
         $scope.searchesGo = function(matches) {
             SearchesService.add(matches);
             switch (matches.type) {
@@ -110,7 +123,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             }
         };
 
-        // set no sched svc message.
+        /**
+         * logic for settng no scheduled service message based on response of type route.
+         * @param  {Object} matches [description]
+         */
         var handleRouteSearch = function(matches) {
               $log.debug(matches);
             if (Object.keys(matches.directions).length > 1) {
@@ -134,13 +150,20 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 }
             }
         };
-
+        /**
+         * sets no scheduled service message for a route/direction
+         * @param  {Array} routeDirection [description]
+         */
         var noSchedService = function(routeDirection) {
             $scope.data.notifications = "There is no scheduled service on this route at this time.";
         };
+/**
+ * enter searches if only one autocomplete result is returned.
+ * @param  {String} term [description]
 
+ */
         $scope.searchAndGo = function(term) {
-            // for search page, enter searches if only one autocomplete result is returned.
+            //
             if ($scope.data.results.length === 1) {
                 term = $scope.data.results[0];
             }
@@ -167,14 +190,18 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 }
             );
         };
-
+        /**
+         * clear previous searches array
+         */
         $scope.clearSearches = function() {
             SearchesService.clear();
             $scope.data.searches = [];
             $scope.data.showSearches = false;
             $scope.data.showDefaultTips = true;
         };
-
+        /**
+         * Initialize and grab previously stored searches.
+         */
         var init = (function() {
             SearchesService.fetchAll().then(function(results) {
                 if (results.length > 0) {

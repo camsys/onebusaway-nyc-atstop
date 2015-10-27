@@ -9,6 +9,7 @@
 !civic.json
 !ProductSpec.md
 !/karma.conf.js
+!hooks/*
 !scss/ionic.app.scss
 !www/SpecRunner.html
 !www/index.html

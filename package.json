@@ -20,8 +20,11 @@
     "shelljs": "^0.3.0"
   },
   "devDependencies": {
+    "angular-jsdoc": "^1.2.1",
     "angular-mocks": "^1.4.7",
+    "gulp-shell": "^0.4.3",
     "jasmine-core": "^2.3.4",
+    "jsdoc": "^3.3.3",
     "karma": "^0.13.10",
     "karma-chrome-launcher": "^0.2.0",
     "karma-coverage": "^0.5.2",

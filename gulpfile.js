@@ -6,10 +6,12 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
+var shell = require('gulp-shell');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var ngAnnotate = require('gulp-ng-annotate');
 var uncss = require('gulp-uncss');
+var del = require('del');
 //var optipng = require('gulp-optipng');
 //var pngquant = require('imagemin-pngquant');
 
@@ -22,8 +24,9 @@ gulp.task('default', ['sass']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
-    .pipe(sass())
+    .pipe(sass({style: 'compact'}))
     .pipe(gulp.dest('./www/css/'))
+    // sadly, uncss on mobile is a little too aggressive.
     // .pipe(uncss({
     //         html: ['./www/**/*.html']
     //     }))
@@ -76,6 +79,15 @@ gulp.task('compress', function() {
 		.pipe(gulp.dest('dist'))
 });
 
+
+gulp.task('docs', shell.task([
+  'node_modules/jsdoc/jsdoc.js '+
+    '-c node_modules/angular-jsdoc/common/conf.json '+   // config file
+    '-t node_modules/angular-jsdoc/angular-template '+   // template file
+    '-d docs '+                           // output directory
+    './README.md '+                             // to include README.md as index contents
+    '-r www/js'                    // source code directory
+]));
 
 //var options = ['-o3'];
 //
