@@ -18,7 +18,8 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'atstop.directives', 'leaflet-directive', 'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress', 'angular-inview'])
+angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'atstop.directives', 'leaflet-directive',
+    'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress', 'ngIOS9UIWebViewPatch'])
 
 // global timeout variable for HTTP requests
 .value('httpTimeout', 10000)
@@ -32,7 +33,6 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
     $ionicPlatform.ready(function() {
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-
         }
 
         if (window.StatusBar) {
@@ -56,15 +56,16 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
 
 // use Angular Cache by default
 .run(function($http, CacheFactory) {
+  if (!CacheFactory.get('dataCache')) {
     $http.defaults.cache = CacheFactory('dataCache', {
         maxAge: 15 * 60 * 1000, // Items added to this cache expire after 15 minutes
         cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
         deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
     });
+  }
 })
 
 .run(function($rootScope, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout, $ionicTabsDelegate) {
-    $rootScope.redirected = false;
 
     // if 'loading:show' is broadcasted then show the loading indicator or hide if 'loading:hide' is broadcasted
     $rootScope.$on('loading:show', function() {
@@ -120,6 +121,18 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
             }
         };
     });
+})
+
+// use the logProvider instead of console.log
+.config(function($logProvider){
+  // you are developing on a mac, right?? otherwise add some || here with your platforms
+  if (ionic.Platform.platform() === 'macintel'){
+    $logProvider.debugEnabled(true);
+  }
+  else {
+    $logProvider.debugEnabled(false);
+  }
+
 })
 
 .config(function($stateProvider, $urlRouterProvider) {

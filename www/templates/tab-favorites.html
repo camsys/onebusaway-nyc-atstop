@@ -1,5 +1,5 @@
 <ion-view title="Favorites">
-    <ion-content ng-show="data.loaded" has-bouncing="true">
+    <ion-content has-bouncing="true">
         <app-header ng-show="data.showBranding"></app-header>
         <ion-list>
             <ion-item ng-repeat="s in data.favoriteStops" href="#/tab/atstop-favorites/{{s.id}}/{{s.name}}">

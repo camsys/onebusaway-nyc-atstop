@@ -20,7 +20,6 @@
         </div>
         <div class="list" ng-show="data.showSearches">
             <p>Your Recent Searches:</p>
-            <button class="button button-full button-stable" ng-repeat="recentSearch in ::data.searches track by $index" ng-click="searchesGo(recentSearch.data)" analytics-on="click" analytics-event="Recent Search">
                 {{recentSearch.title}}</button>
             <button class="button button-full button-calm" ng-click="clearSearches()">Clear</button>
         </div>

@@ -31,94 +31,11 @@ $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
+
 // The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: '../lib/ionic/fonts' !default;
+$ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
-@import '../www/lib/ionic/scss/ionic';
-
-.stop-container{
-    display: flex;
-    //could be changed to column, but this makes landscape work better
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.stop-flex {
-    -webkit-box-flex: 1;
-    -webkit-flex: 1;
-    -ms-flex: 1;
-    flex: 1 1 auto;
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    align-self: auto;
-}
-
-.stop-route{
-    -webkit-box-orient: vertical;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-align-self: flex-start;
-    align-self: flex-start;
-    margin-right: auto;
-    justify-content: center;
-}
-
-.stop-arrival{
-    justify-content: flex-start;
-}
-
-.stop-alerts{
-    align-self:flex-start;
-    flex-direction: column;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    min-width: 0;
-}
-
-.nopadding{
-    padding: 0 !important;
-}
-
-.cardwithnomargin {
-    margin: 0;
-    padding: 0;
-    border-bottom: none;
-}
-
-/*
-.bar .title {
-    overflow: hidden;
-    margin-left: 0px;
-    -webkit-animation-name: title_scroller;
-    -webkit-animation-duration: 10s;
-    -webkit-animation-delay: 2s;
-    -webkit-animation-direction: alternate;
-    -webkit-animation-iteration-count:infinite;
-    -webkit-animation-timing-function: ease;
-    -webkit-animation-fill-mode: both;
-    -webkit-transition-timing-function: linear;
-    animation-name: title_scroller;
-    animation-duration: 10s;
-    animation-delay: 2s;
-    animation-direction: alternate;
-    animation-iteration-count:infinite;
-    animation-timing-function: ease;
-    animation-fill-mode: both;
-    transition-timing-function: linear;
-}
-
-@keyframes title_scroller {
-    0% { margin-left: 0; }
-    100% { margin-left: -350px; }
-}
-
-@-webkit-keyframes title_scroller {
-    0% { margin-left: 0; }
-    100% { margin-left: -350px; }
-}
-*/
-
+@import "www/lib/ionic/scss/ionic";
 .leaflet-control-layers.leaflet-control {
     display: none;
 }
@@ -148,17 +65,17 @@ h1.title {
 span.arrival {
     padding-right: 2em;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; 
 }
 
 button.arrivals {
     font-size: smaller;
-    padding: 0;
+    padding: 0px;
 }
 
 div.route {
     font-size: 1.4em;
-    padding: 0 14px;
+    padding: 0px 14px;
 }
 
 
@@ -225,8 +142,8 @@ p {
 .alerts {
     font-size: 12px;
     color: #B21212;
-    margin: 1em 1em 10px;
-    white-space: pre-wrap !important;
+    margin-bottom: 8px;
+    margin-top: 8px;
 }
 
 .bus {
@@ -271,10 +188,10 @@ select,
 textarea {
     color: inherit;
     /* 1 */
-
+    
     font: inherit;
     /* 2 */
-
+    
     margin: 0;
     /* 3 */
 }
@@ -293,9 +210,9 @@ label.item.item-input {
     line-height: 38px;
     padding-top: 0;
     padding-bottom: 0;
-    transition: .01s all linear;
+    transition: 0.01s all linear;
     &.ng-hide {
-        line-height: 0;
+        line-height: 0px;
     }
     &.ng-hide-add,
     &.ng-hide-remove {
@@ -322,7 +239,7 @@ label.item.item-input {
 
 .tips {
     font-size: smaller;
-    background-color: rgba(102, 204, 51, .85);
+    background-color: rgba(102, 204, 51, 0.85);
     color: #fff;
     height: 30px;
     padding: 4px;
@@ -375,5 +292,3 @@ label.item.item-input {
 .refresh {
     margin: 5px;
 }
-
-

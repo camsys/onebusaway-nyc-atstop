@@ -20,28 +20,7 @@
 
 angular.module('atstop.services', ['ionic', 'configuration'])
 
-.factory('DefaultTabService', function($window) {
-    var setIndex = function(value) {
-        $window.localStorage.setItem('defaultTabIndex', value);
-    };
-
-    var getIndex = function() {
-        var index = $window.localStorage.getItem('defaultTabIndex') | 0;
-        return index;
-    };
-
-    var resetIndex = function(value) {
-        $window.localStorage.setItem('defaultTabIndex', 0);
-    };
-
-    return {
-        setIndex: setIndex,
-        getIndex: getIndex,
-        resetIndex: resetIndex
-    };
-})
-
-.factory('SearchesService', function($q, $window) {
+.factory('SearchesService', function($log, $q, $window) {
     var insert = function(term, title, data) {
         var searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
 
@@ -78,7 +57,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 insert(matches.formattedAddress, matches.formattedAddress, matches);
                 break;
             default:
-                //console.log("undefined type");
+                $log.debug("undefined type");
                 break;
         }
     };
@@ -100,8 +79,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('$localstorage', ['$window',
-    function($window) {
+.factory('$localstorage', ['$log', '$window',
+    function($log, $window) {
         return {
             set: function(key, value) {
                 $window.localStorage[key] = value;
@@ -119,7 +98,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     }
 ])
 
-.factory('FavoritesService', function($q, $window) {
+.factory('FavoritesService', function($log, $q, $window) {
     var add = function(id, name, type) {
         type = type || 'S';
         var data = JSON.parse($window.localStorage['favorites'] || '{}');
@@ -168,7 +147,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('VehicleMonitoringService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('VehicleMonitoringService', function($log, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getLocations = function(route) {
         var deferred = $q.defer();
         var locations = {};
@@ -196,7 +175,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 return deferred.resolve(locations);
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         return deferred.promise;
@@ -207,7 +186,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('RouteService', function($filter, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('RouteService', function($log, $filter, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getPolylines = function(route) {
         var deferred = $q.defer();
         var results = {
@@ -243,7 +222,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 return deferred.resolve(results);
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         return deferred.promise;
@@ -297,7 +276,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 }
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -324,7 +303,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 stops = data.stops;
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -341,7 +320,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('GeolocationService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('GeolocationService', function($log, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var getRoutes = function(lat, lon) {
         var deferred = $q.defer();
         var routes = {};
@@ -361,7 +340,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 routes = data.data.routes;
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -389,7 +368,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 stops = data.data.stops;
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -405,11 +384,15 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('AtStopService', function($q, $http, $filter, datetimeService, httpTimeout, CacheFactory, API_END_POINT, API_KEY) {
+.factory('AtStopService', function($log, $q, $http, $filter, httpTimeout, CacheFactory, datetimeService, API_END_POINT, API_KEY) {
 
-    CacheFactory('atStopCache', {
-        maxAge: 10000
-    });
+    if (!CacheFactory.get('atStopCache')) {
+        CacheFactory('atStopCache', {
+            maxAge: 10000, // Items added to this cache expire after 10s
+            cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+            deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
+        });
+    }
 
     var getBuses = function(params) {
         var stop;
@@ -432,7 +415,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
             stopId: stop
         };
 
-        //for single line support
+        //for supporting queries of a single line (route) from the StopMonitoring API
+        //TODO: abstract OperatorRef to config
         var getParams = {
             key: API_KEY,
             OperatorRef: "MTA",
@@ -443,8 +427,9 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         }
 
         var handleLayovers = function(results) {
-            angular.forEach(results, function(v, k) {
+            angular.forEach(results['arriving'], function(val, key) {
                 //updates distances to an array of strings so that multi-line entries come out cleaner.
+                angular.forEach(val['distances'], function(v, k) {
                     if (v['progress'] === 'prevTrip') {
                         v['distance'] = [v['distance'], "+ Scheduled Layover At Terminal"];
                     } else if (v['progress'] === 'layover,prevTrip') {
@@ -455,13 +440,17 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     } else {
                         v['distance'] = [v['distance']];
                     }
+                });
+
             });
 
         };
 
         var updateArrivalTimes = function(results) {
-            angular.forEach(results, function(v, k) {
+            angular.forEach(results, function(val, key) {
+                angular.forEach(val['distances'], function(v, k) {
                     v.arrivingIn = datetimeService.getRemainingTime(v.expectedArrivalTime);
+                });
             });
         };
 
@@ -488,20 +477,22 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                             expectedArrivalTime: value.MonitoredVehicleJourney.MonitoredCall.ExpectedArrivalTime
                         });
                     });
-                    handleLayovers(tmp);
-                    updateArrivalTimes(tmp);
 
-                        grouped_tmp = _.groupBy(tmp, "routeId");
-                        angular.forEach(grouped_tmp, function(val, key) {
-                            var tmp = _.groupBy(val, "name");
-                            angular.forEach(tmp, function(v, k) {
-                                grouped[key] = {
-                                    name: k,
-                                    distances: v
-                                };
-                            });
+                    grouped_tmp = _.groupBy(tmp, "routeId");
+                    angular.forEach(grouped_tmp, function(val, key) {
+                        var tmp = _.groupBy(val, "name");
+                        angular.forEach(tmp, function(v, k) {
+                            grouped[key] = {
+                                name: k,
+                                distances: v
+                            };
                         });
-                        buses.arriving = grouped;
+                    });
+                    buses.arriving = grouped;
+
+                    handleLayovers(buses);
+                    updateArrivalTimes(buses.arriving);
+
 
                 } else {
                     // check for sched svc:
@@ -518,7 +509,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 }
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -533,7 +524,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('SearchService', function($q, $http, httpTimeout, API_END_POINT, API_KEY) {
+.factory('SearchService', function($log, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
     var autocomplete = function(searchKey) {
         var deferred = $q.defer();
         var matches = [];
@@ -549,7 +540,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 matches = data;
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -583,7 +574,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                                 description: matchesData.description,
                                 directions: {}
                             };
-
+                            //might be able to simplify this with an angular.sort on what is returned.
                             if (matchesData.directions[0]) {
                                 if (matchesData.directions[0].directionId == "0") {
                                     matches.directions[0] = {
@@ -636,12 +627,12 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                             };
                             break;
                         default:
-                            //console.log("undefined type");
+                            $log.debug("undefined type");
                     }
                 }
             })
             .error(function(data, status, header, config) {
-                //console.log('error');
+                $log.debug('error');
             });
 
         responsePromise.then(function() {
@@ -657,8 +648,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
-.factory('datetimeService', ['$timeout',
-    function($timeout) {
+.factory('datetimeService', ['$log', '$timeout',
+    function($log, $timeout) {
         var duration = function(timeSpan) {
             var days = Math.floor(timeSpan / 86400000);
             var diff = timeSpan - days * 86400000;
@@ -689,7 +680,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     }
 ])
 
-.factory('MapService', function(RouteService, VehicleMonitoringService, $filter, $q) {
+.factory('MapService', function($log, RouteService, VehicleMonitoringService, $filter, $q) {
     var getStopMarkers = function(route, stop) {
         stop = stop || null;
         var deferred = $q.defer();
@@ -711,13 +702,13 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 };
 
                 if (stop == val.id && stop !== null) {
-                    markers['s' + key]['icon']['iconSize'] = [35, 35];
+                    markers['s' + key]['icon']['iconSize'] = [20, 20];
                     markers['s' + key]['icon']['iconUrl'] = 'img/stop_icons/stop-red.svg';
                     markers['s' + key]['layer'] = 'currentStop';
                 }
             });
 
-            //console.log(markers);
+            $log.debug(markers);
             deferred.resolve(markers);
         });
 
@@ -744,7 +735,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     });
                 });
             });
-            //console.log(paths);
+            $log.debug(paths);
             deferred.resolve(paths);
         });
 
@@ -773,7 +764,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     zIndexOffset: 800
                 };
             });
-            //console.log(markers);
+            $log.debug(markers);
             deferred.resolve(markers);
         });
 

@@ -55,7 +55,7 @@
                             return store[key];
                         },
                         setItem: function(key, value) {
-                            console.log(key, value);
+                            //console.log(key, value);
                             store[key] = value.toString();
                         },
                         clear: function() {
@@ -90,12 +90,14 @@
                 service.add(route[0],route[1],route[2]);
                 service.add(stop);
                 service.add(routeMap[0],routeMap[1],routeMap[2]);
-                console.log(service.get());
+                //console.log(service.get());
                 service.remove(route[0]);
-                console.log(service.get());
+                //console.log(service.get());
             });
         });
 
+        /* Converted to ngDescribe */
+        /*
         describe('AtStopService Tests (note: server/data dependent)', function () {
             var ctrl, scope;
             beforeEach(module('atstop'));
@@ -119,8 +121,8 @@
                 var data = {};
                 inject(function (AtStopService) {
                     AtStopService.getBuses(params).then(function (results) {
-                        console.log(results.arriving);
-                        console.log(Object.keys(results.arriving).length);
+                        //console.log(results.arriving);
+                        //console.log(Object.keys(results.arriving).length);
                         expect(Object.keys(data.arriving).length).toBeEqualTo(1);
                     })
                 })
@@ -128,8 +130,10 @@
             });
 
         });
+        */
 
-
+        /* Converted to ngDescribe */
+        /*
         describe('Geolocation Tests', function () {
             var ctrl, scope;
             beforeEach(module('atstop'));
@@ -146,6 +150,10 @@
             })
 
         });
+        */
+
+        /* Converted to ngDescribe */
+        /*
         describe('Filter: encodeStopName', function () {
             var encodeStopName;
 
@@ -160,7 +168,10 @@
             });
 
         });
+        */
 
+        /* Converted to ngDescribe */
+        /*
         describe('Countdown filter tests', function () {
             beforeEach(module('atstop'));
             beforeEach(inject(function ($filter) {
@@ -170,13 +181,14 @@
             it('should not show  times <1 min', function () {
                 expect(durationView(0)).toBe('');
             });
-            it('should show a time of 10 min', function () {
+            it('', function () {
                 expect(durationView(633375)).toBe('10 min');
             });
             it('should properly show times of > 60 min', function () {
                 expect(durationView(4200922)).toBe('70 min');
             });
         });
+        */
 
 
         describe('No Scheduled Service Tests', function () {
@@ -191,7 +203,7 @@
             }));
 
             it('should not return the nssm if only one direction', function () {
-                var matches =     
+                var matches =
                     { "directions": [
                         {
                             "destination": "ANNADALE RD",
@@ -205,9 +217,10 @@
             });
 
             it('should display nssm if no service', function () {
-                var matches =     
-                { "directions": [
-                    {
+                var matches =
+                [{
+                  "directions":
+                    [{
                         "destination": "ANNADALE RD",
                         "directionId": "1",
                         "hasUpcomingScheduledService": false,
@@ -218,15 +231,14 @@
                         "directionId": "0",
                         "hasUpcomingScheduledService": false,
                         "stops": null
-                    }
-                    ]
-                };
+                    }]
+                }];
                 scope.searchAndGo(matches);
-                expect(scope.data.notifications).toEqual('');
+                expect(scope.data.notifications).not.toEqual('');
             });
 
             it('should not display nssm if active service in one direction', function () {
-                var matches =     
+                var matches =
                 { "directions": [
                     {
                         "destination": "ANNADALE RD",
@@ -245,9 +257,29 @@
                 scope.searchAndGo(matches);
                 expect(scope.data.notifications).toEqual('');
             });
+            it('should not display nssm if active service in one direction, part 2', function () {
+                var matches =
+                { "directions": [
+                    {
+                        "destination": "ANNADALE RD",
+                        "directionId": "1",
+                        "hasUpcomingScheduledService": false,
+                        "stops": null
+                    },
+                    {
+                        "destination": "DOWNTOWN WORTH ST",
+                        "directionId": "0",
+                        "hasUpcomingScheduledService": false,
+                        "stops": null
+                    }
+                    ]
+                };
+                scope.searchAndGo(matches);
+                expect(scope.data.notifications).toEqual('');
+            });
 
             it('should not display nssm if active service in both directions', function () {
-                var matches =     
+                var matches =
                 { "directions": [
                     {
                         "destination": "ANNADALE RD",

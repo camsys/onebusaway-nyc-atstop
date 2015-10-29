@@ -3,9 +3,13 @@
 
 # But not these files…
 !.gitignore
+!/gulpfile.js
+!/package.json
 !apache-license-2.0.md
 !civic.json
 !ProductSpec.md
+!/karma.conf.js
+!hooks/*
 !scss/ionic.app.scss
 !www/SpecRunner.html
 !www/index.html
@@ -16,9 +20,12 @@
 !www/js/config.tmpl.js
 !www/js/controllers.js
 !www/js/filters.js
+!www/js/filters-spec.js
 !www/js/directives.js
 !www/js/services.js
+!www/js/services-spec.js
 !www/lib/angular-cache/*
+!www/lib/angular-ios9-patch/*
 !www/lib/angular-leaflet/*
 !www/lib/leaflet/*
 !www/lib/leaflet/images/*
@@ -27,6 +34,7 @@
 !www/lib/underscore/*
 !www/lib/angular-timer/*
 !www/lib/round-progress/*
+!www/lib/angular-simple-logger/*
 !www/templates/about.html
 !www/templates/atstop.html
 !www/templates/geolocation.html
