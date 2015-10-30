@@ -49,8 +49,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
  * @description
  * Controller that used for searching using autocomplete API.
  */
-.controller('SearchCtrl', ['$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING', 'DefaultTabService', '$ionicTabsDelegate',
-    function($rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING, DefaultTabService, $ionicTabsDelegate) {
+.controller('SearchCtrl', ['$log','$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING', '$ionicTabsDelegate',
+    function($log, $rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING,  $ionicTabsDelegate) {
 
         $scope.go = function(path) {
             $location.path(path);
@@ -208,12 +208,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
          */
         var init = (function() {
 
-            var defaultTabIndex = DefaultTabService.getIndex();
-            if ($rootScope.redirected === false && defaultTabIndex !== 0) {
-                $rootScope.redirected = true;
-                $ionicTabsDelegate.select(defaultTabIndex);
-            }
-
             SearchesService.fetchAll().then(function(results) {
                 if (results.length > 0) {
                     $scope.data.searches = results;
@@ -282,7 +276,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 ])
 
 /**
- * Controller that used for showing upcoming buses for specific stop.
  * Controller used for showing upcoming buses for specific stop.
  */
 .controller('AtStopCtrl', ['$log', '$ionicScrollDelegate', '$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
@@ -376,7 +369,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     }
 ])
 
-/* Route Stop List Controller
+/**
+ *  Route Stop List Controller
  * Controller that used for showing the routes and stops of routes.
  */
 .controller('RouteCtrl', ['$log', '$scope', 'RouteService', '$stateParams', '$location', '$q', '$ionicLoading', '$ionicScrollDelegate', 'FavoritesService',
@@ -521,19 +515,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             showBranding: SHOW_BRANDING,
             hideText: true,
             brandAboutText: BRAND_ABOUT_TEXT,
-            privText: PRIV_POLICY_TEXT,
-            confirmed: DefaultTabService.getIndex() !== 0
-        };
-
-        $scope.change = function(val) {
-            $rootScope.redirected = true;
-            if (val === true) {
-                DefaultTabService.setIndex(2);
-                console.log(DefaultTabService.getIndex());
-            } else {
-                DefaultTabService.resetIndex();
-                console.log(DefaultTabService.getIndex());
-            }
             privText: PRIV_POLICY_TEXT
         };
 
@@ -556,7 +537,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 ])
 
 /**
- * Controller that used for showing stops and routes on Maps
+ * Controller used for full routes on Maps
  */
 .controller('MapCtrl', ['$log', 'MapService', 'FavoritesService', '$scope', '$location', '$stateParams', '$timeout', 'leafletData', '$filter', '$q', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
     function($log, MapService, FavoritesService, $scope, $location, $stateParams, $timeout, leafletData, $filter, $q, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
@@ -758,10 +739,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
 
 /**
- * Controller that used for showing the nearby stops for specific location from geolocarions.
+ * Controller that used for showing the nearby stops for specific location from geolocations.
  */
-.controller('NearbyStopsAndRoutesCtrl', ['$log', '$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-    function($log, $ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('NearbyStopsAndRoutesCtrl', ['$log', '$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService','AtStopService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+    function($log, $ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, AtStopService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
         $scope.paths = {};
         $scope.url = "atstop";
@@ -788,6 +769,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             "nearbyStops": []
         };
 
+        // this array holds stops we want to query arrivals from.
+        var stopsInTimeout = [];
+
         var cancelReloadTimeout = function() {
             if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
@@ -799,7 +783,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     tick() }, 30000
             );
         };
-
         var resetReloadTimeout = function() {
             cancelReloadTimeout();
             setReloadTimeout();
@@ -808,7 +791,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         $scope.back = function() {
             $scope.data.returnShow = false;
             resetReloadTimeout();
-
             $scope.reinitialize();
         };
 
@@ -821,15 +803,14 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             } else {
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
+
             tick();
             $scope.$broadcast('scroll.refreshComplete');
         };
 
-    // this array holds stops we want to query arrivals from.
-        var stopsInTimeout = [];
-
     // once a line comes into view check if that stop is in the array to query for. If not, add it.
         $scope.lineInView = function(index, inview, inviewpart, event) {
+            $log.debug(index);
             if (inview == true) {
                 var stopInArray = stopsInTimeout.some(function(stop) {
                     return stop === event.inViewTarget.id;
@@ -1011,10 +992,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 }
             });
             //set zoom around nearest stop
-            console.log($scope.data.loaded);
+            $log.debug($scope.data);
             $scope.markers = stops;
             leafletData.getMap().then(function (map) {
-                    console.log('moving', $scope.markers['s0']);
+                    $log.debug('moving', $scope.markers['s0']);
                     map.setView($scope.markers['s0'], 15, {
                         animate: true
                 });
@@ -1082,7 +1063,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             }, 35000);
         };
 
-        // show current stop
+        // show current stop on the map
         var drawCurrentStop = function(route, stop, lat, lon, name) {
             $scope.markers = {};
             leafletData.getMap().then(function(map) {
@@ -1110,6 +1091,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             showBusMarkers(route);
         };
 
+        // when user clicks on a stop on the map, scroll to that stop on the list
         var slideTo = function(location) {
             location = $location.hash(location);
             $timeout(function() {

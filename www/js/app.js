@@ -19,7 +19,7 @@
  */
 
 angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'atstop.directives', 'leaflet-directive',
-    'ngCordova', 'angular-cache', 'timer', 'angular-svg-round-progress', 'ngIOS9UIWebViewPatch'])
+    'ngCordova', 'angular-cache', 'angular-inview', 'timer', 'angular-svg-round-progress', 'ngIOS9UIWebViewPatch'])
 
 // global timeout variable for HTTP requests
 .value('httpTimeout', 10000)
