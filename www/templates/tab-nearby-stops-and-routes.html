@@ -17,13 +17,18 @@
             <ion-list>
                 <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}"
                           id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)"
-                          in-view-options="{ debounce: 20 }" class="card cardwithnomargin" >
-                    <div class="item item-divider vcenter">
+                          in-view-options="{ debounce: 20 }" class="card cardwithnomargin"
+                          >
+                    <div class="item item-divider vcenter item-icon-right">
                         {{item.name}}
+                        <button ng-show="item.alerts.length"
+                                class="button button-outline button-small button-assertive icon ion-alert"
+                                ng-click="toggleStopAlerts(item)">
+                        </button>
                     </div>
                     <div class="stop-container stop-flex" >
-                        <div ng-show="item.alerts" ng-repeat="a in item.alerts" class="stop-flex">
-                            <p class="alerts">{{a}}</p>
+                        <div ng-show="item.showAlerts" ng-repeat="a in item.alerts" class="stop-flex">
+                            <p class="alerts longtext">{{a}}</p>
                         </div>
 
                         <div class="item" ng-repeat="r in item.arriving"

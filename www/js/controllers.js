@@ -798,11 +798,18 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             setReloadTimeout();
         };
 
+        /**
+         * move back from stop detail
+         */
         $scope.back = function() {
             $scope.data.returnShow = false;
             resetReloadTimeout();
             $scope.reinitialize();
         };
+
+        $scope.toggleStopAlerts = function(stop){
+            stop.showAlerts = !stop.showAlerts;
+        }
 
         $scope.reinitialize = function() {
             $scope.data.notifications = "";
@@ -818,9 +825,16 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             $scope.$broadcast('scroll.refreshComplete');
         };
 
-    // once a line comes into view check if that stop is in the array to query for. If not, add it.
+        /**
+         * once a line comes into view check if that stop is in the array to query for. If not, add it.
+         * params are passed in via angular-inview
+         * @param index
+         * @param inview
+         * @param inviewpart
+         * @param event
+         * @returns {boolean}
+         */
         $scope.lineInView = function(index, inview, inviewpart, event) {
-            $log.debug(index);
             if (inview == true) {
                 var stopInArray = stopsInTimeout.some(function(stop) {
                     return stop === event.inViewTarget.id;
@@ -834,7 +848,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             return false;
         };
 
-        // runs on when stops are added to timeouts and on refresh
+        /**
+         *
+         * the meat of the controller
+         * runs on when stops are added to timeouts and on refresh
+         */
         var tick = function() {
             var arrivals = {};
             var alerts = {};
@@ -860,6 +878,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 angular.forEach($scope.data.stops, function(s) {
                     s.arriving = arrivals[s.id];
                     s.alerts = alerts[s.id];
+                    s.showAlerts = false;
                 });
             });
             //avoid apply() if it is already going on.
@@ -869,6 +888,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             console.log('tick');
         };
 
+        /**
+         * Returns nearby stops from the GeolocationService
+         * @param lat
+         * @param lon
+         */
         var getNearbyStopsAndRoutes = function(lat, lon) {
             GeolocationService.getStops(lat, lon).then(function(results) {
                 if (!angular.isUndefined(results) && results !== null && results.length > 0) {
@@ -898,6 +922,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 }
             });
         };
+        /**
+         * activates location services and passes this location on to the getNearbyStopsAndRoutes function
+         */
 
         var getNearbyStopsAndRoutesGPS = function() {
             //console.log("getNearbyStopsAndRoutesGPS called");
@@ -962,7 +989,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     $timeout.cancel(timeout);
                 });
         };
-
+        /**
+         * draws nearby stops already in $scope
+         */
         var showNearbyStops = function() {
             $scope.markers = {};
             $scope.paths = {};
@@ -1014,7 +1043,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
         };
 
-        // map
+        /**
+         * initialize map
+         */
         var map = function() {
             //var mapCenter = {};
 
@@ -1044,7 +1075,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
         };
 
-        // show route polylines
+        /**
+         * when passed in a route, get and display polylines for that route
+         * @param route
+         */
         $scope.showRoutePolylines = function(route) {
             $scope.paths = {};
             MapService.getRoutePolylines(route).then(function(res) {
@@ -1062,18 +1096,33 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
         };
 
-        // refresh specific route
+        /**
+         * refresh specific route
+         * @param route
+         * @param stop
+         * @param lat
+         * @param lon
+         * @param name
+         */
         $scope.showCurrentStop = function(route, stop, lat, lon, name) {
             $log.debug(route, stop, lat, lon, name);
             $scope.data.returnShow = true;
             $interval.cancel($scope.reloadTimeout);
             drawCurrentStop(route, stop, lat, lon, name);
+            //timeout for refreshing information associated with this route at this stop
             $scope.reloadTimeout = $interval(function() {
                 drawCurrentStop(route, stop, lat, lon, name);
             }, 35000);
         };
 
-        // show current stop on the map
+        /**
+         * show current stop on the map
+         * @param route
+         * @param stop
+         * @param lat
+         * @param lon
+         * @param name
+         */
         var drawCurrentStop = function(route, stop, lat, lon, name) {
             $scope.markers = {};
             leafletData.getMap().then(function(map) {
@@ -1121,7 +1170,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         
         });
 
-        // map click event
+        /**
+         * on map marker click event, display popup
+         * if a stop, scroll to that stop on the list (which then displays arrivals for said stop)
+         */
         $scope.$on('leafletDirectiveMarker.click', function(event, args) {
             var object = $scope.markers[args.modelName];
             var content = '';
@@ -1153,6 +1205,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             }
         });
 
+        /**
+         * init function
+         */
         var init = (function() {
             map();
             if ($location.$$path === "/tab/nearby-stops-and-routes") {
