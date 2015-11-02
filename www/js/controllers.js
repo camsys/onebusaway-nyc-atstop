@@ -1100,16 +1100,16 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         //when the map is dragged, get the stops in view
-        //$scope.$on('leafletDirectiveMap.dragend', function(event){
-        //    $scope.eventDetected = "Drag";
-        //    console.log('angular-leaflet center', $scope.center.lat, $scope.center.lng);
-        //
-        //    leafletData.getMap().then(function(map) {
-        //        console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
-        //    });
-        //    getNearbyStopsAndRoutes($scope.center.lat, $scope.center.lng);
-        //
-        //});
+        $scope.$on('leafletDirectiveMap.dragend', function(event){
+           $scope.eventDetected = "Drag";
+           console.log('angular-leaflet center', $scope.center.lat, $scope.center.lng);
+        
+           leafletData.getMap().then(function(map) {
+               console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
+           });
+           getNearbyStopsAndRoutes($scope.center.lat, $scope.center.lng);
+        
+        });
 
         // map click event
         $scope.$on('leafletDirectiveMarker.click', function(event, args) {
