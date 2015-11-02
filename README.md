@@ -12,7 +12,7 @@ Comments/contributions are welcome.
 * Second, start a new project using `ionic start atstop blank`.
 * Then, in the project root (`cd atstop`):
   * Setup SASS running `ionic setup sass`.
-  * Install ngCordova running `bower install ngCordova`.
+  * Install dependencies running `bower install`.
   * `git init`
   * `git remote add origin PATH/TO/THIS/REPO`
   * `git fetch --all`
@@ -21,7 +21,6 @@ Comments/contributions are welcome.
   * `mv www/js/config.tmpl.js  www/js/config.js`
   * `npm install` to grab the dependencies defined in the *package.json*.
   * run `gulp sass` to generate CSS from SCSS.
-  * run `bower install angular-inview`
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one.
   * Insert your key into the `API_KEY` field of `config.js`.
   * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://bustime.mta.info/`)
