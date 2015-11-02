@@ -276,6 +276,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 ])
 
 /**
+ * @ngdoc controller
+ * @description
  * Controller used for showing upcoming buses for specific stop.
  */
 .controller('AtStopCtrl', ['$log', '$ionicScrollDelegate', '$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
@@ -370,6 +372,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 ])
 
 /**
+ * @ngdoc controller
+ * @description
  *  Route Stop List Controller
  * Controller that used for showing the routes and stops of routes.
  */
@@ -504,6 +508,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 ])
 
 /**
+ * @ngdoc controller
+ * @description
  * Controller that used for showing About Information from config.js
  * Also has morphed into a settings page
  */
@@ -537,6 +543,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 ])
 
 /**
+ * @ngdoc controller
+ * @description
  * Controller used for full routes on Maps
  */
 .controller('MapCtrl', ['$log', 'MapService', 'FavoritesService', '$scope', '$location', '$stateParams', '$timeout', 'leafletData', '$filter', '$q', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
@@ -739,6 +747,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
 
 /**
+ * @ngdoc controller
+ * @description
  * Controller that used for showing the nearby stops for specific location from geolocations.
  */
 .controller('NearbyStopsAndRoutesCtrl', ['$log', '$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService','AtStopService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
