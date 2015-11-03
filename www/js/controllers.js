@@ -863,7 +863,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     AtStopService.getBuses(stop).then(function(results) {
                         if (!angular.equals({}, results.arriving)) {
                             arrivals[stop] = results.arriving;
-                            console.log("updated", stop)
                         }
                         if (!angular.equals({}, results.alerts)) {
                             alerts[stop] = results.alerts;
@@ -885,7 +884,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
-            console.log('tick');
         };
 
         /**

@@ -31,7 +31,7 @@ module.exports = function(config) {
       'www/lib/leaflet/plugins/Marker.Rotate.js',
       'www/lib/angular-timer/angular-timer.min.js',
       'www/lib/angular-timer/humanize-duration.js',
-      'www/lib/angular-leaflet/angular-leaflet-directive.min.js',
+      'www/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js',
       'www/lib/round-progress/roundProgress.min.js',
       'www/lib/angular-inview/angular-inview.js',
       'www/lib/angular-simple-logger/angular-simple-logger.light.min.js',

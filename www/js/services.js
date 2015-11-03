@@ -383,7 +383,11 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         getStops: getStops
     };
 })
-
+/**
+ * Service for information about a particular stop
+ * In this current incarnation, it is tailored to SIRI StopMonitoring, version 2
+ * It is possible to refactor this to use another realtime API spec by changing parameters, URL, and responsePromise
+ */
 .factory('AtStopService', function($log, $q, $http, $filter, httpTimeout, CacheFactory, datetimeService, API_END_POINT, API_KEY) {
 
     if (!CacheFactory.get('atStopCache')) {
@@ -420,7 +424,9 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         var getParams = {
             key: API_KEY,
             OperatorRef: "MTA",
-            MonitoringRef: stop
+            MonitoringRef: stop,
+            StopMonitoringDetailLevel: "basic",
+            version: 2
         };
         if (params.hasOwnProperty('line')) {
             getParams.LineRef = params.line;
@@ -467,11 +473,15 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     var grouped = {};
 
                     angular.forEach(data.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit, function(value, key) {
+                        // SIRI V2 API JSON returns destination in an array :( Bug is filed.
+                        var destination = value.MonitoredVehicleJourney.DestinationName;
+                        var safeDestination = Array.isArray(destination) ? destination[0] : destination;
+
                         tmp.push({
                             routeId: value.MonitoredVehicleJourney.LineRef,
                             name: value.MonitoredVehicleJourney.PublishedLineName,
-                            distance: value.MonitoredVehicleJourney.MonitoredCall.Extensions.Distances.PresentableDistance,
-                            destination: value.MonitoredVehicleJourney.DestinationName,
+                            distance: value.MonitoredVehicleJourney.MonitoredCall.ArrivalProximityText,
+                            destination: safeDestination,
                             progress: value.MonitoredVehicleJourney.ProgressStatus,
                             departsTerminal: value.MonitoredVehicleJourney.OriginAimedDepartureTime,
                             expectedArrivalTime: value.MonitoredVehicleJourney.MonitoredCall.ExpectedArrivalTime
@@ -495,7 +505,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
 
 
                 } else {
-                    // check for sched svc:
+                    // TODO: check for sched svc and return something else
                 }
 
                 if (data.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {

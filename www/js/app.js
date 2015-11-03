@@ -87,7 +87,7 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
             });
             $timeout(function() {
                 popup.close();
-            }, 3000);
+            }, 2000);
         }
 
     });
