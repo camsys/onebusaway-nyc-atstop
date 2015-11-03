@@ -34,8 +34,23 @@ ngDescribe({
       };
       var data = {};
       deps.AtStopService.getBuses(params).then(function(results) {
-        except(Object.keys(data.arriving).length).toBeEqualTo(1);
+        expect(Object.keys(data.arriving).length).toBeEqualTo(1);
       });
     });
   }
 });
+
+ngDescribe({
+  name: 'Service: VehicleMonitoringService',
+  modules: 'atstop',
+  inject: 'VehicleMonitoringService',
+  tests: function(deps){
+    it('should return results for a route', function(){
+      var route = 'MTA NYCT_B63';
+      deps.VehicleMonitoringService.getLocations(route).then(function(results){
+        expect(results.length).toBeGreaterThan(0);
+      })
+    })
+
+  }
+})

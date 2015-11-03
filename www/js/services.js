@@ -147,7 +147,15 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
+/**
+ * Service for SIRI VehicleMonitoringService
+ */
 .factory('VehicleMonitoringService', function($log, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
+        /**
+         * return locations for vehicles along a route
+         * @param route fully qualified routeID
+         * @returns {*}
+         */
     var getLocations = function(route) {
         var deferred = $q.defer();
         var locations = {};
@@ -155,7 +163,9 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         var responsePromise = $http.jsonp(API_END_POINT + "api/siri/vehicle-monitoring.json?callback=JSON_CALLBACK", {
                 params: {
                     key: API_KEY,
-                    LineRef: route
+                    LineRef: route,
+                    version: 2,
+                    VehicleMonitoringDetailLevel: "basic"
                 },
                 timeout: httpTimeout,
                 cache: false
@@ -171,7 +181,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                         angle: val.MonitoredVehicleJourney.Bearing
                     };
                 });
-
+                console.log(locations);
                 return deferred.resolve(locations);
             })
             .error(function(data, status, header, config) {
@@ -185,8 +195,17 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         getLocations: getLocations
     };
 })
-
+/**
+ * Service for getting data about routes (or lines in SIRI-speak)
+ * Currently uses OBA Discovery APIs
+ */
 .factory('RouteService', function($log, $filter, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
+
+        /**
+         * All your polylines are belong to us
+         * @param route
+         * @returns {*}
+         */
     var getPolylines = function(route) {
         var deferred = $q.defer();
         var results = {
@@ -227,7 +246,11 @@ angular.module('atstop.services', ['ionic', 'configuration'])
 
         return deferred.promise;
     };
-
+        /**
+         * Get direction names for a route
+         * @param route
+         * @returns {*}
+         */
     var getDirections = function(route) {
         var deferred = $q.defer();
         var directions = {};
@@ -286,6 +309,13 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         return deferred.promise;
     };
 
+        /**
+         * wraps an undocumented convenience method to return a list of stops along a route
+         * TODO: replace with SIRI LinesRequest API
+         * @param route
+         * @param direction
+         * @returns {*}
+         */
     var getStops = function(route, direction) {
         var deferred = $q.defer();
         var stops = {};
@@ -319,8 +349,17 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         getPolylines: getPolylines
     };
 })
-
+/**
+ * Service for returning nearby routes and stops
+ * Currently uses OBA discovery APIs
+ */
 .factory('GeolocationService', function($log, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
+        /**
+         * get routes near coordinates
+         * @param lat
+         * @param lon
+         * @returns {*}
+         */
     var getRoutes = function(lat, lon) {
         var deferred = $q.defer();
         var routes = {};
@@ -350,6 +389,13 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         return deferred.promise;
     };
 
+
+        /**
+         * get stops near coordinates
+         * @param lat
+         * @param lon
+         * @returns {*}
+         */
     var getStops = function(lat, lon) {
         var deferred = $q.defer();
         var stops = {};
@@ -397,7 +443,11 @@ angular.module('atstop.services', ['ionic', 'configuration'])
             deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
         });
     }
-
+        /**
+         * core exposed function of this service
+         * @param either a stop ID or an object of parameters including stop ID and whether to sort the results
+         * @returns {*} an object formatted for the V/VM
+         */
     var getBuses = function(params) {
         var stop;
         if (params.hasOwnProperty('stop')) {
@@ -432,6 +482,11 @@ angular.module('atstop.services', ['ionic', 'configuration'])
             getParams.LineRef = params.line;
         }
 
+        /**
+         * inspect response for the presence of layovers and change the text to represent that
+         * for another API this might not be necessary
+         * @param results
+         */
         var handleLayovers = function(results) {
             angular.forEach(results['arriving'], function(val, key) {
                 //updates distances to an array of strings so that multi-line entries come out cleaner.
@@ -452,6 +507,10 @@ angular.module('atstop.services', ['ionic', 'configuration'])
 
         };
 
+        /**
+         * calculate time to arrival from clock times
+         * @param results returned from this service
+         */
         var updateArrivalTimes = function(results) {
             angular.forEach(results, function(val, key) {
                 angular.forEach(val['distances'], function(v, k) {
@@ -460,6 +519,9 @@ angular.module('atstop.services', ['ionic', 'configuration'])
             });
         };
 
+        /**
+         * This is the meat of the return from this Service
+         */
         var responsePromise = $http.jsonp(API_END_POINT + "api/siri/stop-monitoring.json?callback=JSON_CALLBACK", {
                 params: getParams,
                 timeout: httpTimeout,
@@ -533,8 +595,15 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         getBuses: getBuses
     };
 })
-
+/**
+ * Service wrapping search API
+ */
 .factory('SearchService', function($log, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
+        /**
+         * Autocomplete
+         * @param searchKey text entered in
+         * @returns {*} array of results
+         */
     var autocomplete = function(searchKey) {
         var deferred = $q.defer();
         var matches = [];
@@ -559,7 +628,11 @@ angular.module('atstop.services', ['ionic', 'configuration'])
 
         return deferred.promise;
     };
-
+        /**
+         * search!
+         * @param term Term to search for
+         * @returns {*} appropriately formatter result-- Route, Stop, or Geolocation
+         */
     var search = function(term) {
         var deferred = $q.defer();
         var matches = {};
@@ -658,8 +731,16 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     };
 })
 
+/**
+ * helper functions for date and time
+ */
 .factory('datetimeService', ['$log', '$timeout',
     function($log, $timeout) {
+        /**
+         * get human readable duration between times
+         * @param timeSpan
+         * @returns {{days: number, hours: number, minutes: number, seconds: number}}
+         */
         var duration = function(timeSpan) {
             var days = Math.floor(timeSpan / 86400000);
             var diff = timeSpan - days * 86400000;
@@ -676,6 +757,11 @@ angular.module('atstop.services', ['ionic', 'configuration'])
             };
         };
 
+        /**
+         * get time between now and a time (hopefully in the future)
+         * @param referenceTime a time (hopefully in the future)
+         * @returns {number|*}
+         */
         function getRemainingTime(referenceTime) {
             var now = moment().utc();
             time = moment(referenceTime) - now;
@@ -690,6 +776,9 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     }
 ])
 
+/**
+ * common functionality for creating maps
+ */
 .factory('MapService', function($log, RouteService, VehicleMonitoringService, $filter, $q) {
     var getStopMarkers = function(route, stop) {
         stop = stop || null;
