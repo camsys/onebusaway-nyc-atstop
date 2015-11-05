@@ -32,6 +32,8 @@ In order to build app packages and install, several Cordova plugins are required
  * cordova-plugin-inappbrowser
  * https://github.com/whiteoctober/cordova-plugin-app-version.git
 
+ Note: If building for iOS9, you may need to update the [App Transport Security](http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/) parameters.
+
 ### Running
 * Use the `ionic serve` function of [Ionic Framework](http://ionicframework.com/docs/guide/testing.html)
 * In order to build the native mobile app, use `ionic build [platform]`
