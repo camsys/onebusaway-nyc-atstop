@@ -751,8 +751,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
  * @description
  * Controller that used for showing the nearby stops for specific location from geolocations.
  */
-.controller('NearbyStopsAndRoutesCtrl', ['$log', '$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService','AtStopService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-    function($log, $ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, AtStopService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('NearbyStopsAndRoutesCtrl', ['$log', '$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService','AtStopService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'debounce', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+    function($log, $ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, AtStopService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, debounce, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
         $scope.paths = {};
         $scope.url = "atstop";
@@ -1148,7 +1148,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             showBusMarkers(route);
         };
 
-        // when user clicks on a stop on the map, scroll to that stop on the list
+        /**
+         * when user clicks on a stop on the map, scroll to that stop on the list
+         * @param location index to slide to
+         */
         var slideTo = function(location) {
             location = $location.hash(location);
             $timeout(function() {
@@ -1159,13 +1162,18 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         //when the map is dragged, get the stops in view
         $scope.$on('leafletDirectiveMap.dragend', function(event){
            $scope.eventDetected = "Drag";
-           console.log('angular-leaflet center', $scope.center.lat, $scope.center.lng);
+
+           // angular-leaflet center bound to scope lags the map center for some reason... D'oh!
+           //console.log('angular-leaflet center', $scope.center.lat, $scope.center.lng);
+            var lat, lng;
         
            leafletData.getMap().then(function(map) {
-               console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
+               //console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
+               lat = map.getCenter().lat;
+               lng = map.getCenter().lng;
+               debounce(getNearbyStopsAndRoutes(lat, lng), 250);
            });
-           getNearbyStopsAndRoutes($scope.center.lat, $scope.center.lng);
-        
+
         });
 
         /**
@@ -1195,7 +1203,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 popup.openOn(map);
             });
         });
-
+        /**
+         * fired when leaving the view.
+         */
         $scope.$on('$destroy', function() {
             $scope.left = true;
             if ($scope.reloadTimeout) {
@@ -1209,7 +1219,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         var init = (function() {
             map();
             if ($location.$$path === "/tab/nearby-stops-and-routes") {
-                //console.log("GPS Mode");
                 $scope.data.title = "Nearby Stops";
                 $scope.url = "atstop-gps";
                 getNearbyStopsAndRoutesGPS();
