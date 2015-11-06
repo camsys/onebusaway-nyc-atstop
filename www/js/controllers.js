@@ -571,9 +571,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         };
 
         $scope.refresh = function() {
-            //console.log("refresh");
-            $log.debug("refresh");
-
+            //earlier versions of angular-leaflet did not support binding on popup text.
+            // TODO: check if this no longer is the case
             leafletData.getMap().then(function(map) {
                 map.closePopup();
             });
@@ -583,7 +582,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             showBusAndStopMarkers($stateParams.routeId, $stateParams.stopId);
         };
 
-        // show route polylines
         var showRoutePolylines = function(route) {
             MapService.getRoutePolylines(route).then(function(res) {
                 $scope.paths = res;
@@ -592,7 +590,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 leafletData.getMap().then(function(map) {
                     map.fitBounds([
                         [$scope.paths['p0']['latlngs'][0]['lat'], $scope.paths['p0']['latlngs'][0]['lng']],
-                        [$scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lat'], $scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lng']]
+                        [$scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lat'],
+                            $scope.paths['p0']['latlngs'][$scope.paths['p0']['latlngs'].length - 1]['lng']]
                     ]);
                 });
             });
@@ -671,19 +670,18 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             leafletData.getMap().then(function(map) {
                 //leaflet attrib not required
                 map.attributionControl.setPrefix('');
-                //New Angular Leaflet Directive should have this functionality now.
-                //L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
             });
 
         };
 
         // map click event
-        $scope.$on('leafletDirectiveMarker.click', function(event, args) {
+        $scope.$on('leafletDirectiveMarker.main.click', function(event, args) {
             var object = $scope.markers[args.modelName];
             var content = '';
             var latLng = [];
             var popup = L.popup();
 
+            // if user clicked on a marker that's not a stop, it's a vehicle
             if ($filter('isUndefinedOrEmpty')(object.stopName)) {
                 content = "Vehicle " + object.vehicleId + "<br> <h4>" + object.destination + "</h4>" + "<br> <h5>Next Stop: " + object.nextStop + "</h5>";
                 latLng = [object.lat, object.lng];
@@ -851,7 +849,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         /**
          *
          * the meat of the controller
-         * runs on when stops are added to timeouts and on refresh
+         * queries for data on each stop in the stopsInTimeout array
+         * runs on when stops are added to timeouts, as well as on refresh
          */
         var tick = function() {
             var arrivals = {};
@@ -880,7 +879,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     s.showAlerts = false;
                 });
             });
-            //avoid apply() if it is already going on.
+            //avoid apply() if it is already active.
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
@@ -891,7 +890,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
          * @param lat
          * @param lon
          */
-        var getNearbyStopsAndRoutes = function(lat, lon) {
+        var getNearbyStopsAndRoutes = function(lat, lon, showCurrLocation) {
+            if (showCurrLocation === undefined) { showCurrLocation = true };
+
             GeolocationService.getStops(lat, lon).then(function(results) {
                 if (!angular.isUndefined(results) && results !== null && results.length > 0) {
 
@@ -902,11 +903,14 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         stop['dist'] = MapService.getDistanceInM(lat, lon, stop['lat'], stop['lon']);
                     });
                     $scope.data.stops = results;
-                    $scope.data.stops.push({
-                        id: "current_location",
-                        lat: lat,
-                        lon: lon
-                    });
+
+                    if (showCurrLocation) {
+                        $scope.data.stops.push({
+                            id: "current_location",
+                            lat: lat,
+                            lon: lon
+                        });
+                    }
 
                     showNearbyStops();
                     $scope.data.notifications = "";
@@ -1159,7 +1163,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
         };
 
-        //when the map is dragged, get the stops in view
+        /**
+         * when the map is dragged, get the stops in the new view
+         */
         $scope.$on('leafletDirectiveMap.dragend', function(event){
            $scope.eventDetected = "Drag";
 
@@ -1171,7 +1177,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                //console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
                lat = map.getCenter().lat;
                lng = map.getCenter().lng;
-               debounce(getNearbyStopsAndRoutes(lat, lng), 250);
+               debounce(getNearbyStopsAndRoutes(lat, lng, false), 250);
            });
 
         });

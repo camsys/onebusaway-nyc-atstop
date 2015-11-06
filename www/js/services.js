@@ -444,7 +444,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     }
         /**
          * core exposed function of this service
-         * @param either a stop ID or an object of parameters including stop ID and whether to sort the results
+         * @param either a stop ID or an object of parameters including {stop, sort}
          * @returns {*} an object formatted for the V/VM
          */
     var getBuses = function(params) {
@@ -469,7 +469,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
         };
 
         //for supporting queries of a single line (route) from the StopMonitoring API
-        //TODO: abstract OperatorRef to config
+        //TODO: abstract OperatorRef to config, possibly detailLevel as well
         var getParams = {
             key: API_KEY,
             OperatorRef: "MTA",
@@ -572,8 +572,10 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 if (data.Siri.ServiceDelivery.SituationExchangeDelivery.length > 0) {
                     var alerts = [];
                     angular.forEach(data.Siri.ServiceDelivery.SituationExchangeDelivery[0].Situations, function(val, key) {
-                        angular.forEach(val, function(v, k) {
-                            alerts.push(v.Description);
+                        angular.forEach(val, function(alert, k) {
+                            description = alert.Description;
+                            safeDescription = Array.isArray(description) ? description.join(" ") : description;
+                            alerts.push(safeDescription);
                         });
                     });
                     buses.alerts = alerts;
