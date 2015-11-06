@@ -914,12 +914,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
                     showNearbyStops();
                     $scope.data.notifications = "";
-                    $scope.data.showMap = true;
                     $timeout(function() {
                         $ionicScrollDelegate.scrollTop();
                     });
                 } else {
-                    $scope.data.showMap = false;
                     $scope.data.notifications = "No nearby stops found.";
                 }
             });
@@ -936,7 +934,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             var timeoutVal = 10000;
             var fired = false;
             var timeout = $timeout(function() {
-                $scope.data.showMap = false;
                 $scope.data.notifications = "Pull to refresh.";
                 $scope.loading = false;
                 if ($scope.left !== true) {
@@ -967,7 +964,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
                     },
                     function(error) {
-                        $scope.data.showMap = false;
                         $scope.data.notifications = "Pull to refresh.";
                         $ionicLoading.hide();
                         $timeout.cancel(timeout);
@@ -985,7 +981,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     }
                 )
                 .finally(function() {
-                    $scope.data.showMap = false;
                     $scope.data.notifications = "Pull to refresh.";
                     $scope.loading = false;
                     $timeout.cancel(timeout);
@@ -1177,7 +1172,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                //console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
                lat = map.getCenter().lat;
                lng = map.getCenter().lng;
-               debounce(getNearbyStopsAndRoutes(lat, lng, false), 250);
+               debounce(getNearbyStopsAndRoutes(lat, lng, false), 350);
            });
 
         });
