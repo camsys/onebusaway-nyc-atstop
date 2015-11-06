@@ -181,7 +181,6 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                         angle: val.MonitoredVehicleJourney.Bearing
                     };
                 });
-                console.log(locations);
                 return deferred.resolve(locations);
             })
             .error(function(data, status, header, config) {
