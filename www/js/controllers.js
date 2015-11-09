@@ -633,7 +633,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 },
                 center: {},
                 defaults: {
-                    scrollWheelZoom: false
+                    scrollWheelZoom: true
                 },
                 markers: {},
                 paths: {},
@@ -757,7 +757,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         $scope.left = false;
         $scope.center = {};
         $scope.data = {
-            "returnShow": false,
+            "inRouteView": false,
             "title": "Nearby Stops",
             "loaded": true,
             "showMap": true,
@@ -780,6 +780,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         // this array holds stops we want to query arrivals from.
         var stopsInTimeout = [];
 
+        var lastZoom;
+        var defaultZoom = 15;
+
         var cancelReloadTimeout = function() {
             if ($scope.reloadTimeout) {
                 $interval.cancel($scope.reloadTimeout);
@@ -800,7 +803,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
          * move back from stop detail
          */
         $scope.back = function() {
-            $scope.data.returnShow = false;
+            $scope.data.inRouteView = false;
             resetReloadTimeout();
             $scope.reinitialize();
         };
@@ -1012,7 +1015,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     };
                 } else {
                     //console.log(v["lat"], v["lon"]);
-                    $log.debug(v["lat"], v["lon"]);
                     stops['currentLocation'] = {
                         lat: parseFloat(v["lat"]),
                         lng: parseFloat(v["lon"]),
@@ -1028,11 +1030,13 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 }
             });
             //set zoom around nearest stop
-            $log.debug($scope.data);
             $scope.markers = stops;
             leafletData.getMap().then(function (map) {
-                    $log.debug('moving', $scope.markers['s0']);
-                    map.setView($scope.markers['s0'], 15, {
+                // zoom to default if user is far out.
+                var newZoom = (getCurrentZoom() <= defaultZoom) ? defaultZoom : getCurrentZoom();
+                //$log.debug('currently at ', getCurrentZoom(), 'zooming to ', newZoom)
+
+                map.setView($scope.markers['s0'], newZoom, {
                         animate: true
                 });
             })
@@ -1059,7 +1063,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     tileLayerOptions: {
                         attribution: $filter('hrefToJS')(MAP_ATTRS)
                     },
-                    scrollWheelZoom: false,
+                    scrollWheelZoom: true,
                     key: MAPBOX_KEY,
                     zoomControl: false
                 },
@@ -1103,7 +1107,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
          */
         $scope.showCurrentStop = function(route, stop, lat, lon, name) {
             $log.debug(route, stop, lat, lon, name);
-            $scope.data.returnShow = true;
+            $scope.data.inRouteView = true;
             $interval.cancel($scope.reloadTimeout);
             drawCurrentStop(route, stop, lat, lon, name);
             //timeout for refreshing information associated with this route at this stop
@@ -1158,23 +1162,69 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
         };
 
+        var getCurrentZoom = function(args) {
+            if (angular.isUndefined(args)){
+                return defaultZoom;
+            }
+            else {
+                return args.leafletEvent.target._zoom;
+            }
+        }
         /**
-         * when the map is dragged, get the stops in the new view
+         * called in certain cases when moving map.
+         * @param event leaflet event
+         * @param args leaflet args
          */
-        $scope.$on('leafletDirectiveMap.dragend', function(event){
-           $scope.eventDetected = "Drag";
+        var mapMoveAndReload = function(event, args){
+            // angular-leaflet center bound to scope lags the map center for some reason... D'oh!
+            //console.log('angular-leaflet center', $scope.center.lat, $scope.center.lng);
 
-           // angular-leaflet center bound to scope lags the map center for some reason... D'oh!
-           //console.log('angular-leaflet center', $scope.center.lat, $scope.center.lng);
-            var lat, lng;
-        
-           leafletData.getMap().then(function(map) {
-               //console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
-               lat = map.getCenter().lat;
-               lng = map.getCenter().lng;
-               debounce(getNearbyStopsAndRoutes(lat, lng, false), 350);
-           });
+            // but don't bother if user has chosen a route to view
 
+            if (!$scope.data.inRouteView) {
+                console.log($scope.data.inRouteView);
+                $scope.eventDetected = "Drag";
+
+                leafletData.getMap().then(function (map) {
+                    //console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
+                    var lat = map.getCenter().lat;
+                    var lng = map.getCenter().lng;
+
+                    debounce(getNearbyStopsAndRoutes(lat, lng, false), 350);
+
+                });
+            }
+        };
+
+        /**
+         * when the map is dragged, move and reload stops
+         */
+        $scope.$on('leafletDirectiveMap.dragend', function(event, args){
+            var zoom = getCurrentZoom(args);
+
+            if (zoom >= defaultZoom) {
+                mapMoveAndReload(event, args);
+           }
+        });
+        /**
+         * when zooming in past a certain level, move and reload stops
+         */
+        $scope.$on('leafletDirectiveMap.zoomend', function(event, args){
+            var zoom = getCurrentZoom(args);
+
+            if (zoom >= defaultZoom  && lastZoom < zoom ){
+                mapMoveAndReload(event, args);
+            }
+            else {
+                $scope.data.notifications = "Zoom in to see stops"
+            }
+        });
+
+        /**
+         * before zooming, cache the zoom level
+         */
+        $scope.$on('leafletDirectiveMap.zoomstart', function(event, args){
+            lastZoom = getCurrentZoom(args);
         });
 
         /**
@@ -1205,7 +1255,8 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
         });
         /**
-         * fired when leaving the view.
+         *  destroy the controller.
+         *  fired when leaving the view.
          */
         $scope.$on('$destroy', function() {
             $scope.left = true;

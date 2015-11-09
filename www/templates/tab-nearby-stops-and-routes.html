@@ -1,6 +1,6 @@
 <ion-view view-title="{{data.title}}" class="nearby">
     <ion-nav-buttons side="secondary">
-        <button class="button button-clear" ng-click="back()" ng-show="data.returnShow">
+        <button class="button button-clear" ng-click="back()" ng-show="data.inRouteView">
             <i class="icon ion-arrow-return-left"></i>
         </button>
     </ion-nav-buttons>
@@ -17,7 +17,7 @@
             <ion-list>
                 <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}"
                           id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)"
-                          in-view-options="{ debounce: 20 }" class="card cardwithnomargin" >
+                          in-view-options="{ debounce: 25 }" class="card cardwithnomargin" >
                     <div class="item item-divider vcenter item-icon-right">
                         {{item.name}}
                         <button ng-show="item.alerts.length"
@@ -50,7 +50,7 @@
                     </div>
                     <div class="item nopadding">
                         <a class="button button-positive button-small button-clear"
-                           href="#/tab/{{url}}/{{item.id}}/{{item.name | encodeStopName}}">See more</a>
+                           href="#/tab/{{url}}/{{item.id}}/{{item.name | encodeStopName}}">Stop View</a>
                     </div>
                 </ion-item>
             </ion-list>

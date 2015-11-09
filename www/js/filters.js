@@ -56,7 +56,6 @@ angular.module('filters', [])
 
             if (duration.minutes > 0) {
                 displayTime = minutes + " min";
-                $log.debug(input, duration.hours, duration.minutes);
             }
             else{
                 displayTime = '';

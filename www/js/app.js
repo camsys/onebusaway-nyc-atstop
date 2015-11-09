@@ -65,7 +65,7 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
   }
 })
 
-.run(function($rootScope, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout, $ionicTabsDelegate) {
+.run(function($rootScope, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $timeout) {
 
     // if 'loading:show' is broadcasted then show the loading indicator or hide if 'loading:hide' is broadcasted
     $rootScope.$on('loading:show', function() {
@@ -76,7 +76,6 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
         $ionicLoading.hide();
     });
 
-    // Do we need this?
     $rootScope.$on('requestRejection', function(obj, data) {
         $ionicLoading.hide();
 

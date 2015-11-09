@@ -765,7 +765,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
          */
         function getRemainingTime(referenceTime) {
             var now = moment().utc();
-            time = moment(referenceTime) - now;
+            var time = moment(referenceTime) - now;
             if (time < 0 ){ time = 0;};
             return time;
         }
@@ -808,7 +808,6 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                 }
             });
 
-            $log.debug(markers);
             deferred.resolve(markers);
         });
 
@@ -835,7 +834,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     });
                 });
             });
-            $log.debug(paths);
+
             deferred.resolve(paths);
         });
 
@@ -864,7 +863,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     zIndexOffset: 800
                 };
             });
-            $log.debug(markers);
+
             deferred.resolve(markers);
         });
 
