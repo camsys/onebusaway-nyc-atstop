@@ -1032,15 +1032,20 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             //set zoom around nearest stop
             $scope.markers = stops;
             leafletData.getMap().then(function (map) {
-                // zoom to default if user is far out.
-                var newZoom = (getCurrentZoom() <= defaultZoom) ? defaultZoom : getCurrentZoom();
-                //$log.debug('currently at ', getCurrentZoom(), 'zooming to ', newZoom)
 
-                map.setView($scope.markers['s0'], newZoom, {
-                        animate: true
+                var zoomPromise= getCurrentZoom().then(function(currentZoom){
+                     // zoom to default if user is far out.
+                    var newZoom = (currentZoom <= defaultZoom || angular.isUndefined(currentZoom)) ? defaultZoom : currentZoom;
+
+                    $log.debug($scope.markers['s0']);
+                    $log.debug('currently at ', getCurrentZoom(), 'zooming to ', newZoom);
+
+                    map.setView($scope.markers['s0'], newZoom, {
+                            animate: true
+                    });
                 });
-            })
 
+            })
 
         };
 
@@ -1162,13 +1167,30 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             });
         };
 
+        /**
+        * returns the current zoom via a promise
+        * First, tries to get Leaflet zoom level
+        * else, revert to default zoom 
+        */
         var getCurrentZoom = function(args) {
-            if (angular.isUndefined(args)){
-                return defaultZoom;
-            }
-            else {
-                return args.leafletEvent.target._zoom;
-            }
+            // $log.debug(getCurrentZoom.caller);
+
+            var zoomDefer = $q.defer();
+            var zoom;
+
+            leafletData.getMap().then(function (map) {
+                    mapZoom = map._zoom
+                    $log.debug("curzoom", mapZoom);
+                    if (isInt(mapZoom)){
+                        zoom = mapZoom;
+                    }
+                    else {
+                        $log.debug('using default zoom');
+                        zoom = defaultZoom;
+                    }
+                    zoomDefer.resolve(zoom);
+            });
+            return zoomDefer.promise;
         }
         /**
          * called in certain cases when moving map.
@@ -1182,11 +1204,10 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             // but don't bother if user has chosen a route to view
 
             if (!$scope.data.inRouteView) {
-                console.log($scope.data.inRouteView);
                 $scope.eventDetected = "Drag";
 
                 leafletData.getMap().then(function (map) {
-                    //console.log('leaflet center', map.getCenter().lat, map.getCenter().lng);
+                    $log.debug('moving to', map.getCenter().lat, map.getCenter().lng);
                     var lat = map.getCenter().lat;
                     var lng = map.getCenter().lng;
 
@@ -1200,31 +1221,36 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
          * when the map is dragged, move and reload stops
          */
         $scope.$on('leafletDirectiveMap.dragend', function(event, args){
-            var zoom = getCurrentZoom(args);
-
-            if (zoom >= defaultZoom) {
-                mapMoveAndReload(event, args);
-           }
+            var zoomPromise= getCurrentZoom().then(function(z){
+                $log.debug('returned zoom', z);
+                console.log(z,'!!')
+                if (z >= defaultZoom) {
+                    mapMoveAndReload(event, args);
+               }
+            });
         });
         /**
          * when zooming in past a certain level, move and reload stops
          */
         $scope.$on('leafletDirectiveMap.zoomend', function(event, args){
-            var zoom = getCurrentZoom(args);
 
-            if (zoom >= defaultZoom  && lastZoom < zoom ){
-                mapMoveAndReload(event, args);
-            }
-            else {
-                $scope.data.notifications = "Zoom in to see stops"
-            }
+            var zoomPromise= getCurrentZoom().then(function(zoom){
+                if (zoom >= defaultZoom  && lastZoom < zoom ){
+                    mapMoveAndReload(event, args);
+                }
+                else {
+                    $scope.data.notifications = "Zoom in to see stops"
+                }
+            });
         });
 
         /**
          * before zooming, cache the zoom level
          */
         $scope.$on('leafletDirectiveMap.zoomstart', function(event, args){
-            lastZoom = getCurrentZoom(args);
+            var zoomPromise= getCurrentZoom().then(function(z){
+                lastZoom = z;
+            });
         });
 
         /**
@@ -1264,6 +1290,14 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 $interval.cancel($scope.reloadTimeout);
             }
         });
+
+        var isInt = function(value) {
+            if (isNaN(value)) {
+                return false;
+            }
+            var x = parseFloat(value);
+            return (x | 0) === x;
+        };
 
         /**
          * init function

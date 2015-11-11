@@ -124,8 +124,9 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
 
 // use the logProvider instead of console.log
 .config(function($logProvider){
-  // you are developing on a mac, right?? otherwise add some || here with your platforms
-  if (ionic.Platform.platform() === 'macintel'){
+  // you are developing on a Mac or Linux, right?? otherwise add some || here with your dev platforms
+  var platform = ionic.Platform.platform();
+  if (platform === 'macintel' || platform === 'linux'){
     $logProvider.debugEnabled(true);
   }
   else {
