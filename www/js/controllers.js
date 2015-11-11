@@ -1037,12 +1037,12 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                      // zoom to default if user is far out.
                     var newZoom = (currentZoom <= defaultZoom || angular.isUndefined(currentZoom)) ? defaultZoom : currentZoom;
 
-                    $log.debug($scope.markers['s0']);
-                    $log.debug('currently at ', getCurrentZoom(), 'zooming to ', newZoom);
-
+                    // but don't refocus if user is zoomed too far in. 
+                    if (newZoom < 17){
                     map.setView($scope.markers['s0'], newZoom, {
                             animate: true
                     });
+                    }
                 });
 
             })
