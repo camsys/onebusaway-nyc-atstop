@@ -26,6 +26,12 @@
                         </button>
                     </div>
                     <div class="stop-container stop-flex" >
+                        <div ng-show="!item.loaded"> <em>Loading</em></div>
+
+                        <div ng-show="item.loaded && !item.arriving">
+                            <p class="longtext novmargin">No vehicles in route to this stop.</p>
+                        </div>
+
                         <div ng-show="item.showAlerts" ng-repeat="a in item.alerts" class="stop-flex">
                             <p class="alerts longtext">{{a}}</p>
                         </div>

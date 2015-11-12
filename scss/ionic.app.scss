@@ -165,6 +165,7 @@ p {
     text-justify: auto;
     line-height: 1.5;
     hyphens: auto;
+    white-space: normal !important;
 }
 
 a {
@@ -188,13 +189,8 @@ optgroup,
 select,
 textarea {
     color: inherit;
-    /* 1 */
-    
     font: inherit;
-    /* 2 */
-    
     margin: 0;
-    /* 3 */
 }
 
 button,

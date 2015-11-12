@@ -98,31 +98,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 $scope.data.notifications = "";
             }
         };
-/**
- * run when user triggers enter on a search. Then gets search results and opens appropriate route based on type of response.
- * @param  {String} matches [description]
-
- */
-        $scope.searchesGo = function(matches) {
-            SearchesService.add(matches);
-            switch (matches.type) {
-                case "RouteResult":
-                    handleRouteSearch(matches);
-                    break;
-                case "StopResult":
-                    $scope.go("/tab/atstop/" + matches.id + '/' + $filter('encodeStopName')(matches.name));
-                    break;
-                case "GeocodeResult":
-                    $scope.go("/tab/geolocation/" + matches.latitude + '/' + matches.longitude + '/' + matches.formattedAddress);
-                    break;
-                default:
-                    $scope.data.results = [];
-                    $scope.data.notifications = "No matches";
-                    //console.log("undefined type");
-                    $log.debug("undefined type");
-                    break;
-            }
-        };
 
         // set no sched svc message.
         /**
@@ -819,7 +794,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             if ($location.$$path === "/tab/nearby-stops-and-routes") {
                 getNearbyStopsAndRoutesGPS();
             } else {
-                getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
+                getNearbyStopsAndRoutes($scope.lat, $scope.lon);
             }
 
             tick();
@@ -879,6 +854,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 angular.forEach($scope.data.stops, function(s) {
                     s.arriving = arrivals[s.id];
                     s.alerts = alerts[s.id];
+                    s.loaded = true;
                     s.showAlerts = false;
                 });
             });
@@ -930,7 +906,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
          */
 
         var getNearbyStopsAndRoutesGPS = function() {
-            //console.log("getNearbyStopsAndRoutesGPS called");
 
             $scope.loading = true;
 
@@ -972,13 +947,12 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         $timeout.cancel(timeout);
                         if ($scope.left !== true) {
                             var popup = $ionicPopup.alert({
-                                content: "Cannot access your position. Check if location services are enabled."
+                                content: "Cannot access your position. Check if location is enabled."
                             });
                             $timeout(function() {
                                 popup.close();
                             }, 3000);
                         } else {
-                            console.log("You left the current page! Destroying ...");
                             $log.debug("You left the current page! Destroying ...");
                         }
                     }
@@ -1029,7 +1003,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     };
                 }
             });
-            //set zoom around nearest stop
+
             $scope.markers = stops;
             leafletData.getMap().then(function (map) {
 
@@ -1058,7 +1032,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             angular.extend($scope, {
                 events: {
                     markers: {
-                        enable: ['click', 'dragend'],
+                        enable: ['click', 'dragend', 'zoomstart', 'zoomend'],
                         logic: 'emit'
                     }
                 },
@@ -1111,10 +1085,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
          * @param name
          */
         $scope.showCurrentStop = function(route, stop, lat, lon, name) {
-            $log.debug(route, stop, lat, lon, name);
+
             $scope.data.inRouteView = true;
             $interval.cancel($scope.reloadTimeout);
             drawCurrentStop(route, stop, lat, lon, name);
+
             //timeout for refreshing information associated with this route at this stop
             $scope.reloadTimeout = $interval(function() {
                 drawCurrentStop(route, stop, lat, lon, name);
@@ -1179,7 +1154,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
             leafletData.getMap().then(function (map) {
                     mapZoom = map._zoom
-                    $log.debug("curzoom", mapZoom);
+
                     if (isInt(mapZoom)){
                         zoom = mapZoom;
                     }
@@ -1200,8 +1175,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             // angular-leaflet center bound to scope lags the map center for some reason... D'oh!
             //console.log('angular-leaflet center', $scope.center.lat, $scope.center.lng);
 
-            // but don't bother if user has chosen a route to view
-
+            // don't bother if user has chosen a route to view
             if (!$scope.data.inRouteView) {
                 $scope.eventDetected = "Drag";
 
@@ -1210,7 +1184,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                     var lat = map.getCenter().lat;
                     var lng = map.getCenter().lng;
 
-                    debounce(getNearbyStopsAndRoutes(lat, lng, false), 350);
+                    debounce(getNearbyStopsAndRoutes(lat, lng, false), 500);
+                    $scope.lat = lat;
+                    $scope.lon = lng;
 
                 });
             }
@@ -1306,13 +1282,13 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 $scope.data.title = "Nearby Stops";
                 $scope.url = "atstop-gps";
                 getNearbyStopsAndRoutesGPS();
-                tick();
             } else {
                 $scope.data.title = $stateParams.address;
                 getNearbyStopsAndRoutes($stateParams.latitude, $stateParams.longitude);
             }
-            setReloadTimeout();
+
             tick();
+            setReloadTimeout();
         })();
     }
 ]);

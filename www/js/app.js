@@ -43,7 +43,7 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
         if (window.cordova && $cordovaNetwork.isOffline()) {
             $ionicPopup.alert({
                     title: "Internet Disconnected",
-                    content: "The internet is not available on your device."
+                    content: "Internet is not available on your device."
                 })
                 .then(function(result) {
                     if (result) {
