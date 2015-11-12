@@ -1039,7 +1039,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 
                     // but don't refocus if user is zoomed too far in. 
                     if (newZoom < 17){
-                    map.setView($scope.markers['s0'], newZoom, {
+                        map.setView($scope.markers['s0'], newZoom, {
                             animate: true
                     });
                     }
@@ -1173,7 +1173,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
         * else, revert to default zoom 
         */
         var getCurrentZoom = function(args) {
-            // $log.debug(getCurrentZoom.caller);
 
             var zoomDefer = $q.defer();
             var zoom;
@@ -1207,7 +1206,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 $scope.eventDetected = "Drag";
 
                 leafletData.getMap().then(function (map) {
-                    $log.debug('moving to', map.getCenter().lat, map.getCenter().lng);
+                    // $log.debug('moving to', map.getCenter().lat, map.getCenter().lng);
                     var lat = map.getCenter().lat;
                     var lng = map.getCenter().lng;
 
@@ -1222,8 +1221,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
          */
         $scope.$on('leafletDirectiveMap.dragend', function(event, args){
             var zoomPromise= getCurrentZoom().then(function(z){
-                $log.debug('returned zoom', z);
-                console.log(z,'!!')
                 if (z >= defaultZoom) {
                     mapMoveAndReload(event, args);
                }
@@ -1238,9 +1235,9 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 if (zoom >= defaultZoom  && lastZoom < zoom ){
                     mapMoveAndReload(event, args);
                 }
-                else {
-                    $scope.data.notifications = "Zoom in to see stops"
-                }
+                // else {
+                //     $scope.data.notifications = "Zoom in to see stops"
+                // }
             });
         });
 
@@ -1290,6 +1287,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 $interval.cancel($scope.reloadTimeout);
             }
         });
+
 
         var isInt = function(value) {
             if (isNaN(value)) {
