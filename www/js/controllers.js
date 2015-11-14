@@ -297,6 +297,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                 if (results.alerts.length > 0) {
                     $scope.data.alertsHide = true;
                     $scope.data.alerts = results.alerts;
+                    $log.debug($scope.data.alerts);
                 } else {
                     $scope.data.alertsHide = false;
                 }
