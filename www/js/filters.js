@@ -20,7 +20,9 @@
 
 angular.module('filters', [])
 
-// modify a link to open URL in a device's browser
+/**
+ * modify a link to open URL in a device's browser via the inAppBrowser plugin
+  */
 .filter('hrefToJS', function($sce, $sanitize) {
     return function(text) {
         return $sce.trustAsHtml($sanitize(text).replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', '_system', 'location=yes')\""));
@@ -41,6 +43,29 @@ angular.module('filters', [])
         return input;
     };
 })
+/**
+ * filter for cleaning up shorthand in Service Alerts/SituationExchange/etc
+ * takes in String or Array(String)
+ * @returns String
+ */
+    .filter('alertsFilter', [ function() {
+        // TODO: think about porting regexes from this list: https://github.com/michaelsand/AccessibleMTA
+        return function(input) {
+            var safeDescription = Array.isArray(input) ? input.join(" ") : input;
+
+            // cleaning up shorthand
+            var regexToFix = /^b\/d/i;
+            safeDescription = safeDescription.replace(regexToFix, "In Both Directions:");
+
+            regexToFix = /^s\/b/i;
+            safeDescription = safeDescription.replace(regexToFix, "Southbound:");
+
+            regexToFix = /^n\/b/i;
+            safeDescription = safeDescription.replace(regexToFix, "Northbound:");
+
+            return safeDescription;
+        }
+    }])
 
 // always round down to nearest min, do not show time if less than 1 minute away
 .filter('durationView', ['$log', 'datetimeService',

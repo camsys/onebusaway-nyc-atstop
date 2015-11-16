@@ -574,11 +574,8 @@ angular.module('atstop.services', ['ionic', 'configuration'])
                     angular.forEach(data.Siri.ServiceDelivery.SituationExchangeDelivery[0].Situations, function(val, key) {
                         angular.forEach(val, function(alert, k) {
                             description = alert.Description;
-                            safeDescription = Array.isArray(description) ? description.join(" ") : description;
-                            // cleaning up shorthand
-                            var bothDirectionsRegexp = /^b\/d/i;
-                            safeDescription = safeDescription.replace(bothDirectionsRegexp, "In Both Directions:");
-                            $log.debug(description);
+                            var safeDescription = $filter('alertsFilter')(description);
+
                             alerts.push(safeDescription);
                         });
                     });

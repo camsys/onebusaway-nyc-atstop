@@ -923,7 +923,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
                         popup.close();
                     }, 3000);
                 } else {
-                    console.log("You left the current page! Destroying ...");
                     $log.debug("You left the current page! Destroying ...");
                 }
             }, timeoutVal + 5000);
