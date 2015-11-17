@@ -17,9 +17,10 @@ Comments/contributions are welcome.
   * `git remote add origin PATH/TO/THIS/REPO`
   * `git fetch --all`
   * `git reset --hard origin/master`
-  * `rm www/img/ionic.png www/css/style.css` files.
+  * `rm www/img/ionic.png www/css/style.css` .
   * `mv www/js/config.tmpl.js  www/js/config.js`
   * `npm install` to grab the dependencies defined in the *package.json*.
+  * `bower install` (yes, we know).
   * run `gulp sass` to generate CSS from SCSS.
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one.
   * Insert your key into the `API_KEY` field of `config.js`.
