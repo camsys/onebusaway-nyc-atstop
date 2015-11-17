@@ -493,7 +493,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
     function($log, $cordovaAppVersion, $rootScope, $scope, $ionicScrollDelegate, PRIV_POLICY_TEXT, SHOW_BRANDING, BRAND_ABOUT_TEXT) {
 
         $scope.data = {
-            version: "1.1.3",
+            version: "1.2.0",
             showBranding: SHOW_BRANDING,
             hideText: true,
             brandAboutText: BRAND_ABOUT_TEXT,
