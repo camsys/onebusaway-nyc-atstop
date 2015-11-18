@@ -19,19 +19,12 @@ Comments/contributions are welcome.
   * `git reset --hard origin/master`
   * `rm www/img/ionic.png www/css/style.css` .
   * `mv www/js/config.tmpl.js  www/js/config.js`
-  * `npm install` to grab the dependencies defined in the *package.json*.
-  * `bower install` (yes, we know).
+  * `npm install` to grab dependencies defined in package.json.
+  * `bower install` to grab dependencies defined in bower.json (yes, we know).
   * run `gulp sass` to generate CSS from SCSS.
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one.
   * Insert your key into the `API_KEY` field of `config.js`.
   * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://bustime.mta.info/`)
-
-#### Required Cordova Plugins for Building
-In order to build app packages and install, several Cordova plugins are required. Using `cordova plugin add [name]`, install the following plugins:
- * cordova-plugin-network-information
- * cordova-plugin-geolocation
- * cordova-plugin-inappbrowser
- * https://github.com/whiteoctober/cordova-plugin-app-version.git
 
  Note: If building for iOS9, you may need to update the [App Transport Security](http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/) parameters.
 
@@ -50,6 +43,9 @@ Now, we are using [ng-describe](https://github.com/kensho/ng-describe). **Note:*
 * Default Karma Config (`karma.conf.js`) file located in the root directory of the project
 * Run `karma start`
 * To open the coverage report page in the browser, run `open coverage/Chrome<...>/index.html`
+
+### Building via Cordova
+* running `ionic state restore` will pick up plugins and platforms necessary to build via Cordova
 
 ### Project License ###
 The project uses the [Apache License, version 2.0](http://opensource.org/licenses/Apache-2.0).

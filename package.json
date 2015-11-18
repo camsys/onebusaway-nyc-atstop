@@ -31,6 +31,17 @@
     "karma-coverage": "^0.5.2",
     "karma-jasmine": "^0.3.6"
   },
+  "cordovaPlugins": [
+    "cordova-plugin-network-information",
+    "cordova-plugin-geolocation",
+    "cordova-plugin-inappbrowser",
+    "https://github.com/whiteoctober/cordova-plugin-app-version.git"
+   ],
+   "cordovaPlatforms": [
+    "ios",
+    "android",
+    "browser" 
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -38,6 +49,7 @@
     "type": "git",
     "url": "git+https://github.com/camsys/onebusaway-nyc-atstop.git"
   },
+
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
