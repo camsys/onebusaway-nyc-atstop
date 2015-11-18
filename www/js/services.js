@@ -444,7 +444,7 @@ angular.module('atstop.services', ['ionic', 'configuration'])
     }
         /**
          * core exposed function of this service
-         * @param either a stop ID or an object of parameters including {stop, sort}
+         * @param either a stop ID or an object of parameters including \{stop, sort\}
          * @returns {*} an object formatted for the V/VM
          */
     var getBuses = function(params) {
