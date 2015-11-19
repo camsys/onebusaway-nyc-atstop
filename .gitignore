@@ -28,6 +28,7 @@
 !www/lib/angular-cache/*
 !www/lib/angular-ios9-patch/*
 !www/lib/angular-leaflet/*
+!www/lib/angular-inview/*
 !www/lib/leaflet/*
 !www/lib/leaflet/images/*
 !www/lib/leaflet/plugins/*
