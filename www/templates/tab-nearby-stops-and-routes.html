@@ -17,7 +17,7 @@
             <ion-list>
                 <ion-item ng-repeat="item in data.stops | orderBy:'dist' | filter:{id: '!current_location'}"
                           id="{{item.id}}" in-view="lineInView($index, $inview, $inviewpart, $event)"
-                          in-view-options="{ debounce: 25 }" class="card cardwithnomargin" >
+                          in-view-options="{ debounce: 25 }" class="card cardwithnomargin nopadding" >
                     <div class="item item-divider vcenter item-icon-right">
                         {{item.name}}
                         <button ng-show="item.alerts.length"
