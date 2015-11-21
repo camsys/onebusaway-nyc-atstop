@@ -47,7 +47,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 /**
 * @ngdoc controller
  * @description
- * Controller that used for searching using autocomplete API.
+ * Controller used for searching using autocomplete API.
  */
 .controller('SearchCtrl', ['$log','$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING', '$ionicTabsDelegate',
     function($log, $rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING,  $ionicTabsDelegate) {
@@ -198,7 +198,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 ])
 
 /**
- * Controller that used for showing favorites.
+ * Controller used for showing favorites.
  */
 .controller('FavoritesCtrl', ['$log', '$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
     function($log, $scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
@@ -253,7 +253,7 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 /**
  * @ngdoc controller
  * @description
- * Controller used for showing upcoming buses for specific stop.
+ * Controller used for showing upcoming vehicles for specific stop.
  */
 .controller('AtStopCtrl', ['$log', '$ionicScrollDelegate', '$scope', 'AtStopService', '$stateParams', '$q', '$ionicLoading', 'FavoritesService', '$timeout', '$filter', 'datetimeService', '$interval', '$location',
     function($log, $ionicScrollDelegate, $scope, AtStopService, $stateParams, $q, $ionicLoading, FavoritesService, $timeout, $filter, datetimeService, $interval, $location) {
@@ -580,9 +580,11 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
             $scope.markers = {};
 
             MapService.getBusMarkers(route).then(function(res) {
+                $log.debug(res);
                 angular.extend($scope.markers, res);
             });
             MapService.getStopMarkers(route, stop).then(function(res) {
+                $log.debug(res);
                 angular.extend($scope.markers, res);
 
                 //set zoom around current stop

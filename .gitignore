@@ -1,6 +1,7 @@
 # Ignore everything
 *
 
+
 # But not these files…
 !.gitignore
 !/gulpfile.js
@@ -17,16 +18,9 @@
 !www/css/CSS_README
 !www/img/bus_icons/*
 !www/img/stop_icons/*
-!www/js/app.js
-!www/js/config.tmpl.js
-!www/js/controllers.js
-!www/js/filters.js
-!www/js/filters-spec.js
-!www/js/directives.js
-!www/js/services.js
-!www/js/services-spec.js
+!js/*.js
+!www/js/JS_README
 !www/lib/angular-cache/*
-!www/lib/angular-ios9-patch/*
 !www/lib/angular-leaflet/*
 !www/lib/angular-inview/*
 !www/lib/leaflet/*
@@ -51,8 +45,10 @@
 # …even if they are in subdirectories
 !*/
 
-# Ignore .DS_Store files
+# and specifically ignore these
 .DS\_Store
 *.sw?
 engine/*
 platforms/*
+config.js
+

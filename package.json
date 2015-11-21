@@ -23,6 +23,7 @@
   "devDependencies": {
     "angular-jsdoc": "^1.2.1",
     "angular-mocks": "^1.4.7",
+    "gulp-concat": "^2.6.0",
     "gulp-shell": "^0.4.3",
     "jasmine-core": "^2.3.4",
     "jsdoc": "^3.3.3",
@@ -36,11 +37,11 @@
     "cordova-plugin-geolocation",
     "cordova-plugin-inappbrowser",
     "https://github.com/whiteoctober/cordova-plugin-app-version.git"
-   ],
-   "cordovaPlatforms": [
+  ],
+  "cordovaPlatforms": [
     "ios",
     "android",
-    "browser" 
+    "browser"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -49,7 +50,6 @@
     "type": "git",
     "url": "git+https://github.com/camsys/onebusaway-nyc-atstop.git"
   },
-
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
