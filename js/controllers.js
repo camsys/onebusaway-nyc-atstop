@@ -198,59 +198,6 @@ angular.module('atstop.controllers', ['configuration', 'filters'])
 ])
 
 /**
- * Controller used for showing favorites.
- */
-.controller('FavoritesCtrl', ['$log', '$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
-    function($log, $scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
-        $scope.data = {
-            "loaded": false,
-            "notifications": '',
-            "showBranding": SHOW_BRANDING
-        };
-
-        $scope.remove = function(id) {
-            console.log(id);
-            $log.debug(id);
-            FavoritesService.remove(id);
-            get();
-        };
-
-        var get = function() {
-            $scope.data.favoriteRoutes = [];
-            $scope.data.favoriteStops = [];
-            $scope.data.favoriteRouteMaps = [];
-            var favoritesDefer = $q.defer();
-
-            FavoritesService.get().then(function(results) {
-                if (Object.keys(results).length === 0) {
-                    $scope.data.notifications = "You have not added any favorites. You can add favorites by clicking the star icon on routes, favorites, or maps.";
-                } else if (!angular.isUndefined(results) && results !== null) {
-                    angular.forEach(results, function(value) {
-                        if (value.type === 'R') {
-                            $scope.data.favoriteRoutes.push(value);
-                        } else if (value.type === 'RM') {
-                            $scope.data.favoriteRouteMaps.push(value);
-                        } else {
-                            $scope.data.favoriteStops.push(value);
-                        }
-                    });
-                    $scope.data.notifications = "";
-                }
-                favoritesDefer.resolve();
-            });
-
-            favoritesDefer.promise.then(function() {
-                $scope.data.loaded = true;
-            });
-        };
-
-        var init = (function() {
-            get();
-        })();
-    }
-])
-
-/**
  * @ngdoc controller
  * @description
  * Controller used for showing upcoming vehicles for specific stop.
