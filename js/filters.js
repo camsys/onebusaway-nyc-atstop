@@ -34,9 +34,7 @@ angular.module('filters', [])
         return angular.isUndefined(a) || null === a;
     };
 })
-/**
- * 
- */
+
 .filter('encodeStopName', function() {
     return function(input) {
         input = input || '';
