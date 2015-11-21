@@ -58,7 +58,7 @@ gulp.task('compress', function() {
 			add: true,
 			single_quotes: true
 		}))
-		//.pipe(uglify())
+		.pipe(uglify())
         .pipe(concat('scripts.js'))
 		.pipe(gulp.dest('www/js'))
 });
@@ -68,9 +68,10 @@ gulp.task('docs', shell.task([
   'node_modules/jsdoc/jsdoc.js '+
     '-c node_modules/angular-jsdoc/common/conf.json '+   // config file
     '-t node_modules/angular-jsdoc/angular-template '+   // template file
-    '-d docs '+                           // output directory
-    './README.md '+                             // to include README.md as index contents
-    '-r www/js'                    // source code directory
+    '-d docs '+                                          // output directory
+    './README.md '+                                      // to include README.md as index contents
+    '-r ./js' +                                         // source code directory
+    '--verbose'
 ]));
 
 //var options = ['-o3'];

@@ -18,8 +18,10 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('atstop-favorites-controller')
+angular.module('atstop.favorites.controller', ['configuration', 'filters'])
     /**
+     * @ngdoc controller
+     * @description
      * Controller used for showing favorites.
      */
     .controller('FavoritesCtrl', ['$log', '$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
