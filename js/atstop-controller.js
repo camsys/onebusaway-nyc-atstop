@@ -1,3 +1,4 @@
+/*jshint sub:true*/
 angular.module('atstop.atstop.controller', ['configuration', 'filters'])
 /**
  * @ngdoc controller
