@@ -18,7 +18,11 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.favorites.controller', 'atstop.services', 'atstop.directives', 'leaflet-directive',
+angular.module('atstop', [
+ 'atstop.about.controller','atstop.atstop.controller',
+ 'atstop.favorites.controller', 'atstop.gohome.controller', ,'atstop.nearby.controller', 
+ 'atstop.route.controller', 'atstop.search.controller', 
+ 'atstop.services', 'atstop.directives', 'leaflet-directive','ionic',
     'ngCordova', 'angular-cache', 'angular-inview', 'timer', 'angular-svg-round-progress', 'ngIOS9UIWebViewPatch', 'debounce'])
 
 // global timeout variable for HTTP requests

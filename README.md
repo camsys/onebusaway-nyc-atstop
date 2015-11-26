@@ -12,7 +12,6 @@ Comments/contributions are welcome.
 * Second, start a new project using `ionic start atstop blank`.
 * Then, in the project root (`cd atstop`):
   * Setup SASS running `ionic setup sass`.
-  * Install dependencies running `bower install`.
   * `git init`
   * `git remote add origin PATH/TO/THIS/REPO`
   * `git fetch --all`
@@ -25,8 +24,6 @@ Comments/contributions are welcome.
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one.
   * Insert your key into the `API_KEY` field of `config.js`.
   * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://bustime.mta.info/`)
-
- Note: If building for iOS9, you may need to update the [App Transport Security](http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/) parameters.
 
 ### Running
 * Use the `ionic serve` function of [Ionic Framework](http://ionicframework.com/docs/guide/testing.html)
@@ -46,6 +43,7 @@ Now, we are using [ng-describe](https://github.com/kensho/ng-describe). **Note:*
 
 ### Building via Cordova
 * running `ionic state restore` will pick up plugins and platforms necessary to build via Cordova
+ Note: If building for iOS9, you may need to update the [App Transport Security](http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/) parameters.
 
 ### Project License ###
 The project uses the [Apache License, version 2.0](http://opensource.org/licenses/Apache-2.0).

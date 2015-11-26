@@ -43,7 +43,7 @@ gulp.task('watch', function() {
 });
 
 gulp.task('lint', function() {
-  return gulp.src('./www/js/*.js')
+  return gulp.src('./js/*.js')
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
 });
