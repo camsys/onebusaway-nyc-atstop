@@ -17,7 +17,7 @@ Comments/contributions are welcome.
   * `git fetch --all`
   * `git reset --hard origin/master`
   * `rm www/img/ionic.png www/css/style.css` .
-  * `mv www/js/config.tmpl.js  www/js/config.js`
+  * `mv js/config.tmpl.js  js/config.js`
   * `npm install` to grab dependencies defined in package.json.
   * `bower install` to grab dependencies defined in bower.json (yes, we know).
   * run `gulp sass` to generate CSS from SCSS.
