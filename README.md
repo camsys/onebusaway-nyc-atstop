@@ -12,7 +12,6 @@ Comments/contributions are welcome.
 * Second, start a new project using `ionic start atstop blank`.
 * Then, in the project root (`cd atstop`):
   * Setup SASS running `ionic setup sass`.
-  * Install dependencies running `bower install`.
   * `git init`
   * `git remote add origin PATH/TO/THIS/REPO`
   * `git fetch --all`
