@@ -47,17 +47,17 @@ angular.module('atstop', [
         }
 
         //checking if app is in cordova. Otherwise, don't worry about network connections.
-        if (window.cordova && $cordovaNetwork.isOffline()) {
-            $ionicPopup.alert({
-                    title: "Internet Disconnected",
-                    content: "Internet is not available on your device."
-                })
-                .then(function(result) {
-                    if (result) {
-                        ionic.Platform.exitApp();
-                    }
-                });
-        }
+        //if (window.cordova && $cordovaNetwork.isOffline()) {
+        //    $ionicPopup.alert({
+        //            title: "Internet Disconnected",
+        //            content: "Internet is not available. Try again later."
+        //        })
+        //        .then(function(result) {
+        //            if (result) {
+        //
+        //            }
+        //        });
+        //}
     });
 })
 

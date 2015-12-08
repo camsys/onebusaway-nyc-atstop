@@ -33,15 +33,25 @@
     "karma-jasmine": "^0.3.6"
   },
   "cordovaPlugins": [
+    "https://github.com/whiteoctober/cordova-plugin-app-version.git",
     "cordova-plugin-network-information",
     "cordova-plugin-geolocation",
+    "cordova-plugin-device",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-inappbrowser#master",
     "cordova-plugin-inappbrowser",
-    "https://github.com/whiteoctober/cordova-plugin-app-version.git"
+    {
+      "locator": "https://github.com/apache/cordova-plugin-wkwebview-engine.git#master",
+      "id": "cordova-plugin-wkwebview-engine"
+    }
   ],
   "cordovaPlatforms": [
-    "ios",
-    "android",
-    "browser"
+    "browser",
+    {
+      "platform": "ios",
+      "locator": "https://github.com/apache/cordova-ios.git#master"
+    },
+    "android"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
