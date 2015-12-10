@@ -5,8 +5,8 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
  * @description
  * Controller used for searching using autocomplete API.
  */
-.controller('SearchCtrl', ['$log','$rootScope', '$scope', '$location', 'SearchService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SearchesService', 'SHOW_BRANDING', '$ionicTabsDelegate',
-    function($log, $rootScope, $scope, $location, SearchService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchesService, SHOW_BRANDING,  $ionicTabsDelegate) {
+.controller('SearchCtrl', ['$log','$rootScope', '$scope', '$location', 'SearchService', 'SearchHistoryService', '$filter', '$ionicLoading', 'RouteService', '$ionicPopup', '$ionicPlatform', 'SHOW_BRANDING', '$ionicTabsDelegate',
+    function($log, $rootScope, $scope, $location, SearchHistoryService, $filter, $ionicLoading, RouteService, $ionicPopup, $ionicPlatform, SearchService, SHOW_BRANDING,  $ionicTabsDelegate) {
 
         $scope.go = function(path) {
             $location.path(path);
@@ -102,7 +102,7 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
 
             SearchService.search(term).then(
                 function(matches) {
-                    SearchesService.add(matches);
+                    SearchHistoryService.add(matches);
                     switch (matches.type) {
                         case "RouteResult":
                             handleRouteSearch(matches);
@@ -128,7 +128,7 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
          * clear previous searches array
          */
         $scope.clearSearches = function() {
-            SearchesService.clear();
+            SearchHistoryService.clear();
             $scope.data.searches = [];
             $scope.data.showSearches = false;
             $scope.data.showDefaultTips = true;
@@ -139,7 +139,7 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
          */
         var init = (function() {
 
-            SearchesService.fetchAll().then(function(results) {
+            SearchHistoryService.fetchAll().then(function(results) {
                 if (results.length > 0) {
                     $scope.data.searches = results;
                     $scope.data.showSearches = true;

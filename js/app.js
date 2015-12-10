@@ -22,9 +22,9 @@ angular.module('atstop', [
  'atstop.about.controller','atstop.atstop.controller',
  'atstop.favorites.controller', 'atstop.gohome.controller', 'atstop.nearby.controller', 
  'atstop.route.controller', 'atstop.search.controller', 
- 'atstop.datetime.service', 
+ 'atstop.atstop.service','atstop.datetime.service',
  'atstop.favorites.service', 'atstop.geolocation.service', 'atstop.route.service',
-  'atstop.search.service', 'atstop.vehicleMonitoring.service',
+  'atstop.search.service', 'atstop.searchHistory.service', 'atstop.vehicleMonitoring.service',
  'atstop.services', 'atstop.directives', 'leaflet-directive','ionic',
     'ngCordova', 'angular-cache', 'angular-inview', 'timer', 'angular-svg-round-progress', 'ngIOS9UIWebViewPatch', 'debounce'])
 

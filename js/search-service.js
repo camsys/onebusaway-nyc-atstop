@@ -1,80 +1,136 @@
-/*jshint sub:true*/
-
 /**
- * Copyright (c) 2015 Metropolitan Transportation Authority
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- *
- * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
+ * Created by tonylaidig on 12/10/15.
  */
-
 angular.module('atstop.search.service', ['ionic', 'configuration'])
+.factory('SearchService', function($log, $q, $http, httpTimeout, API_END_POINT, API_KEY) {
+    /**
+     * Autocomplete
+     * @param searchKey text entered in
+     * @returns {*} array of results
+     */
+    var autocomplete = function(searchKey) {
+        var deferred = $q.defer();
+        var matches = [];
 
-.factory('SearchesService', function($log, $q, $window) {
-    var insert = function(term, title, data) {
-        var searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
-
-        if (searches.length > 0) {
-            angular.forEach(searches, function(val, key) {
-                if (val.term == term) {
-                    searches.splice(key, 1);
-                }
+        var responsePromise = $http.jsonp(API_END_POINT + "api/autocomplete?callback=JSON_CALLBACK", {
+                params: {
+                    term: searchKey
+                },
+                cache: true,
+                timeout: httpTimeout
+            })
+            .success(function(data, status, header, config) {
+                matches = data;
+            })
+            .error(function(data, status, header, config) {
+                $log.debug('error');
             });
 
-            if (searches.length >= 5) {
-                searches.splice(0, 1);
-            }
-        }
-
-        searches.push({
-            term: term,
-            title: title,
-            data: data
+        responsePromise.then(function() {
+            deferred.resolve(matches);
         });
 
-        $window.localStorage.setItem("searches", JSON.stringify(searches));
+        return deferred.promise;
     };
-
-    var add = function(matches) {
-        switch (matches.type) {
-            case "RouteResult":
-                insert(matches.id, matches.shortName, matches);
-                break;
-            case "StopResult":
-                insert(matches.id, matches.name, matches);
-                break;
-            case "GeocodeResult":
-                insert(matches.formattedAddress, matches.formattedAddress, matches);
-                break;
-            default:
-                $log.debug("undefined type");
-                break;
-        }
-    };
-
-    var fetchAll = function() {
+    /**
+     * search!
+     * @param term Term to search for
+     * @returns {*} appropriately formatter result-- Route, Stop, or Geolocation
+     */
+    var search = function(term) {
         var deferred = $q.defer();
-        deferred.resolve(Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]')).reverse());
+        var matches = {};
+
+        var responsePromise = $http.jsonp(API_END_POINT + "api/search?callback=JSON_CALLBACK", {
+                params: {
+                    q: term
+                },
+                cache: true,
+                timeout: httpTimeout
+            })
+            .success(function(data, status, header, config) {
+                if (data.searchResults.empty === false && data.searchResults.matches.length > 0) {
+                    var matchesData = data.searchResults.matches[0];
+                    switch (data.searchResults.resultType) {
+                        case "RouteResult":
+                            matches = {
+                                type: "RouteResult",
+                                shortName: matchesData.shortName,
+                                longName: matchesData.longName,
+                                id: matchesData.id,
+                                description: matchesData.description,
+                                directions: {}
+                            };
+                            //might be able to simplify this with an angular.sort on what is returned.
+                            if (matchesData.directions[0]) {
+                                if (matchesData.directions[0].directionId == "0") {
+                                    matches.directions[0] = {
+                                        destination: matchesData.directions[0].destination,
+                                        directionId: matchesData.directions[0].directionId,
+                                        hasUpcomingScheduledService: matchesData.directions[0].hasUpcomingScheduledService
+                                    };
+                                }
+
+                                if (matchesData.directions[0].directionId == "1") {
+                                    matches.directions[1] = {
+                                        destination: matchesData.directions[0].destination,
+                                        directionId: matchesData.directions[0].directionId,
+                                        hasUpcomingScheduledService: matchesData.directions[0].hasUpcomingScheduledService
+                                    };
+                                }
+                            }
+
+                            if (matchesData.directions[1]) {
+                                if (matchesData.directions[1].directionId == "0") {
+                                    matches.directions[0] = {
+                                        destination: matchesData.directions[1].destination,
+                                        directionId: matchesData.directions[1].directionId,
+                                        hasUpcomingScheduledService: matchesData.directions[1].hasUpcomingScheduledService
+                                    };
+                                }
+
+                                if (matchesData.directions[1].directionId == "1") {
+                                    matches.directions[1] = {
+                                        destination: matchesData.directions[1].destination,
+                                        directionId: matchesData.directions[1].directionId,
+                                        hasUpcomingScheduledService: matchesData.directions[1].hasUpcomingScheduledService
+                                    };
+                                }
+                            }
+                            break;
+                        case "StopResult":
+                            matches = {
+                                type: "StopResult",
+                                name: matchesData.name,
+                                id: matchesData.id
+                            };
+                            break;
+                        case "GeocodeResult":
+                            matches = {
+                                type: "GeocodeResult",
+                                formattedAddress: matchesData.formattedAddress,
+                                latitude: matchesData.latitude,
+                                longitude: matchesData.longitude
+                            };
+                            break;
+                        default:
+                            $log.debug("undefined type");
+                    }
+                }
+            })
+            .error(function(data, status, header, config) {
+                $log.debug('error');
+            });
+
+        responsePromise.then(function() {
+            deferred.resolve(matches);
+        });
+
         return deferred.promise;
     };
 
-    var clear = function() {
-        $window.localStorage.removeItem("searches");
-    };
-
     return {
-        add: add,
-        fetchAll: fetchAll,
-        clear: clear
+        autocomplete: autocomplete,
+        search: search
     };
-});
+})
