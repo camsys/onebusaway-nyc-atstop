@@ -39,10 +39,13 @@
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
     "cordova-plugin-inappbrowser#master",
-    "cordova-plugin-inappbrowser",
     {
       "locator": "https://github.com/apache/cordova-plugin-wkwebview-engine.git#master",
       "id": "cordova-plugin-wkwebview-engine"
+    },
+    {
+      "locator": "https://github.com/apache/cordova-plugin-inappbrowser",
+      "id": "cordova-plugin-inappbrowser"
     }
   ],
   "cordovaPlatforms": [
