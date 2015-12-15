@@ -38,7 +38,7 @@ angular.module('atstop.map.controller', ['configuration', 'filters'])
 
             $interval.cancel($scope.reloadTimeout);
             $scope.reloadTimeout = $interval($scope.refresh, 35000);
-            showBusAndStopMarkers($stateParams.routeId, $stateParams.stopId);
+            showBusAndStopMarkers($stateParams.routeId, $stateParams.stopId, false);
         };
 
         var showRoutePolylines = function(route) {
@@ -61,7 +61,10 @@ angular.module('atstop.map.controller', ['configuration', 'filters'])
             });
         };
 
-        var showBusAndStopMarkers = function(route, stop) {
+        var showBusAndStopMarkers = function(route, stop, recenter) {
+            //default to not recenter.
+            recenter = recenter !== false;
+
             //start countdown on markers refresh
             $scope.$broadcast('timer-set-countdown', 35);
             $scope.$broadcast('timer-start');
@@ -76,15 +79,19 @@ angular.module('atstop.map.controller', ['configuration', 'filters'])
                 angular.extend($scope.markers, res);
 
                 //set zoom around current stop
-                angular.forEach($scope.markers, function(val, key) {
-                    if (val.layer == 'currentStop') {
-                        leafletData.getMap().then(function(map) {
-                            map.setView(val, 15, {
-                                animate: true
+                if (recenter) {
+                    angular.forEach($scope.markers, function (val, key) {
+                        if (val.layer == 'currentStop') {
+                            leafletData.getMap().then(function (map) {
+
+                                map.setView(val, 15, {
+                                    animate: true
+                                });
+
                             });
-                        });
-                    }
-                });
+                        }
+                    });
+                }
             });
         };
 
