@@ -62,9 +62,9 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
          */
         var handleRouteSearch = function(matches) {
             // console.log(Object.keys(matches.directions).length);
-              $log.debug(matches);
+
             if (Object.keys(matches.directions).length > 1) {
-                // if one direction with no service-- handle on route/stop page.
+                // if one direction on the route has no service-- handle on route/stop page.
                 if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
                     $log.debug('service in both directions');
                     $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
@@ -72,15 +72,19 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
                     $log.debug('no service in both directions');
                     noSchedService(matches.shortName);
                 } else {
-
+                    $log.debug('service?');
                 }
-            } else {
-                if (matches.directions[0].hasUpcomingScheduledService) {
-                    $log.debug('1direction with service');
-                    $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
-                } else {
+            }
+            // but if there is only one direction on the route
+            else {
+                $log.debug('1D 4eva!');
+                var directionName = Object.keys(matches.directions)[0];
+                if (!matches.directions[directionName].hasUpcomingScheduledService) {
                     $log.debug('1direction with no service');
                     noSchedService(matches.shortName);
+                } else {
+                    $log.debug('1direction with service');
+                    $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
                 }
             }
         };

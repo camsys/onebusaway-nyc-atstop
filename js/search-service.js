@@ -81,6 +81,7 @@ angular.module('atstop.search.service', ['ionic', 'configuration'])
                             }
 
                             if (matchesData.directions[1]) {
+
                                 if (matchesData.directions[1].directionId == "0") {
                                     matches.directions[0] = {
                                         destination: matchesData.directions[1].destination,

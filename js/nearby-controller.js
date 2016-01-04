@@ -349,6 +349,9 @@ angular.module('atstop.nearby.controller', ['configuration', 'filters'])
                     key: MAPBOX_KEY,
                     zoomControl: false
                 },
+                options: {
+                    reuseTiles: true,
+                },
                 markers: {},
                 paths: {}
             });
@@ -480,7 +483,6 @@ angular.module('atstop.nearby.controller', ['configuration', 'filters'])
 
             // don't bother if user has chosen a route to view
             if (!$scope.data.inRouteView) {
-                $scope.eventDetected = "Drag";
 
                 leafletData.getMap().then(function (map) {
                     // $log.debug('moving to', map.getCenter().lat, map.getCenter().lng);

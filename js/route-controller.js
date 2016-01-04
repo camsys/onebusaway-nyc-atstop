@@ -70,8 +70,11 @@ angular.module('atstop.route.controller', ['configuration', 'filters'])
         var getDirectionsAndStops = function() {
             var directionsDefer = $q.defer();
             var stopsDefer = $q.defer();
+            var oneDirection;
 
             RouteService.getDirections($stateParams.routeId).then(function(results) {
+                $log.debug(results);
+
                 if (Object.keys(results).length > 1) {
                     oneDirection = false;
                     angular.forEach(results, function(val, key) {
@@ -88,24 +91,33 @@ angular.module('atstop.route.controller', ['configuration', 'filters'])
                 } else {
                     // with one direction, set destination and remove second group.
                     oneDirection = true;
-                    $scope.data.directionName = results[0].destination;
-                    $scope.data.groups[0].name = results[0].destination;
+
+                    // there now are routes that have one direction with ID 1. This is getting hacky.
+                    var directionName = Object.keys(results)[0][0];
+
+                    $scope.data.directionName = results[directionName].destination;
+                    $scope.data.groups[0].name = results[directionName].destination;
                     $scope.data.groups.splice(1);
-                    $scope.toggleGroup($scope.data.groups[0]);
+                    $scope.toggleGroup($scope.data.groups[directionName]);
                 }
                 directionsDefer.resolve();
             });
 
             directionsDefer.promise.then(function() {
                 RouteService.getStops($stateParams.routeId, "0").then(function(results) {
+
                     $scope.data.direction = results;
                     $scope.data.groups[0].items = results;
-                    if (oneDirection === false) {
-                        //console.log("1D 4eva!");
-                        $log.debug("1D 4eva!");
-                        RouteService.getStops($stateParams.routeId, "1").then(function(results2) {
+                    if (oneDirection === false || Object.keys(results).length == 0) {
+                        var directionToSet =1;
+                        // if direction 0 came back empty, try to get stops with direction 1.
+                        // but set the first group for display.
+                        if (Object.keys(results).length == 0){directionToSet =0; }
+
+                        RouteService.getStops($stateParams.routeId, 1).then(function(results2) {
+                            $log.debug('stops '+results2);
                             $scope.data.direction_ = results2;
-                            $scope.data.groups[1].items = results2;
+                            $scope.data.groups[directionToSet].items = results2;
                         });
                     }
                     stopsDefer.resolve();
