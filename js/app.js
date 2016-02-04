@@ -1,5 +1,5 @@
 /*jshint sub:true*/
-
+//nothing
 /**
  * Copyright (c) 2015 Metropolitan Transportation Authority
  *
@@ -18,8 +18,17 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'atstop.directives', 'leaflet-directive',
-    'ngCordova', 'angular-cache', 'angular-inview', 'timer', 'angular-svg-round-progress', 'ngIOS9UIWebViewPatch', 'debounce'])
+angular.module('atstop', [
+ 'atstop.about.controller','atstop.atstop.controller',
+ 'atstop.favorites.controller', 'atstop.gohome.controller',
+  'atstop.map.controller',  'atstop.nearby.controller',
+ 'atstop.route.controller', 'atstop.search.controller', 
+ 'atstop.atstop.service','atstop.datetime.service',
+ 'atstop.favorites.service', 'atstop.geolocation.service', 'atstop.route.service',
+  'atstop.search.service', 'atstop.searchHistory.service', 'atstop.vehicleMonitoring.service',
+ 'atstop.services', 'atstop.directives', 'leaflet-directive','ionic',
+    'ngCordova', 'angular-cache', 'angular-inview', 'timer', 'angular-svg-round-progress', 'ngIOS9UIWebViewPatch',
+    'debounce'])
 
 // global timeout variable for HTTP requests
 .value('httpTimeout', 10000)
@@ -29,8 +38,14 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
     showBackdrop: false
 })
 
-.run(function($ionicPlatform, $ionicPopup, $cordovaNetwork) {
+.run(function($ionicPlatform, $log) {
     $ionicPlatform.ready(function() {
+
+        $log.debug('yo yo');
+
+        $cordovaSplashscreen.hide();
+        navigator.splashscreen.hide();
+
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
@@ -39,18 +54,6 @@ angular.module('atstop', ['ionic', 'atstop.controllers', 'atstop.services', 'ats
             StatusBar.styleDefault();
         }
 
-        //checking if app is in cordova. Otherwise, don't worry about network connections.
-        if (window.cordova && $cordovaNetwork.isOffline()) {
-            $ionicPopup.alert({
-                    title: "Internet Disconnected",
-                    content: "Internet is not available on your device."
-                })
-                .then(function(result) {
-                    if (result) {
-                        ionic.Platform.exitApp();
-                    }
-                });
-        }
     });
 })
 

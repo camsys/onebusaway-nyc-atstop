@@ -5,9 +5,14 @@
   "main": "gulpfile.js",
   "dependencies": {
     "bower": "^1.4.1",
-    "del": "^2.0.2",
+    "del": "^2.0.2"
+  },
+  "devDependencies": {
+    "angular-jsdoc": "^1.2.1",
+    "angular-mocks": "^1.4.7",
+    "gulp-concat": "^2.6.0",
+    "gulp-shell": "^0.4.3",
     "gulp": "^3.8.11",
-    "gulp-concat": "^2.5.2",
     "gulp-jshint": "^1.10.0",
     "gulp-minify-css": "^0.3.13",
     "gulp-ng-annotate": "^0.5.2",
@@ -16,14 +21,9 @@
     "gulp-scss-lint": "^0.2.2",
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^2.2.20",
-    "jshint-stylish": "^1.0.1",
     "ng-describe": "^1.4.1",
-    "shelljs": "^0.3.0"
-  },
-  "devDependencies": {
-    "angular-jsdoc": "^1.2.1",
-    "angular-mocks": "^1.4.7",
-    "gulp-shell": "^0.4.3",
+    "shelljs": "^0.3.0",
+    "jshint-stylish": "^1.0.1",
     "jasmine-core": "^2.3.4",
     "jsdoc": "^3.3.3",
     "karma": "^0.13.10",
@@ -32,15 +32,28 @@
     "karma-jasmine": "^0.3.6"
   },
   "cordovaPlugins": [
+    "https://github.com/whiteoctober/cordova-plugin-app-version.git",
     "cordova-plugin-network-information",
-    "cordova-plugin-geolocation",
-    "cordova-plugin-inappbrowser",
-    "https://github.com/whiteoctober/cordova-plugin-app-version.git"
-   ],
-   "cordovaPlatforms": [
-    "ios",
-    "android",
-    "browser" 
+    "cordova-plugin-device",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-inappbrowser#master",
+    {
+      "locator": "https://github.com/apache/cordova-plugin-wkwebview-engine.git#master",
+      "id": "cordova-plugin-wkwebview-engine"
+    },
+    {
+      "locator": "https://github.com/apache/cordova-plugin-inappbrowser",
+      "id": "cordova-plugin-inappbrowser"
+    },
+    "cordova-plugin-geolocation"
+  ],
+  "cordovaPlatforms": [
+    "browser",
+    {
+      "platform": "ios",
+      "locator": "https://github.com/apache/cordova-ios.git#master"
+    },
+    "android"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -49,7 +62,6 @@
     "type": "git",
     "url": "git+https://github.com/camsys/onebusaway-nyc-atstop.git"
   },
-
   "author": "",
   "license": "Apache-2.0",
   "bugs": {

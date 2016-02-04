@@ -8,7 +8,7 @@
     "ng-debounce": "~0.1.7"
   },
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.1.1"
+    "ionic": "driftyco/ionic-bower#1.2.4"
   },
   "resolutions": {
     "angular": "1.4.3",

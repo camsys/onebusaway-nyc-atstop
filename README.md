@@ -25,8 +25,6 @@ Comments/contributions are welcome.
   * Insert your key into the `API_KEY` field of `config.js`.
   * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://bustime.mta.info/`)
 
- Note: If building for iOS9, you may need to update the [App Transport Security](http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/) parameters.
-
 ### Running
 * Use the `ionic serve` function of [Ionic Framework](http://ionicframework.com/docs/guide/testing.html)
 * In order to build the native mobile app, use `ionic build [platform]`
@@ -45,6 +43,7 @@ Now, we are using [ng-describe](https://github.com/kensho/ng-describe). **Note:*
 
 ### Building via Cordova
 * running `ionic state restore` will pick up plugins and platforms necessary to build via Cordova
+ Note: If building for iOS9, you may need to update the [App Transport Security](http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/) parameters.
 
 ### Project License ###
 The project uses the [Apache License, version 2.0](http://opensource.org/licenses/Apache-2.0).

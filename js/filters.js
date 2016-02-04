@@ -66,7 +66,7 @@ angular.module('filters', [])
             safeDescription = safeDescription.replace(regexToFix, "Northbound:");
 
             return safeDescription;
-        }
+        };
     }])
 
 // always round down to nearest min, do not show time if less than 1 minute away
