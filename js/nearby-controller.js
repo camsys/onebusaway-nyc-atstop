@@ -238,6 +238,7 @@ angular.module('atstop.nearby.controller', ['configuration', 'filters'])
                     maximumAge: 0
                 }).then(
                     function(position) {
+                        $log.debug(position);
                         $scope.loading = false;
                         $timeout.cancel(timeout);
                         $scope.data.notifications = "";
@@ -245,6 +246,7 @@ angular.module('atstop.nearby.controller', ['configuration', 'filters'])
                         getNearbyStopsAndRoutes(position.coords.latitude, position.coords.longitude);
                     },
                     function(error) {
+                        $log.debug(error);
                         $scope.data.notifications = "Pull to refresh.";
                         $ionicLoading.hide();
                         $timeout.cancel(timeout);

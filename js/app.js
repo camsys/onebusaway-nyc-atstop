@@ -27,7 +27,8 @@ angular.module('atstop', [
  'atstop.favorites.service', 'atstop.geolocation.service', 'atstop.route.service',
   'atstop.search.service', 'atstop.searchHistory.service', 'atstop.vehicleMonitoring.service',
  'atstop.services', 'atstop.directives', 'leaflet-directive','ionic',
-    'ngCordova', 'angular-cache', 'angular-inview', 'timer', 'angular-svg-round-progress', 'ngIOS9UIWebViewPatch', 'debounce'])
+    'ngCordova', 'angular-cache', 'angular-inview', 'timer', 'angular-svg-round-progress', 'ngIOS9UIWebViewPatch',
+    'debounce'])
 
 // global timeout variable for HTTP requests
 .value('httpTimeout', 10000)
@@ -37,8 +38,14 @@ angular.module('atstop', [
     showBackdrop: false
 })
 
-.run(function($ionicPlatform, $ionicPopup, $cordovaNetwork) {
+.run(function($ionicPlatform, $log) {
     $ionicPlatform.ready(function() {
+
+        $log.debug('yo yo');
+
+        $cordovaSplashscreen.hide();
+        navigator.splashscreen.hide();
+
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
@@ -47,18 +54,6 @@ angular.module('atstop', [
             StatusBar.styleDefault();
         }
 
-        //checking if app is in cordova. Otherwise, don't worry about network connections.
-        //if (window.cordova && $cordovaNetwork.isOffline()) {
-        //    $ionicPopup.alert({
-        //            title: "Internet Disconnected",
-        //            content: "Internet is not available. Try again later."
-        //        })
-        //        .then(function(result) {
-        //            if (result) {
-        //
-        //            }
-        //        });
-        //}
     });
 })
 
