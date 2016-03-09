@@ -3,7 +3,7 @@ var gutil = require('gulp-util');
 var bower = require('bower');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
-var minifyCss = require('gulp-minify-css');
+var cleanCSS = require('gulp-clean-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
 var shell = require('gulp-shell');
@@ -29,7 +29,8 @@ gulp.task('sass', function(done) {
     // .pipe(uncss({
     //         html: ['./www/**/*.html']
     //     }))
-    .pipe(minifyCss({
+    .pipe(cleanCSS({
+      compatibility: 'ie8',
       keepSpecialComments: 0
     }))
     .pipe(rename({ extname: '.min.css' }))
