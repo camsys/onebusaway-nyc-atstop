@@ -20,10 +20,10 @@ Comments/contributions are welcome.
   * `mv js/config.tmpl.js  js/config.js`
   * `npm install` to grab dependencies defined in package.json.
   * `bower install` to grab dependencies defined in bower.json (yes, we know).
-  * run `gulp sass` to generate CSS from SCSS.
   * Get a MTA Bus Time Developer API key. Go [here](http://spreadsheets.google.com/viewform?hl=en&formkey=dG9kcGIxRFpSS0NhQWM4UjA0V0VkNGc6MQ#gid=0) to request one.
   * Insert your key into the `API_KEY` field of `config.js`.
   * Set the API end point via the `API_END_POINT` constant in the same file (e.g. `http://bustime.mta.info/`)
+  * run `gulp sass && gulp compress` to generate CSS from SCSS and generate the scripts.js.
 
 ### Running
 * Use the `ionic serve` function of [Ionic Framework](http://ionicframework.com/docs/guide/testing.html)
