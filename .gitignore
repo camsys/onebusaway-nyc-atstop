@@ -5,6 +5,7 @@
 # But not these files…
 !.gitignore
 !/gulpfile.js
+!/setup.sh
 !/bower.json
 !/package.json
 !apache-license-2.0.md
