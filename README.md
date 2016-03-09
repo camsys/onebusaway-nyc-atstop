@@ -16,7 +16,7 @@ Comments/contributions are welcome.
   * `git remote add origin PATH/TO/THIS/REPO`
   * `git fetch --all`
   * `git reset --hard origin/master`
-  * `rm www/img/ionic.png www/css/style.css` .
+  * `rm www/img/ionic.png www/css/style.css`
   * `mv js/config.tmpl.js  js/config.js`
   * `npm install` to grab dependencies defined in package.json.
   * `bower install` to grab dependencies defined in bower.json (yes, we know).
