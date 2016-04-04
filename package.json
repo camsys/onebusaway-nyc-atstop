@@ -37,6 +37,7 @@
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
     "cordova-plugin-inappbrowser#master",
+    "cordova-plugin-whitelist",
     {
       "locator": "https://github.com/apache/cordova-plugin-wkwebview-engine.git#master",
       "id": "cordova-plugin-wkwebview-engine"

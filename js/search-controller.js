@@ -61,7 +61,6 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
          * @param  {Object} matches [description]
          */
         var handleRouteSearch = function(matches) {
-            // console.log(Object.keys(matches.directions).length);
 
             if (Object.keys(matches.directions).length > 1) {
                 // if one direction on the route has no service-- handle on route/stop page.
@@ -93,7 +92,7 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
             $scope.data.notifications = "There is no scheduled service on this route at this time.";
         };
 /**
- * enter searches if only one autocomplete result is returned.
+ * Search for result
  * @param  {String} term [description]
 
  */
@@ -104,8 +103,12 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
                 term = $scope.data.results[0];
             }
 
+
+
             SearchService.search(term).then(
+
                 function(matches) {
+
                     SearchHistoryService.add(matches);
                     switch (matches.type) {
                         case "RouteResult":

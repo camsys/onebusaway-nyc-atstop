@@ -22,8 +22,13 @@ angular.module('atstop.searchHistory.service', ['ionic', 'configuration'])
 
 .factory('SearchHistoryService', function($log, $q, $window) {
     var insert = function(term, title, data) {
+
+        var termArray = term.split("_");
+        term = termArray[termArray.length - 1];
+
         var searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
 
+        //hacky implementation of a capped collection size 5.
         if (searches.length > 0) {
             angular.forEach(searches, function(val, key) {
                 if (val.term == term) {
