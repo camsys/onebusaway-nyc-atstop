@@ -2,10 +2,9 @@
   "name": "bustime",
   "private": "true",
   "dependencies": {
-    "ngCordova": "0.1.17-alpha",
+    "ngCordova": "0.1.24-alpha",
     "angular-leaflet-directive": "^0.10.0",
-    "angular-inview": "1.5.0",
-    "ng-debounce": "~0.1.7"
+    "angular-inview": "1.5.7"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.2.4"

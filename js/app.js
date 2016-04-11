@@ -38,18 +38,12 @@ angular.module('atstop', [
     showBackdrop: false
 })
 
-.run(function($ionicPlatform, $log) {
+.run(function($ionicPlatform, $log, $cordovaSplashscreen) {
     $ionicPlatform.ready(function() {
 
-        $log.debug('yo yo');
+        console.log('yo yo');
 
         $cordovaSplashscreen.hide();
-        navigator.splashscreen.hide();
-
-        if (window.cordova && window.cordova.plugins.Keyboard) {
-            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-        }
-
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }

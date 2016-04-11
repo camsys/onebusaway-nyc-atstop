@@ -25,8 +25,8 @@ angular.module('atstop.nearby.controller', ['configuration', 'filters'])
  * @description
  * Controller that used for showing the nearby stops for specific location from geolocations.
  */
-.controller('NearbyStopsAndRoutesCtrl', ['$log', '$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService','AtStopService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'debounce', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
-    function($log, $ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, AtStopService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, debounce, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
+.controller('NearbyStopsAndRoutesCtrl', ['$log', '$ionicLoading', 'MapService', '$stateParams', '$window', '$location', '$scope', 'GeolocationService','AtStopService', '$q', '$ionicPopup', '$cordovaGeolocation', '$filter', 'RouteService', 'leafletData', '$ionicScrollDelegate', '$timeout', '$interval', 'MAPBOX_KEY', 'MAP_TILES', 'MAP_ATTRS',
+    function($log, $ionicLoading, MapService, $stateParams, $window, $location, $scope, GeolocationService, AtStopService, $q, $ionicPopup, $cordovaGeolocation, $filter, RouteService, leafletData, $ionicScrollDelegate, $timeout, $interval, MAPBOX_KEY, MAP_TILES, MAP_ATTRS) {
         $scope.markers = {};
         $scope.paths = {};
         $scope.url = "atstop";
@@ -491,7 +491,7 @@ angular.module('atstop.nearby.controller', ['configuration', 'filters'])
                     var lat = map.getCenter().lat;
                     var lng = map.getCenter().lng;
 
-                    debounce(getNearbyStopsAndRoutes(lat, lng, false), 500);
+                    ionic.debounce(getNearbyStopsAndRoutes(lat, lng, false), 500);
                     $scope.lat = lat;
                     $scope.lon = lng;
 
