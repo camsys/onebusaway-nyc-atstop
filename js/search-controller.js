@@ -103,12 +103,8 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
                 term = $scope.data.results[0];
             }
 
-
-
             SearchService.search(term).then(
-
                 function(matches) {
-
                     SearchHistoryService.add(matches);
                     switch (matches.type) {
                         case "RouteResult":

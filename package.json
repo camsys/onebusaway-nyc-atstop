@@ -32,7 +32,7 @@
     "karma-jasmine": "^0.3.6"
   },
   "cordovaPlugins": [
-    "https://github.com/whiteoctober/cordova-plugin-app-version.git",
+
     "cordova-plugin-network-information",
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
