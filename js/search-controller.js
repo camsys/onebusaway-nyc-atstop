@@ -65,7 +65,7 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
             if (Object.keys(matches.directions).length > 1) {
                 // if one direction on the route has no service-- handle on route/stop page.
                 if (matches.directions[0].hasUpcomingScheduledService || matches.directions[1].hasUpcomingScheduledService) {
-                    $log.debug('service in both directions');
+                    $log.debug('service at least one direction');
                     $scope.go("/tab/route/" + matches.id + '/' + matches.shortName);
                 } else if (!matches.directions[0].hasUpcomingScheduledService && !matches.directions[1].hasUpcomingScheduledService) {
                     $log.debug('no service in both directions');
@@ -119,7 +119,6 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
                         default:
                             $scope.data.results = [];
                             $scope.data.notifications = "No matches";
-                            //console.log("undefined type");
                             $log.debug("undefined type");
                             break;
                     }
@@ -141,7 +140,6 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
          * Initialize and grab previously stored searches.
          */
         var init = (function() {
-
             SearchHistoryService.fetchAll().then(function(results) {
                 if (results.length > 0) {
                     $scope.data.searches = results;

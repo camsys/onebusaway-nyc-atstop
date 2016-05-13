@@ -108,11 +108,11 @@ angular.module('atstop.route.controller', ['configuration', 'filters'])
 
                     $scope.data.direction = results;
                     $scope.data.groups[0].items = results;
-                    if (oneDirection === false || Object.keys(results).length == 0) {
+                    if (oneDirection === false || Object.keys(results).length === 0) {
                         var directionToSet =1;
                         // if direction 0 came back empty, try to get stops with direction 1.
                         // but set the first group for display.
-                        if (Object.keys(results).length == 0){directionToSet =0; }
+                        if (Object.keys(results).length === 0){directionToSet =0; }
 
                         RouteService.getStops($stateParams.routeId, 1).then(function(results2) {
                             $log.debug('stops '+results2);

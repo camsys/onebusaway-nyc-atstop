@@ -24,10 +24,12 @@ angular.module('atstop', [
   'atstop.map.controller',  'atstop.nearby.controller',
  'atstop.route.controller', 'atstop.search.controller', 
  'atstop.atstop.service','atstop.datetime.service',
- 'atstop.favorites.service', 'atstop.geolocation.service', 'atstop.route.service',
-  'atstop.search.service', 'atstop.searchHistory.service', 'atstop.vehicleMonitoring.service',
+ 'atstop.favorites.service', 'atstop.geolocation.service',
+    'atstop.storage.service','atstop.route.service',
+  'atstop.search.service', 'atstop.searchHistory.service',
+    'atstop.vehicleMonitoring.service',
  'atstop.services', 'atstop.directives', 'leaflet-directive','ionic',
-    'ngCordova', 'angular-cache', 'angular-inview', 'timer', 'ngIOS9UIWebViewPatch'])
+    'ngCordova', 'angular-cache', 'angular-inview', 'timer'])
 
 // global timeout variable for HTTP requests
 .value('httpTimeout', 10000)

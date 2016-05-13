@@ -1,21 +1,24 @@
 /*jshint sub:true*/
-angular.module('atstop.localstorage.service', ['ionic', 'configuration'])
-
-.factory('$localstorage', ['$log', '$window',
+angular.module('atstop.storage.service', ['ionic'])
+.factory('StorageService', ['$log', '$window',
     function($log, $window) {
+        var set= function(key, value) {
+            $window.localStorage[key] = value;
+        };
+        var get= function(key, defaultValue) {
+            return $window.localStorage[key] || defaultValue;
+        };
+        var setObject= function(key, value) {
+            $window.localStorage[key] = JSON.stringify(value);
+        };
+        var getObject= function(key) {
+            return JSON.parse($window.localStorage[key] || '{}');
+        };
         return {
-            set: function(key, value) {
-                $window.localStorage[key] = value;
-            },
-            get: function(key, defaultValue) {
-                return $window.localStorage[key] || defaultValue;
-            },
-            setObject: function(key, value) {
-                $window.localStorage[key] = JSON.stringify(value);
-            },
-            getObject: function(key) {
-                return JSON.parse($window.localStorage[key] || '{}');
-            }
+            set: set,
+            get: get,
+            setObject: setObject,
+            getObject: getObject
         };
     }
 ]);

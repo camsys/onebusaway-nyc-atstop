@@ -3,7 +3,7 @@ ngDescribe({
     modules: 'atstop',
     inject: 'SearchHistoryService',
     tests: function(deps) {
-        // this guy errors out... 
+        // this guy errors out in bulk, but passes on its own
         //it('should add geocodes to the recent list', function(){
         //    var aGeocode = {
         //        "type": "GeocodeResult",
