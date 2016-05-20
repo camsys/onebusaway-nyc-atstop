@@ -1,5 +1,3 @@
-/*jshint sub:true*/
-//nothing
 /**
  * Copyright (c) 2015 Metropolitan Transportation Authority
  *
@@ -42,9 +40,10 @@ angular.module('atstop', [
 .run(function($ionicPlatform, $log, $cordovaSplashscreen) {
     $ionicPlatform.ready(function() {
 
-        console.log('yo yo');
+        if (ionic.Platform.isWebView()) {
+            $cordovaSplashscreen.hide();
+        }
 
-        $cordovaSplashscreen.hide();
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
