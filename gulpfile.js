@@ -19,6 +19,12 @@ var paths = {
   js: ['./js/*.js']
 };
 
+gulp.task('serve:before',[
+    "sass",
+    "watch",
+    "compress"
+  ])
+
 gulp.task('default', ['sass', 'compress']);
 
 gulp.task('sass', function(done) {
