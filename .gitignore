@@ -3,6 +3,7 @@
 
 
 # But not these files…
+!.travis.yml
 !.gitignore
 !/gulpfile.js
 !/update_plugins.sh
