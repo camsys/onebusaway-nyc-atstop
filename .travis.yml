@@ -24,4 +24,5 @@ before_script:
 - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - bower install -f --verbose
 - npm install --verbose
+- ls www/lib/**
   
