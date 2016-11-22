@@ -13,6 +13,10 @@ apt:
     - google-chrome-stable
     - google-chrome-beta
 
+cache:
+  directories:
+    - node_modules
+
 before_install:
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
@@ -23,6 +27,6 @@ before_script:
 - npm install -g bower
 - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - bower install -f --verbose
-- npm install --verbose
-- ls www/lib/**
+- travis_retry npm install --verbose
+
   
