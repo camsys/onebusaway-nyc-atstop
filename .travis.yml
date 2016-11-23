@@ -26,7 +26,7 @@ before_script:
 - npm install -g karma
 - npm install -g bower
 - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-- bower install -f --verbose
+- bower install -f --verbose --config.directory=www/lib
 - travis_retry npm install --verbose
 
   

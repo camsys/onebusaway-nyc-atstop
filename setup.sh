@@ -12,6 +12,6 @@ rm www/img/ionic.png www/css/style.css .
 
 mv js/config.tmpl.js js/config.js
 npm install
-bower install
+bower install --force
 gulp sass
 gulp compress
