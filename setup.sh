@@ -1,3 +1,6 @@
+npm i -g ionic@latest
+npm i -g cordova@latest
+
 ionic start atstop blank
 cd atstop
 ionic setup sass
