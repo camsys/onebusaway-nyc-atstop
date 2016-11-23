@@ -9,7 +9,7 @@ Comments/contributions are welcome.
 * install [NodeJS](https://nodejs.org/en/) and the [ionic CLI] (http://ionicframework.com/getting-started/)
 
 Optionally, run
-* wget -O - https://raw.githubusercontent.com/camsys/onebusaway-nyc-atstop/master/setup.sh | bash
+* `wget -O - https://raw.githubusercontent.com/camsys/onebusaway-nyc-atstop/master/setup.sh | bash` 
 to fire off the commands below. 
 
 * (Wait before cloning this repo)
