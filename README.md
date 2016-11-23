@@ -4,6 +4,7 @@ A hybrid mobile app that provides information about when the next bus will arriv
 
 Comments/contributions are welcome.
 
+[![Build Status](https://travis-ci.org/camsys/onebusaway-nyc-atstop.svg?branch=master)](https://travis-ci.org/camsys/onebusaway-nyc-atstop)
 
 ### Setting up the project ###
 * install [NodeJS](https://nodejs.org/en/) and the [ionic CLI] (http://ionicframework.com/getting-started/)
