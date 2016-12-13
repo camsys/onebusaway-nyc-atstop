@@ -18,55 +18,129 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('atstop.favorites.service', ['ionic', 'configuration'])
+angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
 
-.factory('FavoritesService', function($log, $q, $window) {
-    var add = function(id, name, type) {
-        // if type is not passed in, assume it is a stop. 
-        type = type || 'S';
+.factory('FavoritesService', function($log, $q, $window, Loki) {
 
-        var data = JSON.parse($window.localStorage['favorites'] || '{}');
-        // favoriteCount exists in case a future version lets users reorder favorites.
-        // This is also the reason that different types of favs are all in one object in LocalStorage.
-        //var favoriteCount = JSON.parse($window.localStorage['favoriteCount'] || '0');
+    var favorites;
+    var db;
 
-        //Route Maps and Routes would share a key and collide, so instead set the display ID/name.
-        var dispId = id.replace('MAP', '');
-
-        //favoriteCount = Object.keys(data).length++;
-
-        data[id] = {
-            "id": dispId,
-            "name": name,
-            "type": type
-                //"order": favoriteCount
-        };
-        //$window.localStorage.setItem("favoriteCount", JSON.stringify(favoriteCount));
-        $window.localStorage.setItem("favorites", JSON.stringify(data));
+    var initDB = function() {            
+        var fsAdapter = new LokiCordovaFSAdapter({"prefix": "loki"});  
+        //db = new Loki('loki.json')
+        db = new Loki('favoritesDB',
+                {
+                    autosave: true,
+                    autosaveInterval: 1000, // 1 second
+                    adapter: fsAdapter
+                });
     };
 
-    var remove = function(id) {
-        var data = JSON.parse($window.localStorage['favorites'] || '{}');
-        delete data[id];
-        $window.localStorage.setItem("favorites", JSON.stringify(data));
+    var options = {  
+    favorites: {
+        proto: Object,
+        inflate: function (src, dst) {
+            var prop;
+            for (prop in src) {
+                if (prop === 'Date') {
+                    dst.Date = new Date(src.Date);
+                } else {
+                    dst[prop] = src[prop];
+                }
+            }
+        }
+        }
     };
 
     var get = function() {
         var deferred = $q.defer();
-        deferred.resolve(JSON.parse($window.localStorage.getItem("favorites") || '{}'));
+
+        db.loadDatabase(options, function(){
+            favorites = db.getCollection('favorites');
+           
+            if (!favorites)
+                favorites = db.addCollection('favorites');
+
+            deferred.resolve(favorites.data);
+            //return deferred.promise;
+        });
+        // deferred.resolve(JSON.parse($window.localStorage.getItem("favorites") || '{}'));
         return deferred.promise;
+
     };
 
-    var inFavorites = function(id) {
-        id = id || '';
-        var data = JSON.parse($window.localStorage['favorites'] || '{}');
-        return !(angular.isUndefined(data[id]) || data[id] === null);
+    var add = function(id, name, type) {
+        // if type is not passed in, assume it is a stop. 
+        type = type || 'S';
+
+        //Route Maps and Routes would share a key and collide, so instead set the display ID/name.
+        var dispId = id.replace('MAP', '');
+        //favoriteCount = Object.keys(data).length++;
+        var  data = {
+            id: id,
+            name: name,
+            type: type
+                //"order": favoriteCount
+        };
+
+
+        
+        if (!favorites){
+            favorites = db.addCollection('favorites');
+        }
+        
+        favorites.insert(data);
+        
+        //var data = JSON.parse($window.localStorage['favorites'] || '{}');
+        // favoriteCount exists in case a future version lets users reorder favorites.
+        // This is also the reason that different types of favs are all in one object in LocalStorage.
+        //var favoriteCount = JSON.parse($window.localStorage['favoriteCount'] || '0');
+
+        //$window.localStorage.setItem("favoriteCount", JSON.stringify(favoriteCount));
+        //$window.localStorage.setItem("favorites", JSON.stringify(data));
+    };
+
+    var remove = function(favorite) {
+        if (!favorites){
+            if (!db)
+                initDB();
+            favorites = db.getCollection('favorites');
+        }
+        // //var fav = favorites.find({id:favorite.id});
+        // if (fav && fav.length){
+            favorites.remove(favorite);
+        //}
+        
+    };
+
+    var inFavorites = function(data) {
+        if (!db){
+            initDB();
+        }
+
+        if (!favorites){
+            favorites = get().then(function(results){
+                if (results.length > 0){
+                    searchForFav = favorites.find({'id': data.id});
+                    if (searchForFav.length > 0)
+                        return true;
+                }
+            });
+        }
+            
+        return false;
+
+        // id = id || '';
+        // var data = JSON.parse($window.localStorage['favorites'] || '{}');
+        // return !(angular.isUndefined(data[id]) || data[id] === null);
     };
 
     return {
+        initDB: initDB,
+        get: get,
         add: add,
         remove: remove,
-        get: get,
         inFavorites: inFavorites
     };
 });
+

@@ -27,7 +27,7 @@ angular.module('atstop', [
   'atstop.search.service', 'atstop.searchHistory.service',
     'atstop.vehicleMonitoring.service',
  'atstop.services', 'atstop.directives', 'leaflet-directive','ionic',
-    'ngCordova', 'angular-cache', 'angular-inview', 'timer'])
+    'ngCordova', 'angular-cache', 'angular-inview', 'timer', 'lokijs'])
 
 // global timeout variable for HTTP requests
 .value('httpTimeout', 10000)
@@ -36,6 +36,7 @@ angular.module('atstop', [
     template: '<ion-spinner></ion-spinner>',
     showBackdrop: false
 })
+
 
 .run(function($ionicPlatform, $log, $cordovaSplashscreen) {
     $ionicPlatform.ready(function() {

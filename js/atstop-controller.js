@@ -23,8 +23,9 @@ angular.module('atstop.atstop.controller', ['configuration', 'filters'])
         };
 
         $scope.toggleFavorites = function() {
-            if (FavoritesService.inFavorites($scope.data.stopId)) {
-                FavoritesService.remove($scope.data.stopId);
+            var favorite = {'id':$scope.data.stopId, 'name':$scope.data.stopName, 'type':'S'};
+            if (FavoritesService.inFavorites(favorite)) {
+                FavoritesService.remove(favorite);
                 $scope.data.favClass = "";
             } else {
                 FavoritesService.add($scope.data.stopId, $scope.data.stopName);
@@ -85,7 +86,9 @@ angular.module('atstop.atstop.controller', ['configuration', 'filters'])
                 $scope.data.link = "map-gps";
             }
 
-            if (FavoritesService.inFavorites($scope.data.stopId)) {
+            var favorite = {'id':$scope.data.stopId, 'name':$scope.data.stopName, 'type':'S'};
+
+            if (FavoritesService.inFavorites(favorite)) {
                 $scope.data.favClass = "button-energized";
             } else {
                 $scope.data.favClass = "";
