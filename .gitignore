@@ -3,7 +3,7 @@
 
 
 # But not these files…
-!.travis.yml
+!/travis.yml
 !.gitignore
 !/gulpfile.js
 !/update_plugins.sh
@@ -23,17 +23,7 @@
 !www/img/stop_icons/*
 !js/*.js
 !www/js/JS_README
-!www/lib/angular-cache/*
-!www/lib/angular-leaflet/*
-!www/lib/angular-inview/*
-!www/lib/leaflet/*
-!www/lib/leaflet/images/*
-!www/lib/leaflet/plugins/*
-!www/lib/moment/*
-!www/lib/underscore/*
-!www/lib/angular-timer/*
-!www/lib/round-progress/*
-!www/lib/angular-simple-logger/*
+!www/lib/*
 !www/templates/about.html
 !www/templates/atstop.html
 !www/templates/geolocation.html
@@ -53,5 +43,6 @@
 *.sw?
 engine/*
 platforms/*
+node_modules/*
 config.js
 
