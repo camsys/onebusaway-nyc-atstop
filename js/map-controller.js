@@ -15,6 +15,9 @@ angular.module('atstop.map.controller', ['configuration', 'filters'])
         $scope.data = {
             favClass: ""
         };
+        $scope.log = function(message){
+            $log.debug(message);
+        }
 
         $scope.toggleFavorites = function() {
             //hack to have Favorite RouteMap ID and Favorite Route ID not collide.
@@ -24,7 +27,6 @@ angular.module('atstop.map.controller', ['configuration', 'filters'])
             if (FavoritesService.inFavorites(favorite)) {
                 FavoritesService.remove(favorite);
                 //FavoritesService.deleteFavorites(id);
-
                 $scope.data.favClass = "";
             } else {
                 FavoritesService.add(id, $stateParams.routeName, 'RM');

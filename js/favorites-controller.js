@@ -29,7 +29,8 @@ angular.module('atstop.favorites.controller', ['configuration', 'filters'])
             $scope.data = {
                 "loaded": false,
                 "notifications": '',
-                "showBranding": SHOW_BRANDING                };
+                "showBranding": SHOW_BRANDING           
+                 };
 
             $scope.remove = function(favorite) {
                 FavoritesService.remove(favorite);
@@ -45,7 +46,6 @@ angular.module('atstop.favorites.controller', ['configuration', 'filters'])
 
                  FavoritesService.get()
                 .then(function(results) {
-                    $log.debug(results);
                     if (Object.keys(results).length === 0) {
                          $scope.data.notifications = "You have not added any favorites. You can add favorites by clicking the star icon on routes, favorites, or maps.";
                     } else if (!angular.isUndefined(results) && results !== null) {

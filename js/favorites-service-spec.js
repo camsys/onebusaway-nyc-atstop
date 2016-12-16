@@ -29,16 +29,16 @@ ngDescribe({
       });
     });
 
-    it('should remove an existing favorite from favorites', 
-      function(){
-      var id = 'MTA NYCT_M100';
-      var name = 'M100';
-      var type = 'R';
-      var favorite = {'id':id, 'name':name, 'type': type};
-      favorites.FavoritesService.remove(favorite).then(function(response){
-        expect(response).toBeEquals(true);
-      });
-    });  
+    // it('should remove an existing favorite from favorites', 
+    //   function(){
+    //   var id = 'MTA NYCT_M100';
+    //   var name = 'M100';
+    //   var type = 'R';
+    //   var favorite = {'id':id, 'name':name, 'type': type};
+    //   favorites.FavoritesService.remove(favorite).then(function(response){
+    //     expect(response).toBeEquals(true);
+    //   });
+    // });  
 
 
 
