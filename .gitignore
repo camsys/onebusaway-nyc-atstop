@@ -1,9 +1,8 @@
 # Ignore everything
-*
+travis.yml
 
 
 # But not these files…
-!.travis.yml
 !.gitignore
 !/gulpfile.js
 !/update_plugins.sh
