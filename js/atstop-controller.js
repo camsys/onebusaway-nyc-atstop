@@ -19,7 +19,7 @@ angular.module('atstop.atstop.controller', ['configuration', 'filters'])
             "alertsHide": false,
             "alertsToggle": false,
             "stopId": $stateParams.stopId,
-            "tips": "Pull down for instant refresh."
+            "tips": "Pull down for instant refresh.",
         };
 
         $scope.toggleFavorites = function() {
@@ -30,7 +30,7 @@ angular.module('atstop.atstop.controller', ['configuration', 'filters'])
             } else {
                 FavoritesService.add($scope.data.stopId, $scope.data.stopName);
                 $scope.data.favClass = "button-energized";
-            }
+           }
         };
 
         var getBuses = function() {

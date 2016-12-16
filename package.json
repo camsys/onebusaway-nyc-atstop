@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "angular-jsdoc": "^1.2.1",
-    "angular-mocks": "^1.4.7",
+    "angular-mocks": "1.5.3",
     "gulp-concat": "^2.6.0",
     "gulp-shell": "^0.4.3",
     "gulp": "^3.8.11",

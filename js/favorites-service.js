@@ -32,7 +32,8 @@ angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
                 {
                     autosave: true,
                     autosaveInterval: 1000, // 1 second
-                    adapter: fsAdapter
+                    adapter: fsAdapter,
+                    autoupdate: true
                 });
     };
 
@@ -62,11 +63,8 @@ angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
                 favorites = db.addCollection('favorites');
 
             deferred.resolve(favorites.data);
-            //return deferred.promise;
         });
-        // deferred.resolve(JSON.parse($window.localStorage.getItem("favorites") || '{}'));
         return deferred.promise;
-
     };
 
     var add = function(id, name, type) {
@@ -80,37 +78,44 @@ angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
             id: id,
             name: name,
             type: type
-                //"order": favoriteCount
+            //"order": favoriteCount
         };
 
-
-        
         if (!favorites){
             favorites = db.addCollection('favorites');
         }
-        
-        favorites.insert(data);
-        
-        //var data = JSON.parse($window.localStorage['favorites'] || '{}');
-        // favoriteCount exists in case a future version lets users reorder favorites.
-        // This is also the reason that different types of favs are all in one object in LocalStorage.
-        //var favoriteCount = JSON.parse($window.localStorage['favoriteCount'] || '0');
 
-        //$window.localStorage.setItem("favoriteCount", JSON.stringify(favoriteCount));
-        //$window.localStorage.setItem("favorites", JSON.stringify(data));
+        favorites.insert(data);
     };
 
-    var remove = function(favorite) {
-        if (!favorites){
-            if (!db)
-                initDB();
-            favorites = db.getCollection('favorites');
+    var remove = function(data) {
+        if (!db){
+            initDB();
         }
-        // //var fav = favorites.find({id:favorite.id});
-        // if (fav && fav.length){
-            favorites.remove(favorite);
-        //}
-        
+
+        var updatedFavorites = [];
+
+        favoritesCollect = db.getCollection('favorites');
+
+        if (favoritesCollect != null && favoritesCollect.count() > 0){
+            var numFavorites = favoritesCollect.count();
+
+            for (var i=1; i<=numFavorites; i++){
+                 var collectionDoc = favoritesCollect.get(i);
+                 if (collectionDoc.id != data.id)
+                    updatedFavorites.push (collectionDoc);
+            }
+        }
+
+        favorites.clear();
+
+        for (var i=0; i<updatedFavorites.length; i++){
+             favorites.insert({ 'id':updatedFavorites[i].id, 
+                                'name':updatedFavorites[i].name,
+                                'type':updatedFavorites[i].type 
+             });
+         }
+         db.saveDatabase();
     };
 
     var inFavorites = function(data) {
@@ -118,21 +123,27 @@ angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
             initDB();
         }
 
-        if (!favorites){
-            favorites = get().then(function(results){
-                if (results.length > 0){
-                    searchForFav = favorites.find({'id': data.id});
-                    if (searchForFav.length > 0)
-                        return true;
-                }
-            });
-        }
-            
-        return false;
+        var fav = {};
 
-        // id = id || '';
-        // var data = JSON.parse($window.localStorage['favorites'] || '{}');
-        // return !(angular.isUndefined(data[id]) || data[id] === null);
+        if (!favorites){
+            fetchFav = get().then(function(results){
+                 fav = results;
+            });
+           
+        }else{
+            fav = favorites;
+        }
+
+        if (fav.data){
+            numFavorites =  fav.data.length;
+            for (var i=0; i<numFavorites; i++){
+                if (data.id == fav.data[i].id) //fav exists
+                    return true;
+            }
+            return false;
+        }
+        else 
+            return false;
     };
 
     return {
