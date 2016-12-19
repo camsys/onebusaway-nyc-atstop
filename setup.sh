@@ -1,5 +1,6 @@
-npm i -g ionic@latest
 npm i -g cordova@latest
+npm i -g gulp
+npm i -g ionic@latest
 
 ionic start atstop blank
 cd atstop
