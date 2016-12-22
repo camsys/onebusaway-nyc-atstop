@@ -25,12 +25,13 @@ angular.module('atstop.favorites.controller', ['configuration', 'filters'])
      * Controller used for showing favorites.
      */
     .controller('FavoritesCtrl', ['$log', '$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
-        function($log, $scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
+        function($log, $scope, $rootScope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
             $scope.data = {
                 "loaded": false,
                 "notifications": '',
-                "showBranding": SHOW_BRANDING           
-                 };
+                "showBranding": SHOW_BRANDING
+             };
+
 
             $scope.remove = function(favorite) {
                 FavoritesService.remove(favorite);
@@ -41,6 +42,8 @@ angular.module('atstop.favorites.controller', ['configuration', 'filters'])
                 $scope.data.favoriteRoutes = [];
                 $scope.data.favoriteStops = [];
                 $scope.data.favoriteRouteMaps = [];
+                $rootScope.newFavoriteCount = 0; 
+
 
                 var favoritesDefer = $q.defer();
 
