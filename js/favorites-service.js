@@ -54,6 +54,9 @@ angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
 
     var get = function() {
         var deferred = $q.defer();
+        if (!db){
+            initDB();
+        }
 
         db.loadDatabase(options, function(){
             favorites = db.getCollection('favorites');
@@ -71,19 +74,23 @@ angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
         type = type || 'S';
 
         //Route Maps and Routes would share a key and collide, so instead set the display ID/name.
-        var dispId = id.replace('MAP', '');
+        //var dispId = id.replace('MAP', '');
         //favoriteCount = Object.keys(data).length++;
         var  data = {
             id: id,
             name: name,
             type: type
         };
+         if (!db){
+            initDB();
+        }
 
         if (!favorites){
             favorites = db.addCollection('favorites');
         }
         $rootScope.newFavoriteCount += 1; 
         favorites.insert(data);
+        return true;
     };
 
     var remove = function(data) {
@@ -104,7 +111,7 @@ angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
                     updatedFavorites.push (collectionDoc);
             }
         }
-
+        if (favorites != null) //needed to simulate test
         favorites.clear();
 
         for (var i=0; i<updatedFavorites.length; i++){
@@ -114,6 +121,7 @@ angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
              });
          }
          db.saveDatabase();
+         return true;
     };
 
     var inFavorites = function(data) {

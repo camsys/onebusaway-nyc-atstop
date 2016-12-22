@@ -1,3 +1,6 @@
+if (typeof (window) === 'undefined') 
+var loki = require('../www/lib/lokijs/src/lokijs.js');
+
 ngDescribe({
     name: 'SearchHistory',
     modules: 'atstop',
@@ -17,6 +20,12 @@ ngDescribe({
         //        expect(results[2] === aGeocode);
         //    });
         //});
+
+        beforeEach(function () {    
+          var db = new loki('searchHistoryDB');
+          var searchHistoryCollection = db.addCollection('searchHistory');
+        });
+
 
         it('should add routes to the recent list', function(){
             var aRoute = {
@@ -97,6 +106,7 @@ ngDescribe({
             deps.SearchHistoryService.clear();
             deps.SearchHistoryService.fetchAll().then(function(results){
                 expect(results.length() === 0);
+
             });
         });
     }
