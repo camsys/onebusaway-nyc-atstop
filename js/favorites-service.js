@@ -20,8 +20,7 @@
 
 angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
 
-.factory('FavoritesService', function($log, $q, $window, Loki) {
-
+.factory('FavoritesService', function($log, $q, $window, Loki, $rootScope) {
     var favorites;
     var db;
 
@@ -78,13 +77,12 @@ angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
             id: id,
             name: name,
             type: type
-            //"order": favoriteCount
         };
 
         if (!favorites){
             favorites = db.addCollection('favorites');
         }
-
+        $rootScope.newFavoriteCount += 1; 
         favorites.insert(data);
     };
 

@@ -120,6 +120,10 @@ angular.module('atstop', [
     });
 })
 
+.run(function($rootScope){
+    $rootScope.newFavoriteCount = 0; 
+})
+
 // use the logProvider instead of console.log
 .config(function($logProvider){
   // you are developing on a Mac or Linux, right?? otherwise add some || here with your dev platforms

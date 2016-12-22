@@ -18,36 +18,42 @@
  * @authors https://github.com/camsys/onebusaway-nyc-atstop/graphs/contributors
  */
 
-angular.module('atstop.searchHistory.service', ['ionic', 'configuration'])
+angular.module('atstop.searchHistory.service', ['ionic', 'configuration', 'lokijs'])
 
-.factory('SearchHistoryService', function($log, $q, $window) {
+.factory('SearchHistoryService', function($log, $q, $window, Loki) {
+
+    var searchHistory;
+    var db;
+
+    var initDB = function(){
+        var fsAdapter = new LokiCordovaFSAdapter({"prefix":"loki"});
+        db = new Loki('searchHistoryDB', {
+                autosave: true,
+                autosaveInterval : 1000,
+                adapter: fsAdapter,
+                autoupdate: true
+        });
+    };
+ 
+
     var insert = function(term, title, data) {
-
         var termArray = term.split("_");
         term = termArray[termArray.length - 1];
 
-        var searches = Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]'));
+        $log.debug(termArray);
 
-        //hacky implementation of a capped collection size 5.
-        if (searches.length > 0) {
-            angular.forEach(searches, function(val, key) {
-                if (val.term == term) {
-                    searches.splice(key, 1);
-                }
-            });
-
-            if (searches.length >= 5) {
-                searches.splice(0, 1);
-            }
-        }
-
-        searches.push({
+        var data = {
             term: term,
             title: title,
             data: data
-        });
+        };
+        if (inSearchHistory(data))
+            return;
+        if (!searchHistory){
+            searchHistory = db.addCollection('searchHistory');
+        }
+        searchHistory.insert(data);
 
-        $window.localStorage.setItem("searches", JSON.stringify(searches));
     };
 
     var add = function(matches) {
@@ -66,18 +72,76 @@ angular.module('atstop.searchHistory.service', ['ionic', 'configuration'])
                 break;
         }
     };
+    var options = {  
+    searchHistory: {
+        proto: Object,
+        inflate: function (src, dst) {
+            var prop;
+            for (prop in src) {
+                if (prop === 'Date') {
+                    dst.Date = new Date(src.Date);
+                } else {
+                    dst[prop] = src[prop];
+                }
+            }
+        }
+        }
+    };
 
     var fetchAll = function() {
         var deferred = $q.defer();
-        deferred.resolve(Array.prototype.slice.call(JSON.parse($window.localStorage['searches'] || '[]')).reverse());
+
+        db.loadDatabase(options, function(){
+            searchHistory = db.getCollection('searchHistory');
+           
+            if (!searchHistory)
+                searchHistory = db.addCollection('searchHistory');
+
+            deferred.resolve(searchHistory.data);
+        });
         return deferred.promise;
     };
 
     var clear = function() {
-        $window.localStorage.removeItem("searches");
+        if (!db){
+            initDB();
+        }
+        searchHistoryCollect = db.getCollection('searchHistory');
+        if (searchHistory != null)
+            searchHistory.clear();
+        db.saveDatabase();
+
     };
 
+    var inSearchHistory = function(data) {
+        if (!db){
+            initDB();
+        }
+
+        var history = {};
+
+        if (!searchHistory){
+            fetchHistory = fetchAll().then(function(results){
+                 history = results;
+            });
+        }else{
+            history = searchHistory;
+        }
+        if (history.data){
+            numSearchHist =  history.data.length;
+            for (var i=0; i<numSearchHist; i++){
+                if (data.term == history.data[i].term) 
+                    return true;
+            }
+            return false;
+        }
+        else 
+            return false;
+    };
+
+
     return {
+        initDB: initDB,
         add: add,
         fetchAll: fetchAll,
         clear: clear

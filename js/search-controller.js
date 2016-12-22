@@ -28,7 +28,7 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
             "searches": [],
             "showSearches": true,
             "showDefaultTips": true,
-            "showBranding": SHOW_BRANDING
+            "showBranding": SHOW_BRANDING,
         };
 
         /**
@@ -140,6 +140,7 @@ angular.module('atstop.search.controller', ['configuration', 'filters'])
          * Initialize and grab previously stored searches.
          */
         var init = (function() {
+            SearchHistoryService.initDB();
             SearchHistoryService.fetchAll().then(function(results) {
                 if (results.length > 0) {
                     $scope.data.searches = results;
