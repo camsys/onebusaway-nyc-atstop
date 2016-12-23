@@ -35,23 +35,26 @@ var LokiCordovaFSAdapter = (function () {
                 var _this = this;
 
                 console.log(TAG, "saving database");
-                this._getFile(dbname, function (fileEntry) {
-                    fileEntry.createWriter(function (fileWriter) {
-                        fileWriter.onwriteend = function () {
-                            if (fileWriter.length === 0) {
-                                var blob = _this._createBlob(dbstring, "text/plain");
-                                fileWriter.write(blob);
-                                callback();
-                            }
-                        };
-                        fileWriter.truncate(0);
+
+               ionic.Platform.ready(function(){
+                    this._getFile(dbname, function (fileEntry) {
+                        fileEntry.createWriter(function (fileWriter) {
+                            fileWriter.onwriteend = function () {
+                                if (fileWriter.length === 0) {
+                                    var blob = _this._createBlob(dbstring, "text/plain");
+                                    fileWriter.write(blob);
+                                    callback();
+                                }
+                            };
+                            fileWriter.truncate(0);
+                        }, function (err) {
+                            console.error(TAG, "error writing file", err);
+                            throw new LokiCordovaFSAdapterError("Unable to write file" + JSON.stringify(err));
+                        });
                     }, function (err) {
-                        console.error(TAG, "error writing file", err);
-                        throw new LokiCordovaFSAdapterError("Unable to write file" + JSON.stringify(err));
+                        console.error(TAG, "error getting file", err);
+                        throw new LokiCordovaFSAdapterError("Unable to get file" + JSON.stringify(err));
                     });
-                }, function (err) {
-                    console.error(TAG, "error getting file", err);
-                    throw new LokiCordovaFSAdapterError("Unable to get file" + JSON.stringify(err));
                 });
             }
         },
@@ -111,19 +114,23 @@ var LokiCordovaFSAdapter = (function () {
                 
                 if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()){
                      //  For Cordova
-                    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dir) {
-                        var fileName = _this.options.prefix + "__" + name;
-                        dir.getFile(fileName, { create: true }, handleSuccess, handleError);
-                    }, function (err) {
-                        throw new LokiCordovaFSAdapterError("Unable to resolve local file system URL" + JSON.stringify(err));
+                     ionic.Platform.ready(function(){
+                        window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dir) {
+                            var fileName = _this.options.prefix + "__" + name;
+                            dir.getFile(fileName, { create: true }, handleSuccess, handleError.bind(null, fileName));
+                        }, function (err) {
+                            throw new LokiCordovaFSAdapterError("Unable to resolve local file system URL" + JSON.stringify(err));
+                        });
                     });
                 }else{
                     // For webkit browser storage.
                     // Install HTML5 FileSystem Explorer Extended plugin on chrome to see file stores
-                    window.webkitRequestFileSystem(window.TEMPORARY, 5*1024*1024, 
+                    window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;  
+
+                    window.requestFileSystem(window.TEMPORARY, 5*1024*1024, 
                     function(fs){ 
                         var fileName = _this.options.prefix + "__" + name;
-                        fs.root.getFile(fileName, {create: true}, handleSuccess, handleError);
+                        fs.root.getFile(fileName, {create: true}, handleSuccess, handleError.bind(null, fileName));
                     },
                     function (err) {
                         throw new LokiCordovaFSAdapterError("Unable to resolve local file system URL" + JSON.stringify(err));
@@ -132,6 +139,35 @@ var LokiCordovaFSAdapter = (function () {
                
             }
         },
+        handleError:{
+            value: function handleError(fileName, e) {  
+                var msg = '';
+
+                switch (e.code) {
+                    case FileError.QUOTA_EXCEEDED_ERR:
+                        msg = 'Storage quota exceeded';
+                        break;
+                    case FileError.NOT_FOUND_ERR:
+                        msg = 'File not found';
+                        break;
+                    case FileError.SECURITY_ERR:
+                        msg = 'Security error';
+                        break;
+                    case FileError.INVALID_MODIFICATION_ERR:
+                        msg = 'Invalid modification';
+                        break;
+                    case FileError.INVALID_STATE_ERR:
+                        msg = 'Invalid state';
+                        break;
+                    default:
+                        msg = 'Unknown error';
+                        break;
+                };
+
+                console.log('Error (' + fileName + '): ' + msg);
+            }
+        },
+
         _createBlob: {
 
             // adapted from http://stackoverflow.com/questions/15293694/blob-constructor-browser-compatibility
