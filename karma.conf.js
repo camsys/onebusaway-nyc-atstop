@@ -33,7 +33,7 @@ module.exports = function(config) {
     ],
     port: 9876,
     browsers: ['Chrome'],
-    singleRun: false,
+    singleRun: true,
     reporters: ['progress', 'coverage'],
     preprocessors: {
       'js/*.js': ['coverage']
