@@ -102,7 +102,7 @@ var LokiCordovaFSAdapter = (function () {
                 //For web
                   window.webkitRequestFileSystem(window.TEMPORARY, 5*1024*1024, function (dir) {
                     var fileName = _this2.options.prefix + "__" + name;
-                    //fs.root.getFile(fileName, {create: true}, handleSuccess, handleError);
+                    fs.root.getFile(fileName, {create: true}, handleSuccess, handleError);
                 }, function (err) {
                     throw new LokiCordovaFSAdapterError("Unable to resolve local file system URL" + JSON.stringify(err));
                 });
