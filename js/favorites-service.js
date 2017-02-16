@@ -75,6 +75,8 @@ angular.module('atstop.favorites.service', ['ionic', 'configuration','lokijs'])
 
         //Route Maps and Routes would share a key and collide, so instead set the display ID/name.
         //var dispId = id.replace('MAP', '');
+        if (type === "RM")
+            id = id.replace('MAP', '');
         //favoriteCount = Object.keys(data).length++;
         var  data = {
             id: id,
