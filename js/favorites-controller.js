@@ -25,17 +25,16 @@ angular.module('atstop.favorites.controller', ['configuration', 'filters'])
      * Controller used for showing favorites.
      */
     .controller('FavoritesCtrl', ['$log', '$scope', '$ionicLoading', 'FavoritesService', '$q', 'SHOW_BRANDING',
-        function($log, $scope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
+        function($log, $scope, $rootScope, $ionicLoading, FavoritesService, $q, SHOW_BRANDING) {
             $scope.data = {
                 "loaded": false,
                 "notifications": '',
                 "showBranding": SHOW_BRANDING
-            };
+             };
 
-            $scope.remove = function(id) {
-                console.log(id);
-                $log.debug(id);
-                FavoritesService.remove(id);
+
+            $scope.remove = function(favorite) {
+                FavoritesService.remove(favorite);
                 get();
             };
 
@@ -43,11 +42,15 @@ angular.module('atstop.favorites.controller', ['configuration', 'filters'])
                 $scope.data.favoriteRoutes = [];
                 $scope.data.favoriteStops = [];
                 $scope.data.favoriteRouteMaps = [];
+                $rootScope.newFavoriteCount = 0; 
+
+
                 var favoritesDefer = $q.defer();
 
-                FavoritesService.get().then(function(results) {
+                 FavoritesService.get()
+                .then(function(results) {
                     if (Object.keys(results).length === 0) {
-                        $scope.data.notifications = "You have not added any favorites. You can add favorites by clicking the star icon on routes, favorites, or maps.";
+                         $scope.data.notifications = "You have not added any favorites. You can add favorites by clicking the star icon on routes, favorites, or maps.";
                     } else if (!angular.isUndefined(results) && results !== null) {
                         angular.forEach(results, function(value) {
                             if (value.type === 'R') {
@@ -63,12 +66,13 @@ angular.module('atstop.favorites.controller', ['configuration', 'filters'])
                     favoritesDefer.resolve();
                 });
 
-                favoritesDefer.promise.then(function() {
+                 favoritesDefer.promise.then(function() {
                     $scope.data.loaded = true;
                 });
             };
 
             var init = (function() {
+               FavoritesService.initDB();
                 get();
             })();
         }

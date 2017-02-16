@@ -15,13 +15,18 @@ angular.module('atstop.map.controller', ['configuration', 'filters'])
         $scope.data = {
             favClass: ""
         };
+        $scope.log = function(message){
+            $log.debug(message);
+        }
 
         $scope.toggleFavorites = function() {
             //hack to have Favorite RouteMap ID and Favorite Route ID not collide.
             //routeId+MAP is the key, but inside the favorite object the id just routeId (see FavoritesService).
             var id = $stateParams.routeId.concat('MAP');
-            if (FavoritesService.inFavorites(id)) {
-                FavoritesService.remove(id);
+            var favorite = {'id':$stateParams.routeId, 'name':$stateParams.routeName, 'type':'RM'};
+            if (FavoritesService.inFavorites(favorite)) {
+                FavoritesService.remove(favorite);
+                //FavoritesService.deleteFavorites(id);
                 $scope.data.favClass = "";
             } else {
                 FavoritesService.add(id, $stateParams.routeName, 'RM');
@@ -203,7 +208,8 @@ angular.module('atstop.map.controller', ['configuration', 'filters'])
                 $scope.url = "atstop-gps";
             }
 
-            if (FavoritesService.inFavorites($stateParams.routeId.concat('MAP'))) {
+            var favorite = {'id':$stateParams.routeId, 'name':$stateParams.routeName, 'type':'RM'};
+            if (FavoritesService.inFavorites(favorite)) {
                 $scope.data.favClass = "button-energized";
             }
 

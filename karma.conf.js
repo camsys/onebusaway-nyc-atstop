@@ -13,7 +13,6 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     files: [
       'www/lib/ionic/js/ionic.bundle.js',
-      'node_modules/angular-mocks/angular-mocks.js',
       'node_modules/ng-describe/dist/ng-describe.js',
       'www/lib/ngCordova/dist/ng-cordova-mocks.js',
       'www/lib/ngCordova/dist/ng-cordova.min.js',
@@ -27,6 +26,9 @@ module.exports = function(config) {
       'www/lib/angular-timer/humanize-duration.js',
       'www/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js',
       'www/lib/angular-inview/angular-inview.js',
+      'node_modules/angular-mocks/angular-mocks.js',
+      'www/lib/lokijs/src/lokijs.js',
+      'www/lib/lokijs/src/loki-angular.js',
       'js/*.js'
     ],
     port: 9876,

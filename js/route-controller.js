@@ -43,12 +43,14 @@ angular.module('atstop.route.controller', ['configuration', 'filters'])
 
         $scope.toggleFavorites = function() {
             //type-R (for route) FTW
-            var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
-            if (FavoritesService.inFavorites(fav[0])) {
-                FavoritesService.remove(fav[0]);
+            var favorite = {'id':$stateParams.routeId, 'name':$stateParams.routeName, 'type':'R'};
+
+            //var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
+            if (FavoritesService.inFavorites(favorite)) {
+                FavoritesService.remove(favorite);
                 $scope.data.favClass = "";
             } else {
-                FavoritesService.add(fav[0], fav[1], fav[2]);
+                FavoritesService.add($stateParams.routeId, $stateParams.routeName, 'R');
                 $scope.data.favClass = "button-energized";
             }
         };
@@ -139,8 +141,9 @@ angular.module('atstop.route.controller', ['configuration', 'filters'])
                 $scope.data.atStopUrl = "atstop-favorites";
             }
 
-            var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
-            if (FavoritesService.inFavorites($stateParams.routeId)) {
+            var favorite = {'id':$stateParams.routeId, 'name':$stateParams.routeName, 'type':'R'};
+            //var fav = [$stateParams.routeId, $stateParams.routeName, 'R'];
+            if (FavoritesService.inFavorites(favorite)) {
                 $scope.data.favClass = "button-energized";
             }
 

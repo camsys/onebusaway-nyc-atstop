@@ -28,5 +28,5 @@ before_script:
 - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - bower install -f --verbose --config.directory=www/lib
 - travis_retry npm install --verbose
-
+- ls www/lib/leaflet
   
