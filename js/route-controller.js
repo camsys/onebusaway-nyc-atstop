@@ -50,7 +50,7 @@ angular.module('atstop.route.controller', ['configuration', 'filters'])
                 FavoritesService.remove(favorite);
                 $scope.data.favClass = "";
             } else {
-                FavoritesService.add(favorite);
+                FavoritesService.add($stateParams.routeId, $stateParams.routeName, 'R');
                 $scope.data.favClass = "button-energized";
             }
         };
