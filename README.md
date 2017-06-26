@@ -7,7 +7,7 @@ Comments/contributions are welcome.
 [![Build Status](https://travis-ci.org/camsys/onebusaway-nyc-atstop.svg?branch=master)](https://travis-ci.org/camsys/onebusaway-nyc-atstop)
 
 ### Setting up the project ###
-* install [NodeJS](https://nodejs.org/en/) and the [ionic CLI] (http://ionicframework.com/getting-started/)
+* install [NodeJS](https://nodejs.org/en/) and the [ionic CLI](http://ionicframework.com/getting-started/)
 
 Optionally, run
 * `wget -O - https://raw.githubusercontent.com/camsys/onebusaway-nyc-atstop/master/setup.sh | bash` 
